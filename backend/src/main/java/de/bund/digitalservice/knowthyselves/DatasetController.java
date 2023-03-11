@@ -1,7 +1,8 @@
 package de.bund.digitalservice.knowthyselves;
 
-import jakarta.annotation.PreDestroy;
 import java.nio.file.Path;
+import javax.annotation.PreDestroy;
+import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.tdb.TDBFactory;
@@ -16,16 +17,23 @@ public class DatasetController {
 
   private final Dataset dataset;
   private final Model model;
+  private final FusekiServer fusekiServer;
 
   public DatasetController(@Value("${TDB_DIR}") Path tbd) {
     dataset = TDBFactory.createDataset(tbd.toString());
     logger.info("Dataset loaded from: {}", tbd);
     model = dataset.getDefaultModel();
+
+    fusekiServer = FusekiServer.create()
+        .add("/", dataset)
+        .build();
+    fusekiServer.start();
   }
 
   @PreDestroy
   private void close() {
     model.close();
     dataset.close();
+    fusekiServer.stop();
   }
 }
