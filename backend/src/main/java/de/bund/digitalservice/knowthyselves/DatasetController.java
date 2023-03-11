@@ -22,7 +22,9 @@ public class DatasetController {
   public DatasetController(@Value("${TDB_DIR}") Path tbd) {
     dataset = TDBFactory.createDataset(tbd.toString());
     logger.info("Dataset loaded from: {}", tbd);
+
     model = dataset.getDefaultModel();
+    model.listStatements().forEachRemaining(logger::info);
 
     fusekiServer = FusekiServer.create()
         .add("/", dataset)
@@ -32,8 +34,8 @@ public class DatasetController {
 
   @PreDestroy
   private void close() {
+    fusekiServer.stop();
     model.close();
     dataset.close();
-    fusekiServer.stop();
   }
 }
