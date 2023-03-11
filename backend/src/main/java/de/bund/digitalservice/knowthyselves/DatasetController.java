@@ -28,6 +28,7 @@ public class DatasetController {
 
     fusekiServer = FusekiServer.create()
         .add("/", dataset)
+        .enableCors(true)
         .build();
     fusekiServer.start();
   }
