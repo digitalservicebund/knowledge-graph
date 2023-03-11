@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'de.bund.digitalservice'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0'
 sourceCompatibility = '17'
 
 repositories {
@@ -16,6 +16,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation "org.apache.jena:jena-core:4.7.0"
+	implementation "org.apache.jena:jena-tdb:4.7.0"
+	implementation "org.apache.jena:jena-rdfconnection:4.7.0"
+	implementation "org.apache.jena:jena-fuseki-main:4.7.0"
 }
 
 tasks.named('test') {
