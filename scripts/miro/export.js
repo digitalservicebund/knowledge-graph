@@ -11,6 +11,8 @@ const { SparqlEndpointFetcher } = require("fetch-sparql-endpoint");
 const api = new MiroApi(config.ACCESS_TOKEN)
 const sparql = new SparqlEndpointFetcher();
 
+const DELETE_ALL_TRIPLES_FIRST = true
+
 let board
 const nodes = {}
 const edges = []
@@ -95,14 +97,16 @@ const processNodeLabel = txt => {
 }
 
 const uri = localName => {
-  return config.BASE_URI + localName
+  return config.BASE_URI_PREFIX + ":" + localName
 }
 
 (async function () {
   board = await api.getBoard(config.BOARD_ID)
 
-  let query = "DELETE { ?s ?p ?o . } WHERE { ?s ?p ?o . }"
-  await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
+  if (DELETE_ALL_TRIPLES_FIRST) {
+    let query = "DELETE { ?s ?p ?o . } WHERE { ?s ?p ?o . }"
+    await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
+  }
 
   // let tgf = ""
   let counter = 0
@@ -120,6 +124,10 @@ const uri = localName => {
 
   // tgf += "#\n"
 
+  let insertQuery = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
+      + "PREFIX " + config.BASE_URI_PREFIX + ": <" + config.BASE_URI + "> "
+      + "INSERT DATA { "
+
   for (const edge of edges) {
     let from = nodes[edge.from]
     let to = nodes[edge.to]
@@ -131,10 +139,9 @@ const uri = localName => {
     // let triple = quad(namedNode(subUri), namedNode(predUri), to.isLiteral ? literal(to.label) : namedNode(uri(to.label)))
     // quads.push(triple)
 
-    let objSparql = to.isLiteral ? to.label : ("<" + uri(to.label) + ">")
-    let statementStr = "<" + subUri + "> <" + predUri + "> " + objSparql;
-    query = "INSERT DATA { " + statementStr + " . }"
-    await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
+    let objSparql = to.isLiteral ? to.label : uri(to.label)
+    let statementStr = subUri + " " + predUri + " " + objSparql;
+    insertQuery += statementStr + " . "
 
     for (const pair of edge.keyValuePairs) { // RDF-star: statements about statements
       let pred = toCamelCase(pair[0], true)
@@ -147,12 +154,13 @@ const uri = localName => {
       // triple = quad(triple, namedNode(predUri), objIsLiteral ? literal(objLabel) : namedNode(uri(objLabel)))
       // quads.push(triple)
 
-      objSparql = objIsLiteral ? objLabel : ("<" + uri(objLabel) + ">")
-      let rdfStarStatementStr = "<<" + statementStr + ">> <" + predUri + "> " + objSparql;
-      query = "INSERT DATA { " + rdfStarStatementStr + " . }"
-      await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, query)
+      objSparql = objIsLiteral ? objLabel : uri(objLabel)
+      insertQuery += "<<" + statementStr + ">> " + predUri + " " + objSparql + " . "
     }
   }
+
+  insertQuery += " }"
+  await sparql.fetchUpdate(config.SPARQL_ENDPOINT_UPDATE, insertQuery)
 
   // console.log(triples)
 /*const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
