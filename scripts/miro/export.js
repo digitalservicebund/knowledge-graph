@@ -97,7 +97,7 @@ const processNodeLabel = txt => {
 }
 
 const uri = localName => {
-  return config.BASE_URI_PREFIX + ":" + localName
+  return config.DEFAULT_NAMESPACE_PREFIX + ":" + localName
 }
 
 (async function () {
@@ -125,7 +125,7 @@ const uri = localName => {
   // tgf += "#\n"
 
   let insertQuery = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
-      + "PREFIX " + config.BASE_URI_PREFIX + ": <" + config.BASE_URI + "> "
+      + "PREFIX " + config.DEFAULT_NAMESPACE_PREFIX + ": <" + config.DEFAULT_NAMESPACE + "> "
       + "INSERT DATA { "
 
   for (const edge of edges) {
@@ -164,7 +164,7 @@ const uri = localName => {
 
   // console.log(triples)
 /*const filename = "miro_" + slugify(board.name) + "_" + getTimestamp() + ".ttl"
-  const writer = new N3.Writer({ prefixes: { [config.BASE_URI_PREFIX]: config.BASE_URI } });
+  const writer = new N3.Writer({ prefixes: { [config.DEFAULT_NAMESPACE_PREFIX]: config.DEFAULT_NAMESPACE } });
   quads.forEach(quad => writer.addQuad(quad))
   writer.end((error, result) => {
     if (error) { console.error(error); return; }

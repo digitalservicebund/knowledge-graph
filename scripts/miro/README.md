@@ -4,8 +4,8 @@
   "ACCESS_TOKEN": "",
   "BOARD_ID": "",
   "EXPORT_DIR": "",
-  "BASE_URI": "",
-  "BASE_URI_PREFIX": "",
+  "DEFAULT_NAMESPACE": "",
+  "DEFAULT_NAMESPACE_PREFIX": "",
   "SPARQL_ENDPOINT_UPDATE": ""
 }
 ```
