@@ -19,12 +19,18 @@ public class DatasetController {
   private final Model model;
   private final FusekiServer fusekiServer;
 
-  public DatasetController(@Value("${TDB_DIR}") Path tbd) {
+  public DatasetController(
+      @Value("${TDB_DIR}") Path tbd,
+      @Value("${DEFAULT_NAMESPACE}") String defaultNs,
+      @Value("${DEFAULT_NAMESPACE_PREFIX}") String defaultNsPrefix
+  ) {
     dataset = TDBFactory.createDataset(tbd.toString());
     logger.info("Dataset loaded from: {}", tbd);
 
     model = dataset.getDefaultModel();
+    model.setNsPrefix(defaultNsPrefix, defaultNs);
     model.listStatements().forEachRemaining(logger::info);
+    // RDFDataMgr.write(System.out, model, Lang.TURTLE);
 
     fusekiServer = FusekiServer.create()
         .add("/", dataset)
