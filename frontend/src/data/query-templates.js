@@ -15,7 +15,7 @@ export const queryTemplates = [
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
         + "SELECT * WHERE { "
         + "  ?project ds:hasProjectPartner ?ministry . "
-        + "  ?ministry ds:hasLogo ?logo . "
+        // + "  ?ministry ds:hasLogo ?logo . "
         + "}"
   },
 ]
