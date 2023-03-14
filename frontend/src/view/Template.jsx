@@ -9,6 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import { queryTemplates } from "../data/query-templates";
 import config from "../config.json";
+import Button from "@mui/material/Button";
 
 const sparql = new SparqlEndpointFetcher()
 
@@ -54,7 +55,11 @@ function Template() {
             <>
               <h2>{template.title}</h2>
               <p>{template.description}</p>
-              <button style={{margin: "20px"}} onClick={runQuery}>Run query</button>
+              { variables.length === 0 &&
+                  <Button style={{margin: "20px"}} variant="contained" onClick={runQuery}>
+                    Run query
+                  </Button>
+              }
               <TableContainer>
                 <Table sx={{ width: 600 }}>
                   <TableHead>
