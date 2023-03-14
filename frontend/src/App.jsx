@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Main from "./view/Main";
+import Add from "./view/Add";
 import Template from "./view/Template";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Main />}/>
+            <Route path="/add" element={<Add />}/>
             <Route path="/template/:id" element={<Template />}  />
           </Routes>
         </BrowserRouter>
