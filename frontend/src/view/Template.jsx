@@ -41,12 +41,12 @@ function Template() {
   }
 
   return (
-      <div>
+      <div style={{textAlign: "center"}}>
         { template &&
             <>
               <h2>{template.title}</h2>
               <p>{template.description}</p>
-              <button onClick={runQuery}>Run query</button>
+              <button style={{margin: "20px"}} onClick={runQuery}>Run query</button>
               <TableContainer>
                 <Table sx={{ width: 600 }}>
                   <TableHead>

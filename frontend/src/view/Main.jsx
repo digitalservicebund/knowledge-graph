@@ -5,12 +5,16 @@ function Main() {
 
   return (
     <div>
-      <strong>Templates:</strong>
-      { queryTemplates.map(t =>
-          <div key={t.id}>
-            <Link to={"/template/" + t.id}>{t.title}</Link>
-          </div>
-      )}
+      <br/>
+      <strong style={{margin: "20px"}}>Templates</strong>
+      <br/><br/>
+      <ul>
+        { queryTemplates.map(t =>
+            <li key={t.id}>
+              <Link to={"/template/" + t.id}>{t.title}</Link>
+            </li>
+        )}
+      </ul>
     </div>
   );
 }
