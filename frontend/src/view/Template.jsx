@@ -36,8 +36,19 @@ function Template() {
     bindingsStream.on("data", resultRow => {
       console.log(resultRow)
       let row = variables.map(v => resultRow[v].value.split("#").pop())
-      setRows(rows => [...rows, row])
+      setRows(rows => [...rows, resultRow])
     })
+  }
+
+  function buildCellContent(row, variable) {
+    if (variable.toLowerCase().includes("imageURL".toLowerCase())) {
+      return <img src={row.value} title={row.value} width="120" alt="logo"/>
+    }
+    if (row.termType === "NamedNode") {
+      return <span title={row.value}>{row.value.split("#").pop()}</span>
+    }
+    // literal
+    return <span style={{color:"green"}}>{row.value}</span>
   }
 
   return (
@@ -57,7 +68,9 @@ function Template() {
                   <TableBody>
                     {rows.map((row, idx) => (
                         <TableRow key={idx} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                          { row.map((r, idx) => <TableCell align="right" key={idx}>{r}</TableCell>) }
+                          { headers.map((h, idx) =>
+                              <TableCell align="right" key={idx}>{buildCellContent(row[h], h)}</TableCell>
+                          )}
                         </TableRow>
                     ))}
                   </TableBody>
