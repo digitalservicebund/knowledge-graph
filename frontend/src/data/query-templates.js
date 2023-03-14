@@ -1,5 +1,13 @@
 export const queryTemplates = [
   {
+    id: "get-all",
+    title: "Get all",
+    description: "Get all triples.",
+    query: "SELECT * WHERE { "
+        + "  ?s ?p ?o . "
+        + "}"
+  },
+  {
     id: "list-employees",
     title: "List employees",
     description: "List all employees.",
