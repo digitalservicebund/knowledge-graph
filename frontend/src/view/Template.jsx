@@ -16,7 +16,7 @@ function Template() {
   let { id } = useParams();
   const init = useRef(false);
   const [template, setTemplate] = useState({});
-  const [headers, setHeaders] = useState([]);
+  const [variables, setVariables] = useState([]);
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
@@ -27,15 +27,12 @@ function Template() {
   }, [])
 
   async function runQuery() {
-    let variables;
     const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, template.query)
-    bindingsStream.on("variables", vars => {
-      variables = vars.map(v => v.value)
-      setHeaders(variables)
-    })
+    bindingsStream.on("variables", vars =>
+      setVariables(vars.map(v => v.value))
+    )
     bindingsStream.on("data", resultRow => {
       console.log(resultRow)
-      let row = variables.map(v => resultRow[v].value.split("#").pop())
       setRows(rows => [...rows, resultRow])
     })
   }
@@ -62,13 +59,13 @@ function Template() {
                 <Table sx={{ width: 600 }}>
                   <TableHead>
                     <TableRow>
-                      { headers.map(h => <TableCell align="right" key={h}>{h}</TableCell>) }
+                      { variables.map(h => <TableCell align="right" key={h}>{h}</TableCell>) }
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {rows.map((row, idx) => (
                         <TableRow key={idx} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                          { headers.map((h, idx) =>
+                          { variables.map((h, idx) =>
                               <TableCell align="right" key={idx}>{buildCellContent(row[h], h)}</TableCell>
                           )}
                         </TableRow>
