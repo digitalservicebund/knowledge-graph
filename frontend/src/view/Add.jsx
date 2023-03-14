@@ -1,6 +1,12 @@
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
+import config from "../config.json";
+
+const sparql = new SparqlEndpointFetcher()
+const DEFAULT_NAMESPACE = "https://digitalservice.bund.de/kg#"
+const DEFAULT_NAMESPACE_PREFIX = "ds"
 
 function Add() {
   const [sub, setSub] = useState("");
@@ -10,8 +16,15 @@ function Add() {
   const handlePredChange = e => { setPred(e.target.value) };
   const handleObjChange = e => { setObj(e.target.value) };
 
-  function addTriple() {
-    console.log(sub, pred, obj)
+  function uri(localName) {
+    return DEFAULT_NAMESPACE_PREFIX + ":" + localName;
+  }
+
+  async function addTriple() {
+    let object = obj.startsWith("\"") && obj.endsWith("\"") ? obj : uri(obj);
+    const query = "PREFIX " + DEFAULT_NAMESPACE_PREFIX + ": <" + DEFAULT_NAMESPACE + "> "
+        + "INSERT DATA { " + uri(sub) + " " + uri(pred) + " " + object + " }";
+    await sparql.fetchUpdate(config.SPARQL_ENDPOINT, query);
   }
 
   return (

@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { SparqlEndpointFetcher } from "fetch-sparql-endpoint"
+import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import { queryTemplates } from "../data/query-templates";
 import config from "../config.json";
 
