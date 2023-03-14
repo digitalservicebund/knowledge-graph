@@ -5,12 +5,14 @@ import Template from "./view/Template";
 
 function App() {
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Main />}/>
-          <Route path="/template/:id" element={<Template />}  />
-        </Routes>
-      </BrowserRouter>
+      <div style={{display: "flex",  justifyContent: "center", alignItems: "center"}}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Main />}/>
+            <Route path="/template/:id" element={<Template />}  />
+          </Routes>
+        </BrowserRouter>
+      </div>
   );
 }
 
