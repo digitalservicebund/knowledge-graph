@@ -13,11 +13,14 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import GroupsIcon from "@mui/icons-material/Groups";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Overview", "Query", "Templates", "Data"];
 const settings = ["Settings", "Logout"];
 
 function TopBar() {
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -41,17 +44,26 @@ function TopBar() {
     console.log(page);
   }
 
+  const handleLogoClick = () => {
+    navigate("/");
+  }
+
   return (
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <GroupsIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <GroupsIcon
+                sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+                onClick={handleLogoClick}
+                style={{ cursor: "pointer" }}
+            />
             <Typography
                 variant="h6"
                 noWrap
                 component="a"
-                href="/"
+                onClick={handleLogoClick}
                 sx={{
+                  cursor: "pointer",
                   mr: 2,
                   display: { xs: "none", md: "flex" },
                   fontFamily: "monospace",
@@ -99,13 +111,18 @@ function TopBar() {
                 ))}
               </Menu>
             </Box>
-            <GroupsIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <GroupsIcon
+                sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+                onClick={handleLogoClick}
+                style={{ cursor: "pointer" }}
+            />
             <Typography
                 variant="h5"
                 noWrap
                 component="a"
-                href=""
+                onClick={handleLogoClick}
                 sx={{
+                  cursor: "pointer",
                   mr: 2,
                   display: { xs: "flex", md: "none" },
                   flexGrow: 1,

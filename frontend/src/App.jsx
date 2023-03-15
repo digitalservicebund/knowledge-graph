@@ -7,18 +7,16 @@ import TopBar from "./component/TopBar";
 
 function App() {
   return (
-      <>
+      <BrowserRouter>
         <TopBar />
         <div style={{display: "flex",  justifyContent: "center", alignItems: "center"}}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Main />}/>
-              <Route path="/add" element={<Add />}/>
-              <Route path="/template/:id" element={<Template />}  />
-            </Routes>
-          </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Main />}/>
+            <Route path="/add" element={<Add />}/>
+            <Route path="/template/:id" element={<Template />}  />
+          </Routes>
         </div>
-      </>
+      </BrowserRouter>
   );
 }
 
