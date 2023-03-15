@@ -8,7 +8,7 @@ const sparql = new SparqlEndpointFetcher()
 const DEFAULT_NAMESPACE = "https://digitalservice.bund.de/kg#"
 const DEFAULT_NAMESPACE_PREFIX = "ds"
 
-function Add() {
+function Data() {
   const [sub, setSub] = useState("");
   const [pred, setPred] = useState("");
   const [obj, setObj] = useState("");
@@ -29,7 +29,9 @@ function Add() {
 
   return (
       <div>
-        <br/><br/><br/>
+        <br/><br/>
+        <h2>Add triples manually</h2>
+        <br/>
         <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <TextField label="Predicate" variant="outlined" value={pred} onChange={handlePredChange} />
@@ -42,4 +44,4 @@ function Add() {
   );
 }
 
-export default Add;
+export default Data;

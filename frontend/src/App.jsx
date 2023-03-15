@@ -1,9 +1,12 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Main from "./view/Main";
-import Add from "./view/Add";
-import Template from "./view/Template";
 import TopBar from "./component/TopBar";
+import Main from "./view/Main";
+import Templates from "./view/Templates";
+import Template from "./view/Template";
+import Query from "./view/Query";
+import Data from "./view/Data";
+import Visualize from "./view/Visualize";
 
 function App() {
   return (
@@ -12,8 +15,11 @@ function App() {
         <div style={{display: "flex",  justifyContent: "center", alignItems: "center"}}>
           <Routes>
             <Route path="/" element={<Main />}/>
-            <Route path="/add" element={<Add />}/>
+            <Route path="/templates" element={<Templates />}/>
             <Route path="/template/:id" element={<Template />}  />
+            <Route path="/query" element={<Query />}/>
+            <Route path="/data" element={<Data />}/>
+            <Route path="/visualize" element={<Visualize />}/>
           </Routes>
         </div>
       </BrowserRouter>

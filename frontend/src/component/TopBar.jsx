@@ -16,10 +16,10 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
 
 const pages = [
-    { label: "Overview", path: "/visualise" },
-    { label: "Query", path: "/query" },
     { label: "Templates", path: "/templates" },
-    { label: "Data", path: "/data" }
+    { label: "Query", path: "/query" },
+    { label: "Data", path: "/data" },
+    { label: "Visualize", path: "/visualize" }
 ];
 const settings = ["Settings", "Logout"];
 
