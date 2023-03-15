@@ -38,15 +38,16 @@ function Template() {
     })
   }
 
-  function buildCellContent(row, variable) {
+  function buildCellContent(col, variable) {
+    if (!col) return
     if (variable.toLowerCase().includes("imageURL".toLowerCase())) {
-      return <img src={row.value} title={row.value} width="120" alt="logo"/>
+      return <img src={col.value} title={col.value} width="120" alt="logo"/>
     }
-    if (row.termType === "NamedNode") {
-      return <span title={row.value}>{row.value.split("#").pop()}</span>
+    if (col.termType === "NamedNode") {
+      return <span title={col.value}>{col.value.split("#").pop()}</span>
     }
     // literal
-    return <span style={{color:"green"}}>{row.value}</span>
+    return <span style={{color:"green"}}>{col.value}</span>
   }
 
   return (
@@ -60,6 +61,7 @@ function Template() {
                     Run query
                   </Button>
               }
+              <br/>
               <TableContainer>
                 <Table sx={{ width: 600 }}>
                   <TableHead>
@@ -68,10 +70,10 @@ function Template() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row, idx) => (
+                    {rows.map((col, idx) => (
                         <TableRow key={idx} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                           { variables.map((h, idx) =>
-                              <TableCell align="right" key={idx}>{buildCellContent(row[h], h)}</TableCell>
+                              <TableCell align="right" key={idx}>{buildCellContent(col[h], h)}</TableCell>
                           )}
                         </TableRow>
                     ))}
