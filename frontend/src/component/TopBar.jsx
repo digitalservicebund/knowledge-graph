@@ -15,7 +15,12 @@ import MenuItem from "@mui/material/MenuItem";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["Overview", "Query", "Templates", "Data"];
+const pages = [
+    { label: "Overview", path: "/visualise" },
+    { label: "Query", path: "/query" },
+    { label: "Templates", path: "/templates" },
+    { label: "Data", path: "/data" }
+];
 const settings = ["Settings", "Logout"];
 
 function TopBar() {
@@ -41,7 +46,7 @@ function TopBar() {
 
   const handlePageClick = (page) => {
     handleCloseNavMenu();
-    console.log(page);
+    navigate(page.path);
   }
 
   const handleLogoClick = () => {
@@ -105,8 +110,8 @@ function TopBar() {
                   }}
               >
                 {pages.map((page) => (
-                    <MenuItem key={page} onClick={() => handlePageClick(page)}>
-                      <Typography textAlign="center">{page}</Typography>
+                    <MenuItem key={page.label} onClick={() => handlePageClick(page)}>
+                      <Typography textAlign="center">{page.label}</Typography>
                     </MenuItem>
                 ))}
               </Menu>
@@ -137,11 +142,11 @@ function TopBar() {
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                   <Button
-                      key={page}
+                      key={page.label}
                       onClick={() => handlePageClick(page)}
                       sx={{ my: 2, color: "white", display: "block" }}
                   >
-                    {page}
+                    {page.label}
                   </Button>
               ))}
             </Box>
