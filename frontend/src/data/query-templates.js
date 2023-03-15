@@ -13,7 +13,13 @@ export const queryTemplates = [
     description: "List all employees.",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
         + "SELECT * WHERE { "
-        + "  ds:DigitalService ds:hasEmployee ?employee . "
+        + "    ds:DigitalService ds:hasEmployee ?employee . "
+        + "    OPTIONAL { <<ds:DigitalService ds:hasEmployee ?employee>> ds:firstDay ?firstDayAtDS . } "
+        + "    OPTIONAL { ?employee ds:joinedProject ?project . } "
+        + "    OPTIONAL { <<?employee ds:joinedProject ?project>> ds:onDate ?firstDayOnProject . } "
+        + "    OPTIONAL { ?employee ds:belongsToDiscipline ?discipline . } "
+        + "    OPTIONAL { ?employee ds:hasExperienceLevel ?experienceLevel . } "
+        + "    OPTIONAL { ?employee ds:isMemberOf ?nonProjectParticipations . } "
         + "}"
   },
   {
