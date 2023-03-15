@@ -10,6 +10,7 @@ import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import { queryTemplates } from "../data/query-templates";
 import config from "../config.json";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 const sparql = new SparqlEndpointFetcher()
 
@@ -56,6 +57,9 @@ function Template() {
             <>
               <h2>{template.title}</h2>
               <p>{template.description}</p>
+              { template.choices && template.choices.map(c => {
+                return <TextField key={c.label} label={c.label} variant="standard"/>
+              })}
               { variables.length === 0 &&
                   <Button style={{margin: "20px"}} variant="contained" onClick={runQuery}>
                     Run query

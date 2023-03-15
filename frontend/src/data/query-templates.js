@@ -23,6 +23,26 @@ export const queryTemplates = [
         + "}"
   },
   {
+    id: "project-timeline",
+    title: "Project timeline",
+    description: "Shows the timeline of a project in terms of who joined/left.",
+    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
+        + "SELECT * WHERE { "
+        + "    ?employee ds:joinedProject ds:AkteX . "
+        + "    <<?employee ds:joinedProject ds:AkteX>> ds:onDate ?firstDay . "
+        + "    OPTIONAL { "
+        + "        ?employee ds:leftProject ds:AkteX . "
+        + "        <<?employee ds:leftProject ds:AkteX>> ds:onDate ?lastDay . "
+        + "    }"
+        + "}",
+    choices: [
+      {
+        label: "project",
+        placeholder: "[project]"
+      }
+    ]
+  },
+  {
     id: "ministries",
     title: "Ministries",
     description: "Ministries we worked with.",
