@@ -13,6 +13,7 @@
     "fetch-sparql-endpoint": "^3.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-force-graph-2d": "^1.24.0",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1"
   },
