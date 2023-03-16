@@ -11,6 +11,7 @@ import { queryTemplates } from "../data/query-templates";
 import config from "../config.json";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const sparql = new SparqlEndpointFetcher()
 
@@ -41,13 +42,20 @@ function Template() {
 
   function buildCellContent(col, variable) {
     if (!col) return
-    if (variable.toLowerCase().includes("imageURL".toLowerCase())) {
-      return <img src={col.value} title={col.value} width="120" alt="logo"/>
-    }
+    variable = variable.toLowerCase()
     if (col.termType === "NamedNode") {
       return <span title={col.value}>{col.value.split("#").pop()}</span>
     }
     // literal
+    if (variable.includes("imageurl")) {
+      return <img src={col.value} title={col.value} width="120" alt="logo"/>
+    }
+    if (variable.includes("url")) {
+      return <>
+        <a href={col.value} title={col.value} target="_blank" rel="noreferrer">link</a>
+        <OpenInNewIcon style={{fontSize: "large", verticalAlign: "middle", marginLeft: "2px"}}/>
+      </>
+    }
     return <span style={{color:"green"}}>{col.value}</span>
   }
 

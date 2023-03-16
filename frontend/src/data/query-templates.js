@@ -52,4 +52,16 @@ export const queryTemplates = [
         + "  OPTIONAL { ?ministry ds:hasLogoImageURL ?logoImageURL . } "
         + "}"
   },
+  {
+    id: "list-projects",
+    title: "List projects",
+    description: "List all our projects.",
+    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
+        + "SELECT * WHERE { "
+        + "  ds:Projects ds:hasProject ?project . "
+        + "  OPTIONAL { ?project ds:hasProjectPartner ?projectPartner . } "
+        + "  OPTIONAL { ?project ds:hasURL ?url . } "
+        + "  OPTIONAL { <<ds:Projects ds:hasProject ?project>> ds:status ?status . } "
+        + "}"
+  }
 ]
