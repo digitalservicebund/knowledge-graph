@@ -15,18 +15,24 @@ function Visualize() {
     }
   }, [])
 
+  function getLocalName(uri) {
+    return uri.split("#").pop()
+  }
+
   async function fetchTriples() {
     const query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o . } LIMIT 3" // TODO support Quad
     const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, query)
     const nodes = {}
     const edges = []
     bindingsStream.on("data", resultRow => {
-      const s = resultRow.s.value
-      const p = resultRow.p.value
-      const o = resultRow.o.value
-      if (!nodes[s]) nodes[s] = { id: s, label: s.split("#").pop() }
-      if (!nodes[o]) nodes[o] = { id: o, label: o.split("#").pop() }
-      edges.push({ source: s, target: o, label: p.split("#").pop() })
+      console.log(resultRow)
+      const sub = getLocalName(resultRow.s.value)
+      const pred = getLocalName(resultRow.p.value)
+      const obj = resultRow.o.termType === "Literal" ?
+          ("\"" + resultRow.o.value + "\"") : getLocalName(resultRow.o.value)
+      if (!nodes[sub]) nodes[sub] = { id: sub, label: sub }
+      if (!nodes[obj]) nodes[obj] = { id: obj, label: obj }
+      edges.push({ source: sub, target: obj, label: pred })
     })
     bindingsStream.on("end", () => {
       setGraphData({ nodes: Object.values(nodes), links: edges })
