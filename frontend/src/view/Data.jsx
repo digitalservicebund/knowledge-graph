@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import config from "../config.json";
 
@@ -50,12 +49,10 @@ function Data() {
           Submit
         </Button>
         <br/><br/><br/>
-        <FormControl>
-          <RadioGroup row defaultValue="import" name="row-radio-buttons-group" onChange={handleRadioChange}>
-            <FormControlLabel value="import" control={<Radio />} label={<strong>Import from</strong>} />
-            <FormControlLabel value="export" control={<Radio />} label={<strong>Export to</strong>} />
-          </RadioGroup>
-        </FormControl>
+        <RadioGroup row defaultValue="import" onChange={handleRadioChange}>
+          <FormControlLabel value="import" control={<Radio />} label={<strong>Import from</strong>} />
+          <FormControlLabel value="export" control={<Radio />} label={<strong>Export to</strong>} />
+        </RadioGroup>
         <ul>
           <li style={{textDecoration: "underline"}}>RDF/Turtle</li>
           <li style={{textDecoration: "underline"}}>TGF</li>
