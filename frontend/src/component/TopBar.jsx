@@ -14,6 +14,9 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import data from "../view/Data";
 
 const pages = [
     { label: "Templates", path: "/templates" },
@@ -51,6 +54,16 @@ function TopBar() {
 
   const handleLogoClick = () => {
     navigate("/");
+  }
+
+  const datasets = [
+    { label: "Main", id: "main" },
+    { label: "Playground", id: "playground" },
+    { label: "+ Add new", id: "new" }
+  ];
+
+  const handleDatasetChange = (e, chosen) => {
+    console.log(chosen);
   }
 
   return (
@@ -151,6 +164,17 @@ function TopBar() {
               ))}
             </Box>
 
+            <Autocomplete
+                disablePortal
+                id="dataset-chooser"
+                options={datasets}
+                defaultValue={datasets[0]}
+                onChange={handleDatasetChange}
+                sx={{ width: 160, marginRight: "20px", input: { color: "white" } }}
+                renderInput={(params) =>
+                    <TextField variant="standard" {...params} label="Dataset" />
+                }
+            />
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
