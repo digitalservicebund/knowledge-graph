@@ -22,10 +22,11 @@ function Visualize() {
     const edges = []
     bindingsStream.on("data", resultRow => {
       const s = resultRow.s.value
+      const p = resultRow.p.value
       const o = resultRow.o.value
       if (!nodes[s]) nodes[s] = { id: s, label: s.split("#").pop() }
       if (!nodes[o]) nodes[o] = { id: o, label: o.split("#").pop() }
-      edges.push({ source: s, target: o })
+      edges.push({ source: s, target: o, label: p.split("#").pop() })
     })
     bindingsStream.on("end", () => {
       setGraphData({ nodes: Object.values(nodes), links: edges })
@@ -42,6 +43,7 @@ function Visualize() {
             backgroundColor={"#eee"}
             graphData={graphData}
             nodeLabel="label"
+            linkLabel="label"
             linkDirectionalArrowLength={5}
             linkDirectionalArrowRelPos={1}
         />}
