@@ -6,6 +6,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import config from "../config.json";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 
 const sparql = new SparqlEndpointFetcher()
 const DEFAULT_NAMESPACE = "https://digitalservice.bund.de/kg#"
@@ -19,7 +21,17 @@ function Data() {
   const handlePredChange = e => { setPred(e.target.value) };
   const handleObjChange = e => { setObj(e.target.value) };
 
+  const formats = ["RDF/Turtle", "JSON-LD", "TGF", "SPARQL endpoint", "Markdown", "GraphML", "CSV", "Excel", "Google Spreadsheet", "Confluence page"]
   const [io, setIO] = useState("import");
+
+  const paperStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    backgroundColor: "rgb(255, 255, 0, 0.06)",
+    cursor: "pointer"
+  }
 
   function uri(localName) {
     return DEFAULT_NAMESPACE_PREFIX + ":" + localName;
@@ -34,6 +46,10 @@ function Data() {
 
   function handleRadioChange(e) {
     setIO(e.target.value);
+  }
+
+  function handlePaperClick(format) {
+    // TODO
   }
 
   return (
@@ -53,17 +69,25 @@ function Data() {
           <FormControlLabel value="import" control={<Radio />} label={<strong>Import from</strong>} />
           <FormControlLabel value="export" control={<Radio />} label={<strong>Export to</strong>} />
         </RadioGroup>
-        <ul>
-          <li style={{textDecoration: "underline"}}>RDF/Turtle</li>
-          <li style={{textDecoration: "underline"}}>TGF</li>
-          <li style={{textDecoration: "underline"}}>SPARQL endpoint</li>
-          <li style={{textDecoration: "underline"}}>Markdown</li>
-          <li style={{textDecoration: "underline"}}>GraphML</li>
-          <li style={{textDecoration: "underline"}}>CSV</li>
-          <li style={{textDecoration: "underline"}}>Excel</li>
-          <li style={{textDecoration: "underline"}}>Google Spreadsheet</li>
-          <li style={{textDecoration: "underline"}}>Confluence page</li>
-        </ul>
+        <br/>
+        <Box
+            style={{width: "800px"}}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              "& > :not(style)": {
+                m: 1,
+                width: 120,
+                height: 60,
+              },
+            }}
+        >
+          {formats.map(f =>
+              <Paper style={paperStyle} key={f} elevation={2} onClick={() => handlePaperClick(f)}>
+                <div style={{textAlign: "center"}}>{f}</div>
+              </Paper>
+          )}
+        </Box>
       </div>
   );
 }
