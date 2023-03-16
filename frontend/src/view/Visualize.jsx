@@ -11,7 +11,7 @@ function Visualize() {
   useEffect(() => {
     if (!init.current) {
       init.current = true
-      fetchTriples().then(() => {})
+      buildGraphData().then(() => {})
     }
   }, [])
 
@@ -24,14 +24,13 @@ function Visualize() {
         ("\"" + oObj.value + "\"") : getLocalName(oObj.value)
   }
 
-  async function fetchTriples() {
+  async function buildGraphData() {
     const query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o . }"
-    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, query)
     const nodes = {}
     const edges = {}
     const rdfStarTriples = []
+    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, query)
     bindingsStream.on("data", triple => {
-      console.log(triple)
       if (triple.s.termType === "Quad") {
         rdfStarTriples.push(triple)
         return
@@ -49,14 +48,12 @@ function Visualize() {
         label: getObjectLabel(triple.o),
         value: obj
       }
-      let sourceId = nodes[sub].id
-      let targetId = nodes[obj].id
       let tripleIdentifier = sub + "_" + pred + "_" + obj
       edges[tripleIdentifier] = {
         id: Object.keys(edges).length,
         identifier: tripleIdentifier,
-        source: sourceId,
-        target: targetId,
+        source: nodes[sub].id,
+        target: nodes[obj].id,
         label: getLocalName(pred),
         value: pred
       }
@@ -69,7 +66,11 @@ function Visualize() {
         const objLabel = getObjectLabel(triple.o)
         edges[subTripleIdentifier].label += ", " + predLabel + ": " + objLabel
       }
-      setGraphData({ nodes: Object.values(nodes), links: Object.values(edges) })
+      const graphData = {
+        nodes: Object.values(nodes),
+        links: Object.values(edges)
+      }
+      setGraphData(graphData)
     })
   }
 
