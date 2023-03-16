@@ -12,6 +12,8 @@ import config from "../config.json";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Chart from "chart.js/auto";
+import { Line } from "react-chartjs-2";
 
 const sparql = new SparqlEndpointFetcher()
 
@@ -21,6 +23,13 @@ function Template() {
   const [template, setTemplate] = useState({});
   const [variables, setVariables] = useState([]);
   const [rows, setRows] = useState([]);
+  const [chartData, setChartData] = useState();
+  /*{labels: ["Jan", "Feb", "Mar"],
+    datasets: [{
+      label: "Dataset #1",
+      data: [10, 50, 40],
+      tension: 0.2
+    }]}*/
 
   useEffect(() => {
     if (!init.current) {
@@ -95,6 +104,7 @@ function Template() {
             </>
         }
         { !template && "No template with id " + id + " found" }
+        {chartData && <><br/><br/><Line data={chartData} /></>}
       </div>
   );
 }
