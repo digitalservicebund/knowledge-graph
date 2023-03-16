@@ -14,8 +14,6 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useNavigate } from "react-router-dom";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 
 const pages = [
     { label: "Templates", path: "/templates" },
@@ -29,12 +27,23 @@ function TopBar() {
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElDataset, setAnchorElDataset] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
+  const handleOpenDatasetMenu = (event) => setAnchorElDataset(event.currentTarget);
+  const handleCloseDatasetMenu = () => setAnchorElDataset(null);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElUser(null);
+
+  const datasets = [
+    { label: "Main", id: "main" },
+    { label: "Playground", id: "playground" },
+    { label: "+ Add new", id: "new" }
+  ];
+
+  const [currentDataset, setCurrentDataset] = useState(datasets[0])
 
   const handlePageClick = (page) => {
     handleCloseNavMenu();
@@ -45,14 +54,9 @@ function TopBar() {
     navigate("/");
   }
 
-  const datasets = [
-    { label: "Main", id: "main" },
-    { label: "Playground", id: "playground" },
-    { label: "+ Add new", id: "new" }
-  ];
-
-  const handleDatasetChange = (e, chosen) => {
-    console.log(chosen);
+  const handleDatasetClick = (ds) => {
+    handleCloseDatasetMenu()
+    setCurrentDataset(ds)
   }
 
   return (
@@ -153,17 +157,39 @@ function TopBar() {
               ))}
             </Box>
 
-            <Autocomplete
-                disablePortal
-                id="dataset-chooser"
-                options={datasets}
-                defaultValue={datasets[0]}
-                onChange={handleDatasetChange}
-                sx={{ width: 160, marginRight: "20px", input: { color: "white" } }}
-                renderInput={(params) =>
-                    <TextField variant="standard" {...params} label="Dataset" />
-                }
-            />
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                  <Button
+                      onClick={handleOpenDatasetMenu}
+                      sx={{ my: 2, color: "white", display: "block", marginRight: "10px" }}
+                  >
+                    Dataset: {currentDataset.label}
+                  </Button>
+              </Tooltip>
+              <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElDataset}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElDataset)}
+                  onClose={handleCloseDatasetMenu}
+              >
+                {datasets.map((ds) => (
+                    <MenuItem key={ds.label} onClick={() => handleDatasetClick(ds)}>
+                      <Typography textAlign="center">{ds.label}</Typography>
+                    </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
