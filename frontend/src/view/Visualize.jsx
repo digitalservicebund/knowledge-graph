@@ -1,12 +1,18 @@
 import ForceGraph2D from "react-force-graph-2d";
+import ForceGraph3D from "react-force-graph-3d";
 import { useEffect, useRef, useState } from "react";
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import config from "../config.json";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
 const sparql = new SparqlEndpointFetcher()
 
 function Visualize() {
   const init = useRef(false);
   const [graphData, setGraphData] = useState();
+
+  const [visuMode, setVisuMode] = useState("2D");
 
   useEffect(() => {
     if (!init.current) {
@@ -74,14 +80,30 @@ function Visualize() {
     })
   }
 
+  function handleRadioChange(e) {
+    setVisuMode(e.target.value);
+  }
+
   return (
       <div>
         <br/>
-        <h2>Visualize</h2>
-        {graphData && <ForceGraph2D
+        <RadioGroup row defaultValue="2D" onChange={handleRadioChange}>
+          <FormControlLabel value="2D" control={<Radio />} label="2D" />
+          <FormControlLabel value="3D" control={<Radio />} label="3D" />
+        </RadioGroup>
+        {graphData && visuMode === "2D" && <ForceGraph2D
             width={1000}
             height={600}
             backgroundColor={"#eee"}
+            graphData={graphData}
+            nodeLabel="label"
+            linkLabel="label"
+            linkDirectionalArrowLength={5}
+            linkDirectionalArrowRelPos={1}
+        />}
+        {graphData && visuMode === "3D" && <ForceGraph3D
+            width={1000}
+            height={600}
             graphData={graphData}
             nodeLabel="label"
             linkLabel="label"
