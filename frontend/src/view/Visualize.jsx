@@ -19,23 +19,57 @@ function Visualize() {
     return uri.split("#").pop()
   }
 
+  function getObjectLabel(oObj) {
+    return oObj.termType === "Literal" ?
+        ("\"" + oObj.value + "\"") : getLocalName(oObj.value)
+  }
+
   async function fetchTriples() {
-    const query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o . } LIMIT 3" // TODO support Quad
+    const query = "SELECT ?s ?p ?o WHERE { ?s ?p ?o . }"
     const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, query)
     const nodes = {}
-    const edges = []
-    bindingsStream.on("data", resultRow => {
-      console.log(resultRow)
-      const sub = getLocalName(resultRow.s.value)
-      const pred = getLocalName(resultRow.p.value)
-      const obj = resultRow.o.termType === "Literal" ?
-          ("\"" + resultRow.o.value + "\"") : getLocalName(resultRow.o.value)
-      if (!nodes[sub]) nodes[sub] = { id: sub, label: sub }
-      if (!nodes[obj]) nodes[obj] = { id: obj, label: obj }
-      edges.push({ source: sub, target: obj, label: pred })
+    const edges = {}
+    const rdfStarTriples = []
+    bindingsStream.on("data", triple => {
+      console.log(triple)
+      if (triple.s.termType === "Quad") {
+        rdfStarTriples.push(triple)
+        return
+      }
+      const sub = triple.s.value
+      const pred = triple.p.value
+      const obj = triple.o.value
+      if (!nodes[sub]) nodes[sub] = {
+        id: Object.keys(nodes).length,
+        label: getLocalName(sub),
+        value: sub
+      }
+      if (!nodes[obj]) nodes[obj] = {
+        id: Object.keys(nodes).length,
+        label: getObjectLabel(triple.o),
+        value: obj
+      }
+      let sourceId = nodes[sub].id
+      let targetId = nodes[obj].id
+      let tripleIdentifier = sub + "_" + pred + "_" + obj
+      edges[tripleIdentifier] = {
+        id: Object.keys(edges).length,
+        identifier: tripleIdentifier,
+        source: sourceId,
+        target: targetId,
+        label: getLocalName(pred),
+        value: pred
+      }
     })
     bindingsStream.on("end", () => {
-      setGraphData({ nodes: Object.values(nodes), links: edges })
+      for (let triple of rdfStarTriples) {
+        const subTripleIdentifier =
+            triple.s.subject.value + "_" + triple.s.predicate.value + "_" + triple.s.object.value
+        const predLabel = getLocalName(triple.p.value)
+        const objLabel = getObjectLabel(triple.o)
+        edges[subTripleIdentifier].label += ", " + predLabel + ": " + objLabel
+      }
+      setGraphData({ nodes: Object.values(nodes), links: Object.values(edges) })
     })
   }
 
