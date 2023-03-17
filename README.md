@@ -5,6 +5,8 @@ A Knowledge Graph prototype by the Workstream Learning Organization
 
 ### Backend
 
+See which environment variables have to be set in `application.properties`.
+
 ### Frontend
 
 Fill the values in `frontend/src/config.json`:

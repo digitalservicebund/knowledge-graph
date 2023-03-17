@@ -39,6 +39,10 @@ public class DatasetController {
     fusekiServer.start();
   }
 
+  public Model getModel() {
+    return model;
+  }
+
   @PreDestroy
   private void close() {
     fusekiServer.stop();
