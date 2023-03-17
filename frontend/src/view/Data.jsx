@@ -49,7 +49,17 @@ function Data() {
   }
 
   function handlePaperClick(format) {
-    // TODO
+    if (!(io === "import" && format === "Markdown")) {
+      alert("Not implemented yet.");
+      return
+    }
+    fetch("http://localhost:8080/api/v1/knowthyselves/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ format: "markdown" })
+    })
+    .then(response => response.text())
+    .then(data => console.log(data));
   }
 
   return (
