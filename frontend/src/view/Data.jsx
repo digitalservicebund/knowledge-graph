@@ -65,15 +65,21 @@ function Data() {
     alert("Not implemented yet.");
   }
 
+  function handleKeyUp(ev) {
+    if (ev.key === "Enter") {
+      addTriple();
+    }
+  }
+
   return (
       <div>
         <br/><br/>
         <p><strong>Add triples manually</strong></p>
-        <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} />
+        <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} onKeyUp={handleKeyUp} />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <TextField label="Predicate" variant="outlined" value={pred} onChange={handlePredChange} />
+        <TextField label="Predicate" variant="outlined" value={pred} onChange={handlePredChange} onKeyUp={handleKeyUp} />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <TextField label="Object" variant="outlined" value={obj} onChange={handleObjChange} />
+        <TextField label="Object" variant="outlined" value={obj} onChange={handleObjChange} onKeyUp={handleKeyUp} />
         <Button style={{margin: "10px 0 0 25px"}} variant="contained" onClick={addTriple}>
           Submit
         </Button>
