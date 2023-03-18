@@ -30,7 +30,6 @@ public class DatasetController {
     model = dataset.getDefaultModel();
     model.setNsPrefix(defaultNsPrefix, defaultNs);
     model.listStatements().forEachRemaining(logger::info);
-    // RDFDataMgr.write(System.out, model, Lang.TURTLE);
 
     fusekiServer = FusekiServer.create()
         .add("/", dataset)

@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +30,7 @@ public class RdfExporter {
     exportDir.toFile().mkdirs();
     File exportFile = exportDir.resolve("main-" + getTimestamp() + ".ttls").toFile();
     FileOutputStream fos = new FileOutputStream(exportFile);
-    model.write(fos, "TURTLE");
+    RDFDataMgr.write(fos, model, Lang.TURTLE);
   }
 
   public String getTimestamp() {
