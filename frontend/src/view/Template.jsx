@@ -32,10 +32,9 @@ function Template() {
     }]}*/
 
   useEffect(() => {
-    if (!init.current) {
-      init.current = true;
-      setTemplate(queryTemplates.find(t => t.id === id));
-    }
+    if (init.current) return
+    init.current = true;
+    setTemplate(queryTemplates.find(t => t.id === id));
   }, [])
 
   async function runQuery() {
