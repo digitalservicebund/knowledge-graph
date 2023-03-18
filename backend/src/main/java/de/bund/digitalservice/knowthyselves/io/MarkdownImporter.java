@@ -24,7 +24,7 @@ public class MarkdownImporter {
 
   public MarkdownImporter(DatasetController datasetController,
       @Value("${importer.markdown.directory}") Path importDir,
-      @Value("${DEFAULT_NAMESPACE}") String defaultNs) {
+      @Value("${namespace.default.uri}") String defaultNs) {
     this.datasetController = datasetController;
     this.importDir = importDir;
     this.defaultNs = defaultNs;

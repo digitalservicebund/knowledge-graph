@@ -20,9 +20,9 @@ public class DatasetController {
   private final FusekiServer fusekiServer;
 
   public DatasetController(
-      @Value("${TDB_DIR}") Path tbd,
-      @Value("${DEFAULT_NAMESPACE}") String defaultNs,
-      @Value("${DEFAULT_NAMESPACE_PREFIX}") String defaultNsPrefix
+      @Value("${tdb.dir}") Path tbd,
+      @Value("${namespace.default.uri}") String defaultNs,
+      @Value("${namespace.default.prefix}") String defaultNsPrefix
   ) {
     dataset = TDBFactory.createDataset(tbd.toString());
     logger.info("Dataset loaded from: {}", tbd);
