@@ -1,6 +1,11 @@
 package de.bund.digitalservice.knowthyselves;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +14,8 @@ import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.fuseki.main.FusekiServer.Builder;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,12 +41,23 @@ public class DatasetService {
 
     for (String dsName : initialDatasetNames) {
       Path path = tbd.resolve(dsName);
+      boolean addDemoData = dsName.equals("demo") && !Files.exists(path);
       Dataset ds = TDBFactory.createDataset(path.toString());
       datasets.put(dsName, ds);
       logger.info("Dataset {} loaded from: {}", dsName, path);
 
       Model model = ds.getDefaultModel();
       model.setNsPrefix(defaultNsPrefix, defaultNs);
+      if (addDemoData) {
+        try {
+          File demoDataFile = Paths.get("backend").resolve("data").resolve("demo-data.ttls").toFile();
+          RDFDataMgr.read(model, new FileInputStream(demoDataFile), Lang.TURTLE);
+          logger.info("Added demo-data to dataset {}", dsName);
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+          logger.error("Failed to add demo data to dataset {}", dsName);
+        }
+      }
       models.put(dsName, model);
       logger.info("Triples in the default model of dataset {}:", dsName);
       model.listStatements().forEachRemaining(logger::info);

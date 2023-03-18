@@ -1,0 +1,8 @@
+@prefix ds: <https://digitalservice.bund.de/kg#> .
+
+ds:DigitalService  ds:hasEmployee  ds:Alice .
+
+ds:Alice  ds:hasSkill  "Spring Boot" .
+
+<< ds:DigitalService ds:hasEmployee ds:Alice >>
+        ds:firstDay  "2022-03-01" .
