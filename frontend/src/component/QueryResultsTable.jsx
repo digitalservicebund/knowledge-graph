@@ -46,6 +46,14 @@ function QueryResultsTable(props) {
     if (col.termType === "NamedNode") {
       return <span title={col.value}>{col.value.split("#").pop()}</span>
     }
+    // RDF-star
+    if (col.termType === "Quad") {
+      let rdfStarTripleFull = "<<" + col.subject.value + " " + col.predicate.value + " " + col.object.value + ">>"
+      let rdfStarTripleShort = "<<" + col.subject.value.split("#").pop() + " "
+          + col.predicate.value.split("#").pop() + " "
+          + (col.object.termType === "NamedNode" ? col.object.value.split("#").pop() : col.object.value) + ">>"
+      return <span title={rdfStarTripleFull}>{rdfStarTripleShort}</span>
+    }
     // literal
     if (variable.includes("imageurl")) {
       return <img src={col.value} title={col.value} width="120" alt="logo"/>
