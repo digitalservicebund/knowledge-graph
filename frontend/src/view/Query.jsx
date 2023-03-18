@@ -1,23 +1,25 @@
 import "../css/Query.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Yasgui from "@triply/yasgui";
 import "@triply/yasgui/build/yasgui.min.css";
+import QueryResultsTable from "../component/QueryResultsTable";
 
 function Query() {
   const init = useRef(false);
   const yasgui = useRef();
+  const [query, setQuery] = useState();
 
   useEffect(() => {
     if (init.current) return
     init.current = true;
     yasgui.current = new Yasgui(document.getElementById("yasgui"));
+    yasgui.current.getTab().setQuery("SELECT * WHERE { \n  ?subject ?predicate ?object .\n}");
     return () => {};
   }, []);
 
   async function runQuery() {
-    console.log(yasgui.current.getTab().getQuery())
-    // TODO
+   setQuery(yasgui.current.getTab().getQuery())
   }
 
   return (
@@ -37,6 +39,8 @@ function Query() {
         <Button variant="outlined">
           Save as template
         </Button>
+        <br/><br/>
+        {query && <QueryResultsTable query={query}/>}
       </div>
   );
 }
