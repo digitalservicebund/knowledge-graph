@@ -1,9 +1,9 @@
 import { useState } from "react";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import config from "../config.json";
 import Paper from "@mui/material/Paper";

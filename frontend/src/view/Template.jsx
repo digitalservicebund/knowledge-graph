@@ -1,17 +1,17 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import { queryTemplates } from "../data/query-templates";
 import config from "../config.json";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
