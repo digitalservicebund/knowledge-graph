@@ -1,0 +1,3 @@
+.yasgui .controlbar, .tabsList, .yasqe_buttons, .yasr {
+  display: none !important;
+}
