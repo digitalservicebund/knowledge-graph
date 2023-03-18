@@ -41,7 +41,7 @@ function Data() {
     let object = obj.startsWith("\"") && obj.endsWith("\"") ? obj : uri(obj);
     const query = "PREFIX " + DEFAULT_NAMESPACE_PREFIX + ": <" + DEFAULT_NAMESPACE + "> "
         + "INSERT DATA { " + uri(sub) + " " + uri(pred) + " " + object + " }";
-    await sparql.fetchUpdate(config.SPARQL_ENDPOINT, query);
+    await sparql.fetchUpdate(config.SPARQL_ENDPOINT + "/demo", query);
   }
 
   function handleRadioChange(e) {

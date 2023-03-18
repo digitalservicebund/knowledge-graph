@@ -26,7 +26,7 @@ public class RdfExporter {
   }
 
   public void doExport() throws FileNotFoundException {
-    Model model = datasetService.getModel();
+    Model model = datasetService.getModel("demo");
     exportDir.toFile().mkdirs();
     File exportFile = exportDir.resolve("main-" + getTimestamp() + ".ttls").toFile();
     FileOutputStream fos = new FileOutputStream(exportFile);

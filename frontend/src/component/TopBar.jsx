@@ -38,6 +38,7 @@ function TopBar() {
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
   const datasets = [
+    { label: "Demo", id: "demo" },
     { label: "Main", id: "main" },
     { label: "Playground", id: "playground" },
     { label: "+ Add new", id: "new" }

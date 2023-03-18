@@ -39,7 +39,7 @@ function Template() {
   }, [])
 
   async function runQuery() {
-    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, template.query)
+    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", template.query)
     bindingsStream.on("variables", vars =>
       setVariables(vars.map(v => v.value))
     )

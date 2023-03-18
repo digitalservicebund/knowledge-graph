@@ -35,7 +35,7 @@ function Visualize() {
     const nodes = {}
     const edges = {}
     const rdfStarTriples = []
-    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT, query)
+    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", query)
     bindingsStream.on("data", triple => {
       if (triple.s.termType === "Quad") {
         rdfStarTriples.push(triple)
