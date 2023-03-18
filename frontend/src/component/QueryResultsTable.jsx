@@ -56,6 +56,9 @@ function QueryResultsTable(props) {
     }
     // literal
     if (variable.includes("imageurl")) {
+      if (props.templateId === "list-employees") {
+        return <img style={{borderRadius: "30px"}} src="https://fakeface.rest/face/view" title={col.value} width="60"/>
+      }
       return <img src={col.value} title={col.value} width="120" alt="logo"/>
     }
     if (variable.includes("url")) {

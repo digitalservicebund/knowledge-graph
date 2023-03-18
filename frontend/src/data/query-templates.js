@@ -14,6 +14,7 @@ export const queryTemplates = [
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
         + "SELECT * WHERE { "
         + "    ds:DigitalService ds:hasEmployee ?employee . "
+        + "    OPTIONAL { ?employee ds:hasImageURL ?imageURL . } "
         + "    OPTIONAL { <<ds:DigitalService ds:hasEmployee ?employee>> ds:firstDay ?firstDayAtDS . } "
         + "    OPTIONAL { ?employee ds:joinedProject ?project . } "
         + "    OPTIONAL { <<?employee ds:joinedProject ?project>> ds:onDate ?firstDayOnProject . } "

@@ -40,7 +40,7 @@ function Template() {
                   </Button>
               }
               <br/>
-              {query && <QueryResultsTable query={query}/>}
+              {query && <QueryResultsTable query={query} templateId={template.id}/>}
             </>
         }
         { !template && "No template with id " + id + " found" }
