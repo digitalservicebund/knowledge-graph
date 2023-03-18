@@ -49,17 +49,20 @@ function Data() {
   }
 
   function handlePaperClick(format) {
-    if (!(io === "import" && format === "Markdown")) {
-      alert("Not implemented yet.");
+    if (
+        (io === "import" && format === "Markdown") ||
+        (io === "export" && format === "RDF/Turtle")
+    ) {
+      fetch("http://localhost:8080/api/v1/knowthyselves/" + io, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ format: format.toLowerCase() })
+      })
+      .then(response => response.text())
+      .then(data => console.log(data));
       return
     }
-    fetch("http://localhost:8080/api/v1/knowthyselves/import", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ format: "markdown" })
-    })
-    .then(response => response.text())
-    .then(data => console.log(data));
+    alert("Not implemented yet.");
   }
 
   return (
