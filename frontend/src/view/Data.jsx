@@ -53,7 +53,7 @@ function Data() {
         (io === "import" && format === "Markdown") ||
         (io === "export" && format === "RDF/Turtle")
     ) {
-      fetch("http://localhost:8080/api/v1/knowthyselves/" + io, {
+      fetch("http://localhost:8080/api/v1/knowthyselves/io/" + io, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ format: format.toLowerCase() })

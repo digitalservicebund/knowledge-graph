@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/knowthyselves")
+@RequestMapping("api/v1/knowthyselves/io")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ImportExportController {
   private final Logger logger = LogManager.getLogger(ImportExportController.class);
