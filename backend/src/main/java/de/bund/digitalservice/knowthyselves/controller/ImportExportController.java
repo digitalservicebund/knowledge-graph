@@ -1,4 +1,4 @@
-package de.bund.digitalservice.knowthyselves;
+package de.bund.digitalservice.knowthyselves.controller;
 
 import de.bund.digitalservice.knowthyselves.io.MarkdownImporter;
 import de.bund.digitalservice.knowthyselves.io.RdfExporter;
@@ -41,7 +41,7 @@ public class ImportExportController {
         return format + "-import failed: " + e.getMessage();
       }
     }
-    return "Format " + format + " is unknown.";
+    return "Format " + format + " is unknown";
   }
 
   @PostMapping(value = "/export")
