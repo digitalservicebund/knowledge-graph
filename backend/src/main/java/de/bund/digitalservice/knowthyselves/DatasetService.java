@@ -12,18 +12,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatasetController {
-  private final Logger logger = LogManager.getLogger(DatasetController.class);
+public class DatasetService {
+  private final Logger logger = LogManager.getLogger(DatasetService.class);
 
   private final Dataset dataset;
   private final Model model;
   private final FusekiServer fusekiServer;
 
-  public DatasetController(
+  public DatasetService(
       @Value("${tdb.dir}") Path tbd,
       @Value("${namespace.default.uri}") String defaultNs,
       @Value("${namespace.default.prefix}") String defaultNsPrefix
   ) {
+    // dir.toFile().mkdirs(); TODO
     dataset = TDBFactory.createDataset(tbd.toString());
     logger.info("Dataset loaded from: {}", tbd);
 

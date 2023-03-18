@@ -2,7 +2,7 @@ package de.bund.digitalservice.knowthyselves.io;
 
 import static org.apache.commons.io.FilenameUtils.getBaseName;
 
-import de.bund.digitalservice.knowthyselves.DatasetController;
+import de.bund.digitalservice.knowthyselves.DatasetService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,20 +18,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MarkdownImporter {
-  private final DatasetController datasetController;
+  private final DatasetService datasetService;
   private final Path importDir;
   private final String defaultNs;
 
-  public MarkdownImporter(DatasetController datasetController,
+  public MarkdownImporter(DatasetService datasetService,
       @Value("${importer.markdown.directory}") Path importDir,
       @Value("${namespace.default.uri}") String defaultNs) {
-    this.datasetController = datasetController;
+    this.datasetService = datasetService;
     this.importDir = importDir;
     this.defaultNs = defaultNs;
   }
 
   public void doImport() throws IOException {
-    Model model = datasetController.getModel();
+    Model model = datasetService.getModel();
 
     for (Path path : getMarkdownFiles(importDir)) {
       Resource subject = model.createResource(defaultNs + getBaseName(path.getFileName().toString()));

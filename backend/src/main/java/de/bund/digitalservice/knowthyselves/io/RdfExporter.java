@@ -1,6 +1,6 @@
 package de.bund.digitalservice.knowthyselves.io;
 
-import de.bund.digitalservice.knowthyselves.DatasetController;
+import de.bund.digitalservice.knowthyselves.DatasetService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,17 +16,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class RdfExporter {
 
-  private final DatasetController datasetController;
+  private final DatasetService datasetService;
   private final Path exportDir;
 
-  public RdfExporter(DatasetController datasetController,
+  public RdfExporter(DatasetService datasetService,
       @Value("${exporter.default.directory}") Path exportDir) {
-    this.datasetController = datasetController;
+    this.datasetService = datasetService;
     this.exportDir = exportDir;
   }
 
   public void doExport() throws FileNotFoundException {
-    Model model = datasetController.getModel();
+    Model model = datasetService.getModel();
     exportDir.toFile().mkdirs();
     File exportFile = exportDir.resolve("main-" + getTimestamp() + ".ttls").toFile();
     FileOutputStream fos = new FileOutputStream(exportFile);
