@@ -77,7 +77,8 @@ function QueryResultsTable(props) {
             <Table sx={{width: 600}}>
               <TableHead>
                 <TableRow>
-                  {resultData.variables.map(h => <TableCell align="right" key={h}>{h}</TableCell>)}
+                  {resultData.variables.map(h =>
+                      <TableCell align="right" key={h}><strong>{h}</strong></TableCell>)}
                 </TableRow>
               </TableHead>
               <TableBody>

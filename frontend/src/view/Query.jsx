@@ -24,13 +24,12 @@ function Query() {
 
   return (
       <div>
-        <br/><br/>
         <h2>Query</h2>
         <Button variant="outlined">
           Copy from template
         </Button>
         <br/><br/>
-        <div id="yasgui" />
+        <div id="yasgui" style={{width: "600px"}} />
         <br/>
         <Button variant="contained" onClick={runQuery}>
           Run query
