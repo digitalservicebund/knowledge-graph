@@ -128,7 +128,7 @@ function Data() {
             }}
         >
           {exampleCode.map(e =>
-              <Paper style={paperStyle} elevation={2}>
+              <Paper style={paperStyle} key={e} elevation={2}>
                 <div style={{textAlign: "center"}}>{e}</div>
               </Paper>
           )}

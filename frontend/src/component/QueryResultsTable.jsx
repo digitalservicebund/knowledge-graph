@@ -14,6 +14,7 @@ function QueryResultsTable(props) {
 
   const init = useRef(false);
   const [resultData, setResultData] = useState();
+  const [faceURLs, setFaceURLs] = useState([]);
 
   useEffect(() => {
     if (init.current) return
@@ -33,16 +34,35 @@ function QueryResultsTable(props) {
       rows.push(resultRow)
     })
     bindingsStream.on("end", () => {
-      setResultData({
-        variables: variables,
-        rows: rows
-      })
+      if (props.templateId === "list-employees") {
+        Promise.all(rows.map((_, idx) => getRandomFace(idx))).then(result => {
+          setFaceURLs(result)
+          setResultData({
+            variables: variables,
+            rows: rows
+          })
+        })
+      } else {
+        setResultData({
+          variables: variables,
+          rows: rows
+        })
+      }
     })
   }
 
-  function buildCellContent(col, variable) {
-    if (!col) return
+  async function getRandomFace(idx) {
+    return await fetch("https://fakeface.rest/face/json?minimum_age=18&maximum_age=67")
+        .then(response => response.json())
+        .then(data =>  data.image_url)
+  }
+
+  function buildCellContent(col, variable, rowIdx) {
     variable = variable.toLowerCase()
+    if (props.templateId === "list-employees" && variable === "imageurl") {
+      return <img style={{borderRadius: "8px"}} src={faceURLs[rowIdx]} width="50"/>
+    }
+    if (!col) return
     if (col.termType === "NamedNode") {
       return <span title={col.value}>{col.value.split("#").pop()}</span>
     }
@@ -56,9 +76,6 @@ function QueryResultsTable(props) {
     }
     // literal
     if (variable.includes("imageurl")) {
-      if (props.templateId === "list-employees") {
-        return <img style={{borderRadius: "30px"}} src="https://fakeface.rest/face/view" title={col.value} width="60"/>
-      }
       return <img src={col.value} title={col.value} width="120" alt="logo"/>
     }
     if (variable.includes("url")) {
@@ -82,10 +99,10 @@ function QueryResultsTable(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {resultData.rows.map((col, idx) => (
-                    <TableRow key={idx} sx={{"&:last-child td, &:last-child th": {border: 0}}}>
+                {resultData.rows.map((col, rowIdx) => (
+                    <TableRow key={rowIdx} sx={{"&:last-child td, &:last-child th": {border: 0}}}>
                       {resultData.variables.map((h, idx) =>
-                          <TableCell align="right" key={idx}>{buildCellContent(col[h], h)}</TableCell>
+                          <TableCell align="right" key={idx}>{buildCellContent(col[h], h, rowIdx)}</TableCell>
                       )}
                     </TableRow>
                 ))}
