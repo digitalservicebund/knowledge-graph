@@ -32,7 +32,10 @@ function Template() {
               <h2>{template.title}</h2>
               <p>{template.description}</p>
               { template.choices && template.choices.map(c => {
-                return <TextField key={c.label} label={c.label} variant="standard"/>
+                return <div key={c.label}>
+                  <TextField label={c.label} variant="standard"/>
+                  <br/>
+                </div>
               })}
               {!query &&
                   <Button style={{margin: "20px"}} variant="contained" onClick={() => setQuery(template.query)}>

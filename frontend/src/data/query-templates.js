@@ -28,7 +28,7 @@ export const queryTemplates = [
     title: "Project timeline",
     description: "Shows the timeline of a project in terms of who joined/left.",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
-        + "SELECT * WHERE { "
+        + "SELECT ?employee ?firstDay ?lastDay ?daysOnProject WHERE { "
         + "    ?employee ds:joinedProject ds:AkteX . "
         + "    <<?employee ds:joinedProject ds:AkteX>> ds:onDate ?firstDay . "
         + "    OPTIONAL { "

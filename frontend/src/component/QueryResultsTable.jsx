@@ -35,7 +35,7 @@ function QueryResultsTable(props) {
     })
     bindingsStream.on("end", () => {
       if (props.templateId === "list-employees") {
-        Promise.all(rows.map((_, idx) => getRandomFace(idx))).then(result => {
+        Promise.all(rows.map((_, idx) => fetchRandomFace())).then(result => {
           setFaceURLs(result)
           setResultData({
             variables: variables,
@@ -51,16 +51,21 @@ function QueryResultsTable(props) {
     })
   }
 
-  async function getRandomFace(idx) {
+  async function fetchRandomFace() {
     return await fetch("https://fakeface.rest/face/json?minimum_age=18&maximum_age=67")
         .then(response => response.json())
         .then(data =>  data.image_url)
   }
 
+  const daysOnProject = [123, 456] // remove demo-hack TODO
+
   function buildCellContent(col, variable, rowIdx) {
     variable = variable.toLowerCase()
     if (props.templateId === "list-employees" && variable === "imageurl") {
-      return <img style={{borderRadius: "8px"}} src={faceURLs[rowIdx]} width="50"/>
+      return <img style={{borderRadius: "10px"}} src={faceURLs[rowIdx]} width="50"/>
+    }
+    if (props.templateId === "project-timeline" && variable === "daysonproject") {
+      return <span style={{color:"green"}}>{daysOnProject[rowIdx]}</span>
     }
     if (!col) return
     if (col.termType === "NamedNode") {
