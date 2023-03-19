@@ -36,6 +36,7 @@ public class MarkdownImporter {
     for (Path path : getMarkdownFiles(importDir)) {
       Resource subject = model.createResource(defaultNs + getBaseName(path.getFileName().toString()));
       for (String line : Files.lines(path).toList()) {
+        if (line.isBlank()) continue;
         String predicateLocalName = line.trim().split(" ")[0];
         Property predicate = model.createProperty(defaultNs + predicateLocalName);
         String restOfLine = line.trim().substring(predicateLocalName.length()).trim();
