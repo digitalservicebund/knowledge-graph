@@ -21,8 +21,12 @@ function Data() {
   const handlePredChange = e => { setPred(e.target.value) };
   const handleObjChange = e => { setObj(e.target.value) };
 
+  const [addRemove, setAddRemove] = useState("add");
+
   const formats = ["RDF/Turtle", "JSON-LD", "TGF", "SPARQL endpoint", "Markdown", "GraphML", "CSV", "Excel", "Google Spreadsheet", "Confluence page"]
   const [io, setIO] = useState("import");
+
+  const exampleCode = ["Java", "JavaScript", "Python"]
 
   const paperStyle = {
     display: "flex",
@@ -42,10 +46,6 @@ function Data() {
     const query = "PREFIX " + DEFAULT_NAMESPACE_PREFIX + ": <" + DEFAULT_NAMESPACE + "> "
         + "INSERT DATA { " + uri(sub) + " " + uri(pred) + " " + object + " }";
     await sparql.fetchUpdate(config.SPARQL_ENDPOINT + "/demo", query);
-  }
-
-  function handleRadioChange(e) {
-    setIO(e.target.value);
   }
 
   function handlePaperClick(format) {
@@ -74,7 +74,13 @@ function Data() {
   return (
       <div>
         <br/><br/>
-        <p><strong>Add triples manually</strong></p>
+        <p><strong>Edit statements manually</strong></p>
+        <RadioGroup style={{paddingBottom: "15px"}} row defaultValue="add" onChange={(e) => setAddRemove(e.target.value)}>
+          <FormControlLabel value="add" control={<Radio />} label={<strong>Add</strong>} />
+          <FormControlLabel value="update" control={<Radio />} label={<strong>Update</strong>} />
+          <FormControlLabel value="delete" control={<Radio />} label={<strong>Delete</strong>} />
+        </RadioGroup>
+
         <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} onKeyUp={handleKeyUp} />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <TextField label="Predicate" variant="outlined" value={pred} onChange={handlePredChange} onKeyUp={handleKeyUp} />
@@ -84,7 +90,7 @@ function Data() {
           Submit
         </Button>
         <br/><br/><br/>
-        <RadioGroup row defaultValue="import" onChange={handleRadioChange}>
+        <RadioGroup row defaultValue="import" onChange={(e) => setIO(e.target.value)}>
           <FormControlLabel value="import" control={<Radio />} label={<strong>Import from</strong>} />
           <FormControlLabel value="export" control={<Radio />} label={<strong>Export to</strong>} />
         </RadioGroup>
@@ -104,6 +110,26 @@ function Data() {
           {formats.map(f =>
               <Paper style={paperStyle} key={f} elevation={2} onClick={() => handlePaperClick(f)}>
                 <div style={{textAlign: "center"}}>{f}</div>
+              </Paper>
+          )}
+        </Box>
+        <br/>
+        <p><strong>Example code for accessing the SPARQL endpoints programmatically</strong></p>
+        <Box
+            style={{width: "800px"}}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              "& > :not(style)": {
+                m: 1,
+                width: 120,
+                height: 60,
+              },
+            }}
+        >
+          {exampleCode.map(e =>
+              <Paper style={paperStyle} elevation={2}>
+                <div style={{textAlign: "center"}}>{e}</div>
               </Paper>
           )}
         </Box>
