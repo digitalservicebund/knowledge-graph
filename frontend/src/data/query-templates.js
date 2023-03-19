@@ -1,8 +1,8 @@
 export const queryTemplates = [
   {
-    id: "get-all",
-    title: "Get all",
-    description: "Get all triples.",
+    id: "list-all",
+    title: "All triples",
+    description: "List all triples",
     query: "SELECT * WHERE { "
         + "  ?s ?p ?o . "
         + "}"
@@ -10,12 +10,12 @@ export const queryTemplates = [
   {
     id: "list-employees",
     title: "List employees",
-    description: "List all employees.",
+    description: "List all employees with some infos about them",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
         + "SELECT * WHERE { "
-        + "    ds:DigitalService ds:hasEmployee ?employee . "
+        + "    ds:Employees ds:hasEmployee ?employee . "
         + "    OPTIONAL { ?employee ds:hasImageURL ?imageURL . } "
-        + "    OPTIONAL { <<ds:DigitalService ds:hasEmployee ?employee>> ds:firstDay ?firstDayAtDS . } "
+        + "    OPTIONAL { <<ds:Employees ds:hasEmployee ?employee>> ds:joined ?firstDay . } "
         + "    OPTIONAL { ?employee ds:joinedProject ?project . } "
         + "    OPTIONAL { <<?employee ds:joinedProject ?project>> ds:onDate ?firstDayOnProject . } "
         + "    OPTIONAL { ?employee ds:belongsToDiscipline ?discipline . } "
