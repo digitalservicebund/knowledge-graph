@@ -42,6 +42,20 @@ export const queryTemplates = [
         + "} ORDER BY ?firstDay"
   },
   {
+    id: "list-projects",
+    title: "List projects",
+    description: "List all current and past projects",
+    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
+        + "SELECT ?project ?launchDate ?projectPartner ?url ?status (COUNT(?employeesOnProject) as ?people) WHERE { "
+        + "    ds:Projects ds:hasProject ?project . "
+        + "    OPTIONAL { ?project ds:hasLaunchDate ?launchDate . } "
+        + "    OPTIONAL { ?project ds:hasProjectPartner ?projectPartner . } "
+        + "    OPTIONAL { ?project ds:hasURL ?url . } "
+        + "    OPTIONAL { <<ds:Projects ds:hasProject ?project>> ds:status ?status . } "
+        + "    OPTIONAL { ?employeesOnProject ds:joinedProject ?project . }"
+        + "} GROUP BY ?project ?launchDate ?projectPartner ?url ?status ORDER BY ?status"
+  },
+  {
     id: "project-timeline",
     title: "Project timeline",
     description: "Shows the timeline of a project in terms of who joined/left.",
@@ -69,18 +83,6 @@ export const queryTemplates = [
         + "SELECT * WHERE { "
         + "  ?project ds:hasProjectPartner ?ministry . "
         + "  OPTIONAL { ?ministry ds:hasLogoImageURL ?logoImageURL . } "
-        + "}"
-  },
-  {
-    id: "list-projects",
-    title: "List projects",
-    description: "List all our projects.",
-    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
-        + "SELECT * WHERE { "
-        + "  ds:Projects ds:hasProject ?project . "
-        + "  OPTIONAL { ?project ds:hasProjectPartner ?projectPartner . } "
-        + "  OPTIONAL { ?project ds:hasURL ?url . } "
-        + "  OPTIONAL { <<ds:Projects ds:hasProject ?project>> ds:status ?status . } "
         + "}"
   }*/
 ]
