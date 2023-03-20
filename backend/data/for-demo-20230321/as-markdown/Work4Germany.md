@@ -1,0 +1,1 @@
+hasProject [[WaysOfWorking]]

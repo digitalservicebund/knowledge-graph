@@ -1,0 +1,6 @@
+belongsToDiscipline [[Engineering]]
+hasSkill [[SpringBoot]]
+hasSkill [[React]]
+hasExperienceLevel [[Senior]]
+wantsToLearn [[Svelte]]
+isGreatAt "Debugging tough problems" >> says [[Max]]

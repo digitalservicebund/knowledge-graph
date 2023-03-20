@@ -1,0 +1,7 @@
+belongsToDiscipline [[Engineering]]
+hasSkill [[SpringBoot]]
+hasSkill [[PostgreSQL]]
+wantsToLearn [[React]]
+hasExperienceLevel [[Regular]]
+isMemberOf [[MagicGuild]]
+workedBeforeAt [[MinistryXYZ]]

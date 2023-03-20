@@ -1,0 +1,2 @@
+hasFellowshipProjectPartner [[MinistryXYZ]]
+hasTeamMember [[Bob]]

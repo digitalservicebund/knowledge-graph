@@ -1,0 +1,7 @@
+hasOrganizationalElement [[Disciplines]]
+hasOrganizationalElement [[Workstreams]]
+hasOrganizationalElement [[Guilds]]
+hasOrganizationalElement [[Projects]]
+hasOrganizationalElement [[ExperienceLevel]]
+hasOrganizationalElement [[Employees]]
+hasOrganizationalElement [[Fellowships]]

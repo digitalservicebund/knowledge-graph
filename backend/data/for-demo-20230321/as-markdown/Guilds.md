@@ -1,0 +1,1 @@
+hasGuild [[MagicGuild]]
