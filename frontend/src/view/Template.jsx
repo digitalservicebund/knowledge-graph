@@ -29,7 +29,7 @@ function Template() {
   }, [])
 
   return (
-      <div style={{textAlign: "center"}}>
+      <div style={{textAlign: "center", width: "700px"}}>
         { template &&
             <>
               <h2>{template.title}</h2>
@@ -40,6 +40,11 @@ function Template() {
                   <br/>
                 </div>
               })}
+              { template.id === "team-assembly" && <>
+                <br/>
+                <TextField label="Criteria" fullWidth variant="standard" />
+                <br/><br/>
+              </>}
               {!query &&
                   <Button style={{margin: "20px"}} variant="contained" onClick={() => setQuery(template.query)}>
                     Run query

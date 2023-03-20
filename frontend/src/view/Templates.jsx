@@ -30,6 +30,7 @@ function Templates() {
         <br/>
         <h2>Templates</h2>
         <Box
+            style={{width: "650px"}}
             sx={{
               display: "flex",
               flexWrap: "wrap",

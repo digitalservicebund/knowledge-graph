@@ -87,6 +87,40 @@ export const queryTemplates = [
         + "    ?skill ?associatedWithDiscipline ?discipline . "
         + "} GROUP BY ?skill ?discipline ORDER BY DESC(?peopleHavingIt)"
   },
+  {
+    id: "team-assembly",
+    title: "Assemble a team",
+    description: "Based on desired disciplines, seniority and skills",
+    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
+        + "SELECT * WHERE { "
+        + "    { "
+        + "        SELECT * WHERE { "
+        + "            ?name ds:belongsToDiscipline ?discipline .  "
+        + "            ?name ds:hasExperienceLevel ?seniority . "
+        + "            ?name ds:hasSkill ?hasSkill . "
+        + "            FILTER (?hasSkill = ds:React) . "
+        + "            FILTER (?discipline = ds:Engineering) . "
+        + "            FILTER (?seniority IN (ds:Senior)) . "
+        + "        } LIMIT 1 "
+        + "    } UNION { "
+        + "        SELECT * WHERE { "
+        + "            ?name ds:belongsToDiscipline ?discipline . "
+        + "            ?name ds:hasExperienceLevel ?seniority . "
+        + "            ?name ds:wantsToLearn ?wantsSkill . "
+        + "            FILTER (?wantsSkill = ds:React) . "
+        + "            FILTER (?discipline = ds:Engineering) . "
+        + "            FILTER (?seniority IN (ds:Regular)) "
+        + "        } LIMIT 1 "
+        + "    } UNION { "
+        + "        SELECT * WHERE { "
+        + "            ?name ds:belongsToDiscipline ?discipline . "
+        + "            ?name ds:hasExperienceLevel ?seniority . "
+        + "            FILTER (?discipline = ds:Design) . "
+        + "            FILTER (?seniority IN (ds:Junior, ds:Regular)) "
+        + "        } LIMIT 1 "
+        + "    }"
+        + "}"
+  }
   /*{
     id: "ministry-contact-points",
     title: "Ministry contact points",
