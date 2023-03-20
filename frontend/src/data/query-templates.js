@@ -92,7 +92,7 @@ export const queryTemplates = [
     title: "Ministry contact points",
     description: "Ministries we had or have contact points with.",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
-        + "SELECT ?dsProject ?fellowship ?fellowshipProject ?employeeWhoWorkedThere WHERE { "
+        + "SELECT ?dsProject ?fellowship ?fellowshipProject ?workedThereBefore WHERE { "
         + "    BIND(ds:MinistryXYZ AS ?ministry)  "
         + "    {  "
         + "        ?dsProject ds:hasProjectPartner ?ministry .  "
@@ -104,7 +104,7 @@ export const queryTemplates = [
         + "        ?fellowship ds:hasProject ?fellowshipProject . "
         + "        ?fellowshipProject ds:hasFellowshipProjectPartner ?ministry .  "
         + "    } "
-        + "    UNION { ?employeeWhoWorkedThere ds:workedBeforeAt ?ministry . } "
+        + "    UNION { ?workedThereBefore ds:workedBeforeAt ?ministry . } "
         + "}",
     choices: [
       {

@@ -29,7 +29,7 @@ function Query() {
           Copy from template
         </Button>
         <br/><br/>
-        <div id="yasgui" style={{width: "600px"}} />
+        <div id="yasgui" style={{width: "700px"}} />
         <br/>
         <Button variant="contained" onClick={runQuery}>
           Run query
