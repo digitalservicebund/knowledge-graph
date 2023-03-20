@@ -74,11 +74,11 @@ function Data() {
   return (
       <div>
         <br/><br/>
-        <p><strong>Edit statements manually</strong></p>
+        <h2>Edit statements manually</h2>
         <RadioGroup style={{paddingBottom: "15px"}} row defaultValue="add" onChange={(e) => setAddRemove(e.target.value)}>
-          <FormControlLabel value="add" control={<Radio />} label={<strong>Add</strong>} />
-          <FormControlLabel value="update" control={<Radio />} label={<strong>Update</strong>} />
-          <FormControlLabel value="delete" control={<Radio />} label={<strong>Delete</strong>} />
+          <FormControlLabel value="add" control={<Radio />} label="Add" />
+          <FormControlLabel value="update" control={<Radio />} label="Update" />
+          <FormControlLabel value="delete" control={<Radio />} label="Delete" />
         </RadioGroup>
 
         <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} onKeyUp={handleKeyUp} />
@@ -89,10 +89,11 @@ function Data() {
         <Button style={{margin: "10px 0 0 25px"}} variant="contained" onClick={addTriple}>
           Submit
         </Button>
-        <br/><br/><br/>
+        <br/><br/>
+        <h2>Import / Export</h2>
         <RadioGroup row defaultValue="import" onChange={(e) => setIO(e.target.value)}>
-          <FormControlLabel value="import" control={<Radio />} label={<strong>Import from</strong>} />
-          <FormControlLabel value="export" control={<Radio />} label={<strong>Export to</strong>} />
+          <FormControlLabel value="import" control={<Radio />} label="Import from" />
+          <FormControlLabel value="export" control={<Radio />} label="Export to" />
         </RadioGroup>
         <br/>
         <Box
@@ -114,7 +115,8 @@ function Data() {
           )}
         </Box>
         <br/>
-        <p><strong>Example code for accessing the SPARQL endpoints programmatically</strong></p>
+        <h2>Example code</h2>
+        <p>For accessing the SPARQL endpoints programmatically</p>
         <Box
             style={{width: "800px"}}
             sx={{
