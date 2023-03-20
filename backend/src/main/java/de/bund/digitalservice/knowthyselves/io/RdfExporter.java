@@ -16,16 +16,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class RdfExporter {
 
-  private final DatasetService datasetService;
   private final Path exportDir;
 
-  public RdfExporter(DatasetService datasetService,
-      @Value("${exporter.default.directory}") Path exportDir) {
-    this.datasetService = datasetService;
+  public RdfExporter(@Value("${exporter.default.directory}") Path exportDir) {
     this.exportDir = exportDir;
   }
 
-  public void doExport() throws FileNotFoundException {
+  public void doExport(DatasetService datasetService) throws FileNotFoundException {
     Model model = datasetService.getModel("demo");
     exportDir.toFile().mkdirs();
     File exportFile = exportDir.resolve("main-" + getTimestamp() + ".ttls").toFile();

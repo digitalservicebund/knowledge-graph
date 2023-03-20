@@ -18,22 +18,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MarkdownImporter {
-  private final DatasetService datasetService;
   private final Path importDir;
   private final String defaultNs;
 
-  public MarkdownImporter(DatasetService datasetService,
-      @Value("${importer.markdown.directory}") Path importDir,
+  public MarkdownImporter(@Value("${importer.markdown.directory}") Path importDir,
       @Value("${namespace.default.uri}") String defaultNs) {
-    this.datasetService = datasetService;
     this.importDir = importDir;
     this.defaultNs = defaultNs;
   }
 
-  public void doImport() throws IOException {
+  public void doImport(DatasetService datasetService, Path markdownDir) throws IOException {
     Model model = datasetService.getModel("demo");
 
-    for (Path path : getMarkdownFiles(importDir)) {
+    for (Path path : getMarkdownFiles(markdownDir == null ? importDir : markdownDir)) {
       Resource subject = model.createResource(defaultNs + getBaseName(path.getFileName().toString()));
       for (String line : Files.lines(path).toList()) {
         if (line.isBlank()) continue;

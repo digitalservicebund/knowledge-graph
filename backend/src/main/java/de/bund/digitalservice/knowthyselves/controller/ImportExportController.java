@@ -1,5 +1,6 @@
 package de.bund.digitalservice.knowthyselves.controller;
 
+import de.bund.digitalservice.knowthyselves.DatasetService;
 import de.bund.digitalservice.knowthyselves.io.MarkdownImporter;
 import de.bund.digitalservice.knowthyselves.io.RdfExporter;
 import java.io.FileNotFoundException;
@@ -19,10 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImportExportController {
   private final Logger logger = LogManager.getLogger(ImportExportController.class);
 
+  private final DatasetService datasetService;
+
   private final MarkdownImporter markdownImporter;
   private final RdfExporter rdfExporter;
 
-  public ImportExportController(MarkdownImporter markdownImporter, RdfExporter rdfExporter) {
+  public ImportExportController(DatasetService datasetService, MarkdownImporter markdownImporter, RdfExporter rdfExporter) {
+    this.datasetService = datasetService;
     this.markdownImporter = markdownImporter;
     this.rdfExporter = rdfExporter;
   }
@@ -34,7 +38,7 @@ public class ImportExportController {
 
     if (format.equals("markdown")) {
       try {
-        markdownImporter.doImport();
+        markdownImporter.doImport(datasetService, null);
         return format + "-import successful";
       } catch (IOException e) {
         logger.error("{}-import failed", format, e);
@@ -51,7 +55,7 @@ public class ImportExportController {
 
     if (format.equals("rdf/turtle")) {
       try {
-        rdfExporter.doExport();
+        rdfExporter.doExport(datasetService);
         return format + "-export successful";
       } catch (FileNotFoundException e) {
         logger.error("{}-export failed", format, e);
