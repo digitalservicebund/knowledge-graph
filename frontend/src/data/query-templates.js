@@ -87,7 +87,7 @@ export const queryTemplates = [
         + "    ?skill ?associatedWithDiscipline ?discipline . "
         + "} GROUP BY ?skill ?discipline ORDER BY DESC(?peopleHavingIt)"
   },
-  {
+  /*{
     id: "ministry-contact-points",
     title: "Ministry contact points",
     description: "Ministries we had or have contact points with.",
@@ -112,5 +112,5 @@ export const queryTemplates = [
         placeholder: "[ministry]"
       }
     ]
-  }
+  }*/
 ]
