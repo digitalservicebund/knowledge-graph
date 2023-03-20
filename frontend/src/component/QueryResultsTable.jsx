@@ -99,6 +99,7 @@ function QueryResultsTable(props) {
             <Table sx={{width: 600}}>
               <TableHead>
                 <TableRow>
+                  <TableCell></TableCell>
                   {resultData.variables.map(h =>
                       <TableCell align="right" key={h}><strong>{h}</strong></TableCell>)}
                 </TableRow>
@@ -106,8 +107,9 @@ function QueryResultsTable(props) {
               <TableBody>
                 {resultData.rows.map((col, rowIdx) => (
                     <TableRow key={rowIdx} sx={{"&:last-child td, &:last-child th": {border: 0}}}>
-                      {resultData.variables.map((h, idx) =>
-                          <TableCell align="right" key={idx}>{buildCellContent(col[h], h, rowIdx)}</TableCell>
+                      <TableCell align="left"><span style={{color: "gray", fontSize: "small"}}>{rowIdx + 1}</span></TableCell>
+                      {resultData.variables.map((v, idx) =>
+                          <TableCell align="right" key={idx}>{buildCellContent(col[v], v, rowIdx)}</TableCell>
                       )}
                     </TableRow>
                 ))}
