@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { queryTemplates } from "../data/query-templates";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import chartjs from "chart.js/auto"; // required for react-chartjs-2
 import { Line } from "react-chartjs-2";
 import QueryResultsTable from "../component/QueryResultsTable";
 
@@ -12,17 +13,19 @@ function Template() {
   const [template, setTemplate] = useState({});
   const [query, setQuery] = useState();
   const [chartData, setChartData] = useState();
-  /*{labels: ["Jan", "Feb", "Mar"],
+  const demoChartData = {
+    labels: ["June 2022", "July", "August", "September", "October", "November", "December", "January 2023", "February", "March"],
     datasets: [{
-      label: "Dataset #1",
-      data: [10, 50, 40],
+      label: "Number of employees over time",
+      data: [1, 1, 2, 3, 3, 3, 4, 4, 5, 7],
       tension: 0.2
-    }]}*/
+    }]};
 
   useEffect(() => {
     if (init.current) return
     init.current = true;
     setTemplate(queryTemplates.find(t => t.id === id));
+    if (id === "hire-timeline") setChartData(demoChartData); // remove demo-hack TODO
   }, [])
 
   return (
@@ -47,7 +50,7 @@ function Template() {
             </>
         }
         { !template && "No template with id " + id + " found" }
-        {chartData && <><br/><br/><Line data={chartData} /></>}
+        {chartData && query && <><br/><Line data={chartData} /></>}
       </div>
   );
 }

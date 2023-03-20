@@ -1,27 +1,38 @@
 export const queryTemplates = [
-  {
+  /*{
     id: "list-all",
     title: "All triples",
     description: "List all triples",
     query: "SELECT * WHERE { "
         + "  ?s ?p ?o . "
         + "}"
-  },
+  },*/
   {
     id: "list-employees",
     title: "List employees",
-    description: "List all employees with some infos about them",
+    description: "List all employees with some basic infos about them",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
-        + "SELECT * WHERE { "
+        + "SELECT (?employee AS ?name) ?imageURL ?discipline ?seniority (GROUP_CONCAT(strafter(str(?skill), \"#\"); SEPARATOR=\", \") as ?skills) ?nonProjectParticipations "
+        + "WHERE { "
         + "    ds:Employees ds:hasEmployee ?employee . "
         + "    OPTIONAL { ?employee ds:hasImageURL ?imageURL . } "
-        + "    OPTIONAL { <<ds:Employees ds:hasEmployee ?employee>> ds:joined ?firstDay . } "
-        + "    OPTIONAL { ?employee ds:joinedProject ?project . } "
-        + "    OPTIONAL { <<?employee ds:joinedProject ?project>> ds:onDate ?firstDayOnProject . } "
         + "    OPTIONAL { ?employee ds:belongsToDiscipline ?discipline . } "
-        + "    OPTIONAL { ?employee ds:hasExperienceLevel ?experienceLevel . } "
+        + "    OPTIONAL { ?employee ds:hasExperienceLevel ?seniority . } "
         + "    OPTIONAL { ?employee ds:isMemberOf ?nonProjectParticipations . } "
-        + "}"
+        + "    OPTIONAL { ?employee ds:hasSkill ?skill . } "
+        + "} GROUP BY ?employee ?imageURL ?discipline ?seniority ?nonProjectParticipations"
+  },
+  {
+    id: "hire-timeline",
+    title: "Hiring timeline",
+    description: "Plot the timeline of when employees joined the company",
+    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
+        + "SELECT * WHERE { "
+        + "    ds:Employees ds:hasEmployee ?name . "
+        + "    OPTIONAL { <<ds:Employees ds:hasEmployee ?name>> ds:joined ?firstDay . } "
+        + "    OPTIONAL { ?name ds:joinedProject ?project . } "
+        + "    OPTIONAL { <<?name ds:joinedProject ?project>> ds:onDate ?firstDayOnProject . }"
+        + "} ORDER BY ?firstDay"
   },
   {
     id: "project-timeline",
