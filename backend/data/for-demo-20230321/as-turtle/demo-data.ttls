@@ -1,0 +1,153 @@
+@prefix ds: <https://digitalservice.bund.de/kg#> .
+
+ds:Erika  ds:belongsToDiscipline  ds:Design ;
+        ds:hasExperienceLevel   ds:Junior ;
+        ds:hasSkill             ds:Figma ;
+        ds:joinedProject        ds:AkteX ;
+        ds:leftProject          ds:AkteX ;
+        ds:wantsToLearn         ds:Sketch .
+
+ds:Figma  ds:associatedWithDiscipline  ds:Design .
+
+ds:Sketch  ds:associatedWithDiscipline  ds:Design .
+
+ds:AkteX  ds:hasLaunchDate    "2022-05-01" ;
+        ds:hasProjectPartner  ds:MinistryXYZ ;
+        ds:hasURL             "https://link-to-the-wiki-page.de" .
+
+<< ds:Erika ds:joinedProject ds:AkteX >>
+        ds:onDate  "2022-09-15" .
+
+<< ds:Erika ds:leftProject ds:AkteX >>
+        ds:onDate  "2023-02-01" .
+
+ds:Svelte  ds:associatedWithDiscipline  ds:Engineering .
+
+ds:MinistryXYZ  ds:type  ds:Ministry .
+
+ds:Guilds  ds:hasGuild  ds:MagicGuild .
+
+ds:SpringBoot  ds:associatedWithDiscipline
+                ds:Engineering .
+
+ds:DigitalService  ds:hasOrganizationalElement
+                ds:Guilds , ds:Disciplines , ds:Workstreams , ds:Projects , ds:ExperienceLevel , ds:Employees , ds:Fellowships .
+
+ds:Disciplines  ds:hasDiscipline  ds:Design , ds:Engineering , ds:Product , ds:Communications .
+
+ds:Workstreams  ds:hasWorkstream  ds:WorkstreamLearning .
+
+ds:Projects  ds:hasProject  ds:AkteX , ds:Rainbow .
+
+ds:ExperienceLevel  ds:experienceLevel  ds:Junior , ds:Regular , ds:Senior .
+
+ds:Employees  ds:hasEmployee  ds:Erika , ds:Bob , ds:Alice , ds:Max , ds:Herbert , ds:Gudrun , ds:Katie .
+
+ds:Fellowships  ds:hasFellowship  ds:Tech4Germany , ds:Work4Germany .
+
+ds:Rainbow  ds:hasLaunchDate  "2021-09-15" ;
+        ds:hasProjectPartner  ds:ResarchGroupABC ;
+        ds:hasURL             "https://link-to-the-wiki-page.de" .
+
+ds:AdobeXD  ds:associatedWithDiscipline
+                ds:Design .
+
+ds:OpenDataPortal  ds:hasFellowshipProjectPartner
+                ds:MinistryXYZ ;
+        ds:hasTeamMember                ds:Bob .
+
+ds:Bob  ds:belongsToDiscipline  ds:Engineering ;
+        ds:hasExperienceLevel   ds:Regular ;
+        ds:hasSkill             ds:SpringBoot , ds:PostgreSQL ;
+        ds:isMemberOf           ds:MagicGuild ;
+        ds:wantsToLearn         ds:React ;
+        ds:workedBeforeAt       ds:MinistryXYZ .
+
+ds:Scrum  ds:associatedWithDiscipline  ds:Product .
+
+ds:Alice  ds:belongsToDiscipline  ds:Engineering ;
+        ds:hasExperienceLevel   ds:Senior ;
+        ds:hasSkill             ds:SpringBoot , ds:React ;
+        ds:isGreatAt            "Debugging tough problems" ;
+        ds:wantsToLearn         ds:Svelte .
+
+<< ds:Employees ds:hasEmployee ds:Alice >>
+        ds:joined  "2022-06-01" .
+
+<< ds:Employees ds:hasEmployee ds:Bob >>
+        ds:joined  "2022-08-01" .
+
+<< ds:Employees ds:hasEmployee ds:Erika >>
+        ds:joined  "2022-09-01" .
+
+ds:Max  ds:belongsToDiscipline  ds:Design ;
+        ds:hasExperienceLevel   ds:Junior ;
+        ds:hasSkill             ds:Figma , ds:AdobeXD ;
+        ds:joinedProject        ds:AkteX .
+
+<< ds:Employees ds:hasEmployee ds:Max >>
+        ds:joined  "2022-12-01" .
+
+ds:Herbert  ds:belongsToDiscipline  ds:Product ;
+        ds:hasExperience        "Politische Stiftungsarbeit" ;
+        ds:hasExperienceLevel   ds:Senior ;
+        ds:hasSkill             ds:Scrum , ds:AgileCoaching ;
+        ds:isMemberOf           ds:MagicGuild ;
+        ds:joinedProject        ds:AkteX .
+
+<< ds:Employees ds:hasEmployee ds:Herbert >>
+        ds:joined  "2023-02-01" .
+
+ds:Gudrun  ds:belongsToDiscipline  ds:Engineering ;
+        ds:hasExperienceLevel   ds:Senior ;
+        ds:hasSkill             ds:React , ds:Angular ;
+        ds:isMemberOf           ds:WorkstreamLearning ;
+        ds:joinedProject        ds:AkteX .
+
+<< ds:Employees ds:hasEmployee ds:Gudrun >>
+        ds:joined  "2023-03-01" .
+
+ds:Katie  ds:belongsToDiscipline  ds:Design ;
+        ds:hasExperience        "Accessibility focused user research" ;
+        ds:hasExperienceLevel   ds:Regular ;
+        ds:hasSkill             ds:Figma , ds:Sketch .
+
+<< ds:Employees ds:hasEmployee ds:Katie >>
+        ds:joined  "2023-03-01" .
+
+ds:PostgreSQL  ds:associatedWithDiscipline
+                ds:Engineering .
+
+ds:React  ds:associatedWithDiscipline  ds:Engineering .
+
+ds:AgileCoaching  ds:associatedWithDiscipline
+                ds:Product .
+
+<< ds:Herbert ds:joinedProject ds:AkteX >>
+        ds:onDate  "2023-02-01" .
+
+<< ds:Projects ds:hasProject ds:AkteX >>
+        ds:status  ds:active .
+
+<< ds:Projects ds:hasProject ds:Rainbow >>
+        ds:status  ds:completed .
+
+ds:Angular  ds:associatedWithDiscipline
+                ds:Engineering .
+
+ds:Tech4Germany  ds:hasProject  ds:OpenDataPortal .
+
+ds:WaysOfWorking  ds:hasFellowshipProjectPartner
+                ds:MinistryXYZ ;
+        ds:hasTeamMember                ds:Herbert .
+
+ds:Work4Germany  ds:hasProject  ds:WaysOfWorking .
+
+<< ds:Max ds:joinedProject ds:AkteX >>
+        ds:onDate  "2022-12-15" .
+
+<< ds:Alice ds:isGreatAt "Debugging tough problems" >>
+        ds:says  ds:Max .
+
+<< ds:Gudrun ds:joinedProject ds:AkteX >>
+        ds:onDate  "2023-03-10" .
