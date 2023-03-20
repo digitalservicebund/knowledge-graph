@@ -1,8 +1,7 @@
 package de.bund.digitalservice.knowthyselves;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import de.bund.digitalservice.knowthyselves.io.MarkdownImporter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,8 +13,6 @@ import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.fuseki.main.FusekiServer.Builder;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,31 +31,32 @@ public class DatasetService {
   public DatasetService(
       @Value("${tdb.dir}") Path tbd,
       @Value("${namespace.default.uri}") String defaultNs,
-      @Value("${namespace.default.prefix}") String defaultNsPrefix
+      @Value("${namespace.default.prefix}") String defaultNsPrefix,
+      MarkdownImporter markdownImporter
   ) {
     tbd.toFile().mkdirs();
     Builder fusekiServerBuilder = FusekiServer.create();
 
     for (String dsName : initialDatasetNames) {
-      Path path = tbd.resolve(dsName);
-      boolean addDemoData = dsName.equals("demo") && !Files.exists(path);
-      Dataset ds = TDBFactory.createDataset(path.toString());
+      Path tbdDir = tbd.resolve(dsName);
+      boolean addDemoData = dsName.equals("demo") && !Files.exists(tbdDir);
+      Dataset ds = TDBFactory.createDataset(tbdDir.toString());
       datasets.put(dsName, ds);
-      logger.info("Dataset {} loaded from: {}", dsName, path);
+      logger.info("Dataset {} loaded from: {}", dsName, tbdDir);
 
       Model model = ds.getDefaultModel();
       model.setNsPrefix(defaultNsPrefix, defaultNs);
+      models.put(dsName, model);
       if (addDemoData) {
         try {
-          File demoDataFile = Paths.get("backend").resolve("data").resolve("demo-data.ttls").toFile();
-          RDFDataMgr.read(model, new FileInputStream(demoDataFile), Lang.TURTLE);
-          logger.info("Added demo-data to dataset {}", dsName);
-        } catch (FileNotFoundException e) {
+          Path markdownDir = Paths.get("backend/data/for-demo-20230321/as-markdown");
+          markdownImporter.doImport(this, markdownDir);
+          logger.info("Added demo-data in markdown format to dataset {} from directory {}", dsName, markdownDir);
+        } catch (IOException e) {
           e.printStackTrace();
           logger.error("Failed to add demo data to dataset {}", dsName);
         }
       }
-      models.put(dsName, model);
       logger.info("Triples in the default model of dataset {}:", dsName);
       model.listStatements().forEachRemaining(logger::info);
 
