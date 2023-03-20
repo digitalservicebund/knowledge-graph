@@ -96,7 +96,7 @@ function QueryResultsTable(props) {
       <div>
         {resultData && <>
           <TableContainer>
-            <Table sx={{width: 700}}>
+            <Table sx={{margin: "0 auto", width: 700}}>
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>

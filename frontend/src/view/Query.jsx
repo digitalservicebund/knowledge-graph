@@ -19,7 +19,7 @@ function Query() {
   }, []);
 
   async function runQuery() {
-   setQuery(yasgui.current.getTab().getQuery())
+    setQuery(yasgui.current.getTab().getQuery())
   }
 
   return (

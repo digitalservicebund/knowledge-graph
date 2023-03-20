@@ -29,7 +29,7 @@ function Template() {
   }, [])
 
   return (
-      <div style={{textAlign: "center", width: "700px"}}>
+      <div style={{textAlign: "center", width: "880px"}}>
         { template &&
             <>
               <h2>{template.title}</h2>
