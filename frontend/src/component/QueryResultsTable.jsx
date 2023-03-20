@@ -89,7 +89,7 @@ function QueryResultsTable(props) {
         <OpenInNewIcon style={{fontSize: "large", verticalAlign: "middle", marginLeft: "2px"}}/>
       </>
     }
-    return <span style={{color:"green"}}>{col.value}</span>
+    return <span style={{color:"green"}}>{col.value === "0" ? "" : col.value}</span>
   }
 
   return (

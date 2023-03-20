@@ -75,6 +75,18 @@ export const queryTemplates = [
       }
     ]
   },
+  {
+    id: "skill-statistics",
+    title: "Skill statistics",
+    description: "Statistics about existing and desired skills",
+    query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
+        + "SELECT ?skill ?discipline (COUNT(?employee1) AS ?peopleHavingIt) (COUNT(?employee2) AS ?peopleWantingToLearnIt) WHERE { "
+        + "    { ?employee1 ds:hasSkill ?skill . } "
+        + "    UNION "
+        + "    { ?employee2 ds:wantsToLearn ?skill . } "
+        + "    ?skill ?associatedWithDiscipline ?discipline . "
+        + "} GROUP BY ?skill ?discipline ORDER BY DESC(?peopleHavingIt)"
+  },
   /*{
     id: "ministries",
     title: "Ministries",
