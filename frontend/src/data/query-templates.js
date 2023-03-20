@@ -70,7 +70,7 @@ export const queryTemplates = [
         + "}",
     choices: [
       {
-        label: "project",
+        label: "Project",
         placeholder: "[project]"
       }
     ]
@@ -87,14 +87,30 @@ export const queryTemplates = [
         + "    ?skill ?associatedWithDiscipline ?discipline . "
         + "} GROUP BY ?skill ?discipline ORDER BY DESC(?peopleHavingIt)"
   },
-  /*{
-    id: "ministries",
-    title: "Ministries",
-    description: "Ministries we worked with.",
+  {
+    id: "ministry-contact-points",
+    title: "Ministry contact points",
+    description: "Ministries we had or have contact points with.",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
-        + "SELECT * WHERE { "
-        + "  ?project ds:hasProjectPartner ?ministry . "
-        + "  OPTIONAL { ?ministry ds:hasLogoImageURL ?logoImageURL . } "
-        + "}"
-  }*/
+        + "SELECT ?dsProject ?fellowship ?fellowshipProject ?employeeWhoWorkedThere WHERE { "
+        + "    BIND(ds:MinistryXYZ AS ?ministry)  "
+        + "    {  "
+        + "        ?dsProject ds:hasProjectPartner ?ministry .  "
+        + "        ?ministry ds:type ds:Ministry . "
+        + "    } "
+        + "    UNION  "
+        + "    { "
+        + "        ds:Fellowships ds:hasFellowship ?fellowship . "
+        + "        ?fellowship ds:hasProject ?fellowshipProject . "
+        + "        ?fellowshipProject ds:hasFellowshipProjectPartner ?ministry .  "
+        + "    } "
+        + "    UNION { ?employeeWhoWorkedThere ds:workedBeforeAt ?ministry . } "
+        + "}",
+    choices: [
+      {
+        label: "Ministry",
+        placeholder: "[ministry]"
+      }
+    ]
+  }
 ]
