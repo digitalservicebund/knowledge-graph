@@ -12,7 +12,9 @@ export const queryTemplates = [
     title: "List employees",
     description: "List all employees with some basic infos about them",
     query: "PREFIX ds: <https://digitalservice.bund.de/kg#> "
-        + "SELECT (?employee AS ?name) ?imageURL ?discipline ?seniority (GROUP_CONCAT(strafter(str(?skill), \"#\"); SEPARATOR=\", \") as ?skills) ?nonProjectParticipations "
+        + "SELECT (?employee AS ?name) ?imageURL ?discipline ?seniority "
+        + "(GROUP_CONCAT(strafter(str(?skill), \"#\"); SEPARATOR=\", \") as ?skills) "
+        + "?nonProjectParticipations ?fellowshipAlumni "
         + "WHERE { "
         + "    ds:Employees ds:hasEmployee ?employee . "
         + "    OPTIONAL { ?employee ds:hasImageURL ?imageURL . } "
@@ -20,7 +22,12 @@ export const queryTemplates = [
         + "    OPTIONAL { ?employee ds:hasExperienceLevel ?seniority . } "
         + "    OPTIONAL { ?employee ds:isMemberOf ?nonProjectParticipations . } "
         + "    OPTIONAL { ?employee ds:hasSkill ?skill . } "
-        + "} GROUP BY ?employee ?imageURL ?discipline ?seniority ?nonProjectParticipations"
+        + "    OPTIONAL { "
+        + "        ds:Fellowships ds:hasFellowship ?fellowshipAlumni . "
+        + "        ?fellowshipAlumni ds:hasProject ?fellowshipProject . "
+        + "        ?fellowshipProject ds:hasTeamMember ?employee . "
+        + "    }"
+        + "} GROUP BY ?employee ?imageURL ?discipline ?seniority ?nonProjectParticipations ?fellowshipAlumni"
   },
   {
     id: "hire-timeline",
@@ -54,7 +61,7 @@ export const queryTemplates = [
       }
     ]
   },
-  {
+  /*{
     id: "ministries",
     title: "Ministries",
     description: "Ministries we worked with.",
@@ -75,5 +82,5 @@ export const queryTemplates = [
         + "  OPTIONAL { ?project ds:hasURL ?url . } "
         + "  OPTIONAL { <<ds:Projects ds:hasProject ?project>> ds:status ?status . } "
         + "}"
-  }
+  }*/
 ]
