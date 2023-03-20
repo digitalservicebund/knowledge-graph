@@ -57,7 +57,7 @@ function QueryResultsTable(props) {
         .then(data =>  data.image_url)
   }
 
-  const daysOnProject = [123, 456] // remove demo-hack TODO
+  const daysOnProject = [139, 96, 48, 11] // remove demo-hack TODO
 
   function buildCellContent(col, variable, rowIdx) {
     variable = variable.toLowerCase()
@@ -94,7 +94,7 @@ function QueryResultsTable(props) {
 
   return (
       <div>
-        {resultData &&
+        {resultData && <>
           <TableContainer>
             <Table sx={{width: 600}}>
               <TableHead>
@@ -114,6 +114,12 @@ function QueryResultsTable(props) {
               </TableBody>
             </Table>
           </TableContainer>
+          {props.templateId === "project-timeline" && <>
+              <br/>
+              <p style={{color: "blue"}}>Total person days on project: <strong>294</strong></p>
+            </>
+          }
+        </>
         }
     </div>
   );
