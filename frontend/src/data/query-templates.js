@@ -1,12 +1,12 @@
 export const queryTemplates = [
-  /*{
+  {
     id: "list-all",
     title: "All triples",
-    description: "List all triples",
+    description: "List all triples in the knowledge graph",
     query: "SELECT * WHERE { "
         + "  ?s ?p ?o . "
         + "}"
-  },*/
+  },
   {
     id: "list-employees",
     title: "List employees",
@@ -120,8 +120,8 @@ export const queryTemplates = [
         + "        } LIMIT 1 "
         + "    }"
         + "}"
-  }
-  /*{
+  },
+  {
     id: "ministry-contact-points",
     title: "Ministry contact points",
     description: "Ministries we had or have contact points with.",
@@ -146,5 +146,5 @@ export const queryTemplates = [
         placeholder: "[ministry]"
       }
     ]
-  }*/
+  }
 ]
