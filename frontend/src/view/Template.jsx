@@ -20,6 +20,7 @@ function Template() {
       data: [1, 1, 2, 3, 3, 3, 4, 4, 5, 7],
       tension: 0.2
     }]};
+  const demoCriteriaStr = "Senior Engineer (React!) + Regular Engineer (React?) + Junior/Regular Design"
 
   useEffect(() => {
     if (init.current) return
@@ -41,8 +42,9 @@ function Template() {
                 </div>
               })}
               { template.id === "team-assembly" && <>
-                <br/>
-                <TextField label="Criteria" fullWidth variant="standard" />
+                <br/><br/>
+                <strong>Criteria:</strong>
+                <TextField fullWidth variant="standard" value={demoCriteriaStr} />
                 <br/><br/>
               </>}
               {!query &&
