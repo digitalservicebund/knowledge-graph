@@ -21,7 +21,7 @@ public class MarkdownImporter {
   private final Path importDir;
   private final String defaultNs;
 
-  public MarkdownImporter(@Value("${importer.markdown.directory}") Path importDir,
+  public MarkdownImporter(@Value("${importer.default.directory}") Path importDir,
       @Value("${namespace.default.uri}") String defaultNs) {
     this.importDir = importDir;
     this.defaultNs = defaultNs;
@@ -30,7 +30,7 @@ public class MarkdownImporter {
   public void doImport(DatasetService datasetService, Path markdownDir) throws IOException {
     Model model = datasetService.getModel("demo");
 
-    for (Path path : getMarkdownFiles(markdownDir == null ? importDir : markdownDir)) {
+    for (Path path : getMarkdownFiles(markdownDir == null ? importDir.resolve("markdown") : markdownDir)) {
       Resource subject = model.createResource(defaultNs + getBaseName(path.getFileName().toString()));
       for (String line : Files.lines(path).toList()) {
         if (line.isBlank()) continue;
