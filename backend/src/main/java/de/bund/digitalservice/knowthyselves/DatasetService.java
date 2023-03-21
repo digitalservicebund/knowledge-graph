@@ -49,7 +49,7 @@ public class DatasetService {
       models.put(dsName, model);
       if (addDemoData) {
         try {
-          Path markdownDir = Paths.get("backend/data/for-demo-20230321/as-markdown");
+          Path markdownDir = Paths.get("data/for-demo-20230321/as-markdown");
           markdownImporter.doImport(this, markdownDir);
           logger.info("Added demo-data in markdown format to dataset {} from directory {}", dsName, markdownDir);
         } catch (IOException e) {
