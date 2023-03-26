@@ -1,4 +1,4 @@
-# KnowThyselves
+# :bulb: KnowThyselves
 A Knowledge Graph prototype by the Workstream "Learning Organization" at DigitalService.
 
 <img title="Katy" src="https://user-images.githubusercontent.com/5141792/225292599-c8ae735f-10f9-42c3-89c2-267a1d60b790.png" width="400">
