@@ -1,4 +1,37 @@
-### Sequence diagram
+## Architecture overview
+
+```mermaid
+graph
+
+  subgraph Spring Boot Server
+    springBoot[Spring Boot]
+    restAPI[REST API]
+    springBoot --> restAPI
+  end
+
+  subgraph Apache Jena Fuseki Server using Apache Shiro for auth
+    fuseki[Apache Jena Fuseki]
+    sparqlEndpoint[SPARQL Endpoint]
+    fuseki --> sparqlEndpoint
+  end
+
+  subgraph Google
+    googleAuth[Google Account Authentication]
+  end
+
+  subgraph React Frontend
+    reactApp[React App]
+  end
+
+  restAPI -->|Fuseki HTTP Administration Protocol| fuseki
+  reactApp -->|Management Tasks| restAPI
+  reactApp -->|SPARQL Queries| sparqlEndpoint
+  reactApp -->|Request Authentication| googleAuth
+  googleAuth -->|Return Authentication Token| reactApp
+  fuseki -->|Token Validation| googleAuth
+```
+
+## Sequence diagram
 
 ```mermaid
 sequenceDiagram
