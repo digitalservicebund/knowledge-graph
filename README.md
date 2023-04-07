@@ -5,7 +5,7 @@ A Knowledge Graph prototype by the Workstream "Learning Organization" at Digital
 
 ## Tech stack
 
-Find diagrams in `docs`.
+Find diagrams in `doc`.
 
 ## How to run the application
 
