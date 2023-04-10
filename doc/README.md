@@ -3,32 +3,24 @@
 ```mermaid
 graph
 
-  subgraph Spring Boot Server
-    springBoot[Spring Boot]
-    restAPI[REST API]
-    springBoot --> restAPI
-  end
-
-  subgraph Apache Jena Fuseki Server using Apache Shiro for auth
-    fuseki[Apache Jena Fuseki]
-    sparqlEndpoint[SPARQL Endpoint]
-    fuseki --> sparqlEndpoint
-  end
-
-  subgraph Google
-    googleAuth[Google Account Authentication]
-  end
-
   subgraph React Frontend
     reactApp[React App]
   end
 
-  restAPI -->|Fuseki HTTP Administration Protocol| fuseki
-  reactApp -->|Management Tasks| restAPI
-  reactApp -->|SPARQL Queries| sparqlEndpoint
-  reactApp -->|Request Authentication| googleAuth
-  googleAuth -->|Return Authentication Token| reactApp
-  fuseki -->|Token Validation| googleAuth
+  subgraph Spring Boot Server
+    springBoot[Spring Boot Server]
+    triplestore[Apache Jena TDB2<br>RDF-triplestore]
+    restAPI[REST API endpoints]
+    restAPI --> springBoot
+    springBoot -->|run queries<br>from authenticated users| triplestore
+  end
+
+  subgraph Google
+    googleAuth[Google OAuth 2.0 Flow]
+  end
+
+  reactApp --> restAPI
+  springBoot -->|handle authentication| googleAuth
 ```
 
 ## Sequence diagram
@@ -36,22 +28,19 @@ graph
 ```mermaid
 sequenceDiagram
     participant R as React App
-    participant S as Spring Boot Server
-    participant FS as Apache Jena Fuseki Server<br>using Apache Shiro for auth
-    participant G as Google
+    participant ST as Spring Boot Server with<br>Apache Jena TDB2 RDF-triplestore
+    participant G as Google OAuth 2.0 Flow
 
-    R->>G: Request authentication
-    G->>R: Return authentication token
+    R->>ST: Login
+    ST->>G: Request authentication
+    G->>ST: Return authentication token
+    ST->>R: Login successful
 
-    R->>FS: Request: SPARQL query (with token)
-    FS->>G: Validate token
-    G->>FS: Validation result
-    FS->>R: Response: SPARQL query result
+    R->>ST: Request: SPARQL query
+    ST->>ST: Run query for authenticated user
+    ST->>R: Response: SPARQL query result
 
-    R->>S: Request: Create dataset (with token)
-    S->>FS: Use Fuseki HTTP Admin Protocol to create dataset (with token)
-    FS->>G: Validate token
-    G->>FS: Validation result
-    FS->>S: Dataset creation result
-    S->>R: Response: Dataset created
+    R->>ST: Request: Create new dataset
+    ST->>ST: Create new dataset for authenticated user
+    ST->>R: Response: Dataset created
 ```
