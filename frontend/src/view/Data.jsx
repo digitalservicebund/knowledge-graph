@@ -4,12 +4,10 @@ import Button from "@mui/material/Button";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import config from "../config.json";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 
-const sparql = new SparqlEndpointFetcher()
 const DEFAULT_NAMESPACE = "https://digitalservice.bund.de/kg#"
 const DEFAULT_NAMESPACE_PREFIX = "ds"
 
@@ -45,7 +43,7 @@ function Data() {
     let object = obj.startsWith("\"") && obj.endsWith("\"") ? obj : uri(obj);
     const query = "PREFIX " + DEFAULT_NAMESPACE_PREFIX + ": <" + DEFAULT_NAMESPACE + "> "
         + "INSERT DATA { " + uri(sub) + " " + uri(pred) + " " + object + " }";
-    await sparql.fetchUpdate(config.SPARQL_ENDPOINT + "/demo", query);
+    // await sparql.fetchUpdate(config.SPARQL_ENDPOINT + "/demo", query);
   }
 
   function handlePaperClick(format) {

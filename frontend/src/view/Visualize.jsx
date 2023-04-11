@@ -1,12 +1,10 @@
 import ForceGraph2D from "react-force-graph-2d";
 import ForceGraph3D from "react-force-graph-3d";
 import { useEffect, useRef, useState } from "react";
-import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
 import config from "../config.json";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-const sparql = new SparqlEndpointFetcher()
 
 function Visualize() {
   const init = useRef(false);
@@ -35,7 +33,7 @@ function Visualize() {
     const nodes = {}
     const edges = {}
     const rdfStarTriples = []
-    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", query)
+    /*const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", query)
     bindingsStream.on("data", triple => {
       if (triple.s.termType === "Quad") {
         rdfStarTriples.push(triple)
@@ -77,7 +75,7 @@ function Visualize() {
         links: Object.values(edges)
       }
       setGraphData(graphData)
-    })
+    })*/
   }
 
   function handleRadioChange(e) {

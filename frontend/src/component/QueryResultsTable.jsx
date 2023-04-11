@@ -7,8 +7,6 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import config from "../config.json";
-import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
-const sparql = new SparqlEndpointFetcher()
 
 function QueryResultsTable(props) {
 
