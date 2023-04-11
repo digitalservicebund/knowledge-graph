@@ -23,6 +23,17 @@ function QueryResultsTable(props) {
   }, [])
 
   async function runQuery() {
+    fetch("http://localhost:8080/api/v1/knowthyselves/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: props.query })
+    })
+    .then(response => response.text())
+    .then(data => console.log(data));
+
+    // TODO
+
+    /*
     let variables = []
     let rows = []
     const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", props.query)
@@ -48,7 +59,7 @@ function QueryResultsTable(props) {
           rows: rows
         })
       }
-    })
+    })*/
   }
 
   async function fetchRandomFace() {

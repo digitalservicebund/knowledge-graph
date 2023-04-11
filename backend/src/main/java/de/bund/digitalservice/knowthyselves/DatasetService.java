@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PreDestroy;
-import org.apache.jena.fuseki.main.FusekiServer;
-import org.apache.jena.fuseki.main.FusekiServer.Builder;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.tdb.TDBFactory;
@@ -26,7 +24,6 @@ public class DatasetService {
   private final List<String> initialDatasetNames = List.of("main", "demo");
   private final Map<String, Dataset> datasets = new HashMap<>();
   private final Map<String, Model> models = new HashMap<>();
-  private final FusekiServer fusekiServer;
 
   public DatasetService(
       @Value("${tdb.dir}") Path tbd,
@@ -35,7 +32,6 @@ public class DatasetService {
       MarkdownImporter markdownImporter
   ) {
     tbd.toFile().mkdirs();
-    Builder fusekiServerBuilder = FusekiServer.create();
 
     for (String dsName : initialDatasetNames) {
       Path tbdDir = tbd.resolve(dsName);
@@ -59,11 +55,7 @@ public class DatasetService {
       }
       logger.info("Triples in the default model of dataset {}:", dsName);
       model.listStatements().forEachRemaining(logger::info);
-
-      fusekiServerBuilder.add("/" + dsName, ds);
     }
-
-    fusekiServer = fusekiServerBuilder.enableCors(true).build().start();
   }
 
   public Model getModel(String dsName) {
@@ -72,7 +64,6 @@ public class DatasetService {
 
   @PreDestroy
   private void close() {
-    fusekiServer.stop();
     models.values().forEach(Model::close);
     datasets.values().forEach(Dataset::close);
   }
