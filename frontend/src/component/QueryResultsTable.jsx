@@ -28,7 +28,7 @@ function QueryResultsTable(props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query: props.query })
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => console.log(data));
 
     // TODO

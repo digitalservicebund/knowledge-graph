@@ -1,5 +1,7 @@
 package de.bund.digitalservice.knowthyselves;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
@@ -26,7 +28,9 @@ public class QueryService {
 
     try(QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
       ResultSet resultSet = queryExecution.execSelect();
-      return ResultSetFormatter.asText(resultSet);
+      OutputStream outStream = new ByteArrayOutputStream();
+      ResultSetFormatter.outputAsJSON(outStream, resultSet);
+      return outStream.toString();
     }
   }
 }
