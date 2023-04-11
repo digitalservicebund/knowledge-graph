@@ -14,7 +14,6 @@ function QueryResultsTable(props) {
 
   const init = useRef(false);
   const [resultData, setResultData] = useState();
-  const [faceURLs, setFaceURLs] = useState([]);
 
   useEffect(() => {
     if (init.current) return
@@ -29,10 +28,11 @@ function QueryResultsTable(props) {
       body: JSON.stringify({ query: props.query })
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(queryResult => {
+      console.log(queryResult)
 
-    // TODO
-
+      // TODO
+    })
     /*
     let variables = []
     let rows = []
@@ -45,39 +45,15 @@ function QueryResultsTable(props) {
       rows.push(resultRow)
     })
     bindingsStream.on("end", () => {
-      if (props.templateId === "list-employees") {
-        Promise.all(rows.map((_, idx) => fetchRandomFace())).then(result => {
-          setFaceURLs(result)
-          setResultData({
-            variables: variables,
-            rows: rows
-          })
-        })
-      } else {
-        setResultData({
-          variables: variables,
-          rows: rows
-        })
-      }
+      setResultData({
+        variables: variables,
+        rows: rows
+      })
     })*/
   }
 
-  async function fetchRandomFace() {
-    return await fetch("https://fakeface.rest/face/json?minimum_age=18&maximum_age=67")
-        .then(response => response.json())
-        .then(data =>  data.image_url)
-  }
-
-  const daysOnProject = [139, 96, 48, 11] // remove demo-hack TODO
-
   function buildCellContent(col, variable, rowIdx) {
     variable = variable.toLowerCase()
-    if (props.templateId === "list-employees" && variable === "imageurl") {
-      return <img style={{borderRadius: "10px"}} src={faceURLs[rowIdx]} width="50"/>
-    }
-    if (props.templateId === "project-timeline" && variable === "daysonproject") {
-      return <span style={{color:"green"}}>{daysOnProject[rowIdx]}</span>
-    }
     if (!col) return
     if (col.termType === "NamedNode") {
       return <span title={col.value}>{col.value.split("#").pop()}</span>
@@ -127,11 +103,6 @@ function QueryResultsTable(props) {
               </TableBody>
             </Table>
           </TableContainer>
-          {props.templateId === "project-timeline" && <>
-              <br/>
-              <p style={{color: "blue"}}>Total person days on project: <strong>294</strong></p>
-            </>
-          }
         </>
         }
     </div>
