@@ -6,7 +6,6 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import config from "../config.json";
 
 function QueryResultsTable(props) {
 
@@ -26,42 +25,28 @@ function QueryResultsTable(props) {
       body: JSON.stringify({ query: props.query })
     })
     .then(response => response.json())
-    .then(queryResult => {
-      console.log(queryResult)
-
-      // TODO
-    })
-    /*
-    let variables = []
-    let rows = []
-    const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", props.query)
-    bindingsStream.on("variables", vars =>
-        variables = vars.map(v => v.value)
-    )
-    bindingsStream.on("data", resultRow => {
-      console.log(resultRow)
-      rows.push(resultRow)
-    })
-    bindingsStream.on("end", () => {
+    .then(data => {
+      console.log(data)
       setResultData({
-        variables: variables,
-        rows: rows
+        variables: data.head.vars,
+        rows: data.results.bindings
       })
-    })*/
+    })
   }
 
   function buildCellContent(col, variable, rowIdx) {
     variable = variable.toLowerCase()
     if (!col) return
-    if (col.termType === "NamedNode") {
+    if (col.type === "uri") {
       return <span title={col.value}>{col.value.split("#").pop()}</span>
     }
     // RDF-star
-    if (col.termType === "Quad") {
-      let rdfStarTripleFull = "<<" + col.subject.value + " " + col.predicate.value + " " + col.object.value + ">>"
-      let rdfStarTripleShort = "<<" + col.subject.value.split("#").pop() + " "
-          + col.predicate.value.split("#").pop() + " "
-          + (col.object.termType === "NamedNode" ? col.object.value.split("#").pop() : col.object.value) + ">>"
+    if (col.type === "triple") {
+      let triple = col.value
+      let rdfStarTripleFull = "<<" + triple.subject.value + " " + triple.predicate.value + " " + triple.object.value + ">>"
+      let rdfStarTripleShort = "<<" + triple.subject.value.split("#").pop() + " "
+          + triple.predicate.value.split("#").pop() + " "
+          + (triple.object.type === "uri" ? triple.object.value.split("#").pop() : triple.object.value) + ">>"
       return <span title={rdfStarTripleFull}>{rdfStarTripleShort}</span>
     }
     // literal
@@ -85,8 +70,8 @@ function QueryResultsTable(props) {
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  {resultData.variables.map(h =>
-                      <TableCell align="right" key={h}><strong>{h}</strong></TableCell>)}
+                  {resultData.variables.map(v =>
+                      <TableCell align="right" key={v}><strong>{v}</strong></TableCell>)}
                 </TableRow>
               </TableHead>
               <TableBody>

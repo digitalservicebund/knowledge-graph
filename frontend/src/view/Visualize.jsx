@@ -1,7 +1,6 @@
 import ForceGraph2D from "react-force-graph-2d";
 import ForceGraph3D from "react-force-graph-3d";
 import { useEffect, useRef, useState } from "react";
-import config from "../config.json";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -24,7 +23,7 @@ function Visualize() {
   }
 
   function getObjectLabel(oObj) {
-    return oObj.termType === "Literal" ?
+    return oObj.type === "literal" ?
         ("\"" + oObj.value + "\"") : getLocalName(oObj.value)
   }
 
@@ -33,39 +32,48 @@ function Visualize() {
     const nodes = {}
     const edges = {}
     const rdfStarTriples = []
-    /*const bindingsStream = await sparql.fetchBindings(config.SPARQL_ENDPOINT + "/demo", query)
-    bindingsStream.on("data", triple => {
-      if (triple.s.termType === "Quad") {
-        rdfStarTriples.push(triple)
-        return
-      }
-      const sub = triple.s.value
-      const pred = triple.p.value
-      const obj = triple.o.value
-      if (!nodes[sub]) nodes[sub] = {
-        id: Object.keys(nodes).length,
-        label: getLocalName(sub),
-        value: sub
-      }
-      if (!nodes[obj]) nodes[obj] = {
-        id: Object.keys(nodes).length,
-        label: getObjectLabel(triple.o),
-        value: obj
-      }
-      let tripleIdentifier = sub + "_" + pred + "_" + obj
-      edges[tripleIdentifier] = {
-        id: Object.keys(edges).length,
-        identifier: tripleIdentifier,
-        source: nodes[sub].id,
-        target: nodes[obj].id,
-        label: getLocalName(pred),
-        value: pred
-      }
+
+    fetch("http://localhost:8080/api/v1/knowthyselves/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: query })
     })
-    bindingsStream.on("end", () => {
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      for (let i = 0; i < data.results.bindings.length; i++) {
+        let triple = data.results.bindings[i]
+        if (triple.s.type === "triple") {
+          rdfStarTriples.push(triple)
+          continue
+        }
+        const sub = triple.s.value
+        const pred = triple.p.value
+        const obj = triple.o.value
+        if (!nodes[sub]) nodes[sub] = {
+          id: Object.keys(nodes).length,
+          label: getLocalName(sub),
+          value: sub
+        }
+        if (!nodes[obj]) nodes[obj] = {
+          id: Object.keys(nodes).length,
+          label: getObjectLabel(triple.o),
+          value: obj
+        }
+        let tripleIdentifier = sub + "_" + pred + "_" + obj
+        edges[tripleIdentifier] = {
+          id: Object.keys(edges).length,
+          identifier: tripleIdentifier,
+          source: nodes[sub].id,
+          target: nodes[obj].id,
+          label: getLocalName(pred),
+          value: pred
+        }
+      }
       for (let triple of rdfStarTriples) {
-        const subTripleIdentifier =
-            triple.s.subject.value + "_" + triple.s.predicate.value + "_" + triple.s.object.value
+        let refTriple = triple.s.value
+        const subTripleIdentifier = refTriple.subject.value + "_"
+            + refTriple.predicate.value + "_" + refTriple.object.value
         const predLabel = getLocalName(triple.p.value)
         const objLabel = getObjectLabel(triple.o)
         edges[subTripleIdentifier].label += ", " + predLabel + ": " + objLabel
@@ -75,7 +83,7 @@ function Visualize() {
         links: Object.values(edges)
       }
       setGraphData(graphData)
-    })*/
+    })
   }
 
   function handleRadioChange(e) {
