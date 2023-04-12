@@ -14,7 +14,10 @@ function Query() {
     if (init.current) return
     init.current = true;
     yasgui.current = new Yasgui(document.getElementById("yasgui"));
-    yasgui.current.getTab().setQuery("SELECT * WHERE { \n  ?subject ?predicate ?object .\n}");
+    yasgui.current.getTab().setQuery(
+        "PREFIX ds: <https://digitalservice.bund.de/kg#>\n"
+        + "SELECT * WHERE { \n  ?subject ?predicate ?object .\n}"
+    );
     return () => {};
   }, []);
 
