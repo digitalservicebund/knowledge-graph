@@ -42,7 +42,7 @@ function Query() {
           Save as template
         </Button>
         <br/><br/>
-        {query && <QueryResultsTable query={query}/>}
+        {query && <QueryResultsTable key={query} query={query}/>}
       </div>
   );
 }
