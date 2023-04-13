@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class DatasetService {
   private final Logger logger = LogManager.getLogger(DatasetService.class);
 
-  private final List<String> initialDatasetNames = List.of("main", "demo");
+  private final List<String> initialDatasetNames = List.of("main"); // "demo"
   private final Map<String, Dataset> datasets = new HashMap<>();
   private final Map<String, Model> models = new HashMap<>();
 

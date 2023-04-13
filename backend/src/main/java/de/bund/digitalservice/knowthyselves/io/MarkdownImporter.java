@@ -28,7 +28,7 @@ public class MarkdownImporter {
   }
 
   public void doImport(DatasetService datasetService, Path markdownDir) throws IOException {
-    Model model = datasetService.getModel("demo");
+    Model model = datasetService.getModel("main");
 
     for (Path path : getMarkdownFiles(markdownDir == null ? importDir.resolve("markdown") : markdownDir)) {
       Resource subject = model.createResource(defaultNs + getBaseName(path.getFileName().toString()));

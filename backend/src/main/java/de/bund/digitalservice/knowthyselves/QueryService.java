@@ -24,7 +24,7 @@ public class QueryService {
   public String runQuery(String query) {
     logger.info("Running query {}", query);
 
-    Model model = datasetService.getModel("demo");
+    Model model = datasetService.getModel("main");
 
     try(QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
       ResultSet resultSet = queryExecution.execSelect();
