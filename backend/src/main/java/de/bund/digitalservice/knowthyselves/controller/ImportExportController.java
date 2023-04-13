@@ -2,9 +2,11 @@ package de.bund.digitalservice.knowthyselves.controller;
 
 import de.bund.digitalservice.knowthyselves.DatasetService;
 import de.bund.digitalservice.knowthyselves.io.MarkdownImporter;
+import de.bund.digitalservice.knowthyselves.io.PlainTripleImporter;
 import de.bund.digitalservice.knowthyselves.io.RdfExporter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,11 +26,20 @@ public class ImportExportController {
 
   private final MarkdownImporter markdownImporter;
   private final RdfExporter rdfExporter;
+  private final PlainTripleImporter plainTripleImporter;
 
-  public ImportExportController(DatasetService datasetService, MarkdownImporter markdownImporter, RdfExporter rdfExporter) {
+  public ImportExportController(DatasetService datasetService, MarkdownImporter markdownImporter, RdfExporter rdfExporter, PlainTripleImporter plainTripleImporter) {
     this.datasetService = datasetService;
     this.markdownImporter = markdownImporter;
     this.rdfExporter = rdfExporter;
+    this.plainTripleImporter = plainTripleImporter;
+  }
+
+  @PostMapping(value = "/import-plain-triples")
+  public String importPlainTriples(@RequestBody List<PlainTriple> triples) {
+    logger.info("importing {} triples", triples.size());
+    plainTripleImporter.doImport(datasetService, triples);
+    return "Received and imported " + triples.size() + " triples";
   }
 
   @PostMapping(value = "/import")
