@@ -55,6 +55,7 @@ function Visualize() {
           label: getLocalName(sub),
           value: sub
         }
+        // this logic doesn't work for literals, they need a new node each time TODO
         if (!nodes[obj]) nodes[obj] = {
           id: Object.keys(nodes).length,
           label: getObjectLabel(triple.o),
