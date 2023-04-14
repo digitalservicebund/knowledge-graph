@@ -19,16 +19,22 @@ public class PlainTripleImporter {
     }
 
     public void doImport(DatasetService datasetService, List<PlainTriple> triples) {
-        Model model = datasetService.getModel("main");
+        Model mainModel = datasetService.getModel("main");
+        Model metaModel = datasetService.getModel("meta");
         for (PlainTriple triple : triples) {
-            Statement stmt = model.createStatement(
-                    model.createResource(defaultNs + triple.subject()),
-                    model.createProperty(defaultNs + triple.predicate()),
+            Statement mainStmt = mainModel.createStatement(
+                    mainModel.createResource(defaultNs + triple.subject()),
+                    mainModel.createProperty(defaultNs + triple.predicate()),
                     triple.type().equals("uri")
-                            ? model.createResource(defaultNs + triple.object())
-                            : model.createLiteral(triple.object())
+                            ? mainModel.createResource(defaultNs + triple.object())
+                            : mainModel.createLiteral(triple.object())
             );
-            model.add(stmt);
+            mainModel.add(mainStmt);
+            metaModel.add(
+                metaModel.createResource(mainStmt),
+                metaModel.createProperty(defaultNs + "hasImportSource"),
+                metaModel.createLiteral(triple.source())
+            );
         }
     }
 }

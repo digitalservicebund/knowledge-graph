@@ -4,5 +4,6 @@ public record PlainTriple(
     String subject,
     String predicate,
     String object,
-    String type
+    String type,
+    String source
 ) {}
