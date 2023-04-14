@@ -49,14 +49,17 @@ function Visualize() {
         }
         const sub = triple.s.value
         const pred = triple.p.value
-        const obj = triple.o.value
+        let obj = triple.o.value
+        let objKey = obj
+        if (triple.o.type === "literal") {
+          objKey += "_" + Math.random().toString(36).slice(-5)
+        }
         if (!nodes[sub]) nodes[sub] = {
           id: Object.keys(nodes).length,
           label: getLocalName(sub),
           value: sub
         }
-        // this logic doesn't work for literals, they need a new node each time TODO
-        if (!nodes[obj]) nodes[obj] = {
+        if (!nodes[objKey]) nodes[objKey] = {
           id: Object.keys(nodes).length,
           label: getObjectLabel(triple.o),
           value: obj
@@ -66,7 +69,7 @@ function Visualize() {
           id: Object.keys(edges).length,
           identifier: tripleIdentifier,
           source: nodes[sub].id,
-          target: nodes[obj].id,
+          target: nodes[objKey].id,
           label: getLocalName(pred),
           value: pred
         }
