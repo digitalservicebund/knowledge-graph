@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,10 +39,14 @@ public class ImportExportController {
   }
 
   @PostMapping(value = "/import-plain-triples")
-  public String importPlainTriples(@RequestBody List<PlainTriple> triples) {
-    logger.info("importing {} triples", triples.size());
+  public ResponseEntity<String> importPlainTriples(@RequestBody @NonNull List<PlainTriple> triples) {
+    if (triples.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("List of triples is empty");
+    }
+    String source = triples.get(0).source();
+    logger.info("Importing {} triples from source {}", triples.size(), source);
     plainTripleImporter.doImport(datasetService, triples);
-    return "Received and imported " + triples.size() + " triples";
+    return ResponseEntity.ok("Imported " + triples.size() + " triples from source " + source);
   }
 
   @PostMapping(value = "/import")
