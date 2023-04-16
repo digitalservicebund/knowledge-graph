@@ -18,23 +18,49 @@ public class PlainTripleImporter {
         this.defaultNs = defaultNs;
     }
 
+    private String uri(String localName) {
+        return defaultNs + localName;
+    }
+
+    private Statement buildStatement(Model model, String sub, String pred, String obj, String objType) {
+        return model.createStatement(
+            model.createResource(uri(sub)),
+            model.createProperty(uri(pred)),
+            objType.equals("uri")
+                ? model.createResource(uri(obj))
+                : model.createLiteral(obj)
+        );
+    }
+
+    private Statement buildRDFStarStatement(Model model, Statement subStmt, String pred, String obj, String objType) {
+        return model.createStatement(
+            model.createResource(subStmt),
+            model.createProperty(uri(pred)),
+            objType.equals("uri")
+                ? model.createResource(uri(obj))
+                : model.createLiteral(obj)
+        );
+    }
+
     public void doImport(DatasetService datasetService, List<PlainTriple> triples) {
         Model mainModel = datasetService.getModel("main");
         Model metaModel = datasetService.getModel("meta");
         for (PlainTriple triple : triples) {
-            Statement mainStmt = mainModel.createStatement(
-                    mainModel.createResource(defaultNs + triple.subject()),
-                    mainModel.createProperty(defaultNs + triple.predicate()),
-                    triple.type().equals("uri")
-                            ? mainModel.createResource(defaultNs + triple.object())
-                            : mainModel.createLiteral(triple.object())
-            );
-            mainModel.add(mainStmt);
-            metaModel.add(
-                metaModel.createResource(mainStmt),
-                metaModel.createProperty(defaultNs + "hasImportSource"),
-                metaModel.createLiteral(triple.source())
-            );
+            Statement stmt;
+            String subjectType = triple.subjectType();
+            if (subjectType.startsWith("triple")) {
+                // ref = the triple that this triple is making a statement about
+                String refObjectType = subjectType.substring(subjectType.lastIndexOf("-") + 1);
+                String refSubject = triple.subject().split(" ")[0];
+                String refPredicate = triple.subject().split(" ")[1];
+                String refObject = triple.subject().split(" ")[2];
+                Statement refStmt = buildStatement(mainModel, refSubject, refPredicate, refObject, refObjectType);
+                stmt = buildRDFStarStatement(mainModel, refStmt, triple.predicate(), triple.object(), triple.objectType());
+            } else {
+                stmt = buildStatement(mainModel, triple.subject(), triple.predicate(), triple.object(), triple.objectType());
+            }
+            mainModel.add(stmt);
+            metaModel.add(buildRDFStarStatement(metaModel, stmt, "hasImportSource", triple.source(), "literal"));
         }
     }
 }

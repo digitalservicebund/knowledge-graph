@@ -2,8 +2,9 @@ package de.bund.digitalservice.knowthyselves.controller;
 
 public record PlainTriple(
     String subject,
+    String subjectType,
     String predicate,
     String object,
-    String type,
+    String objectType,
     String source
 ) {}
