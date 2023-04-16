@@ -58,9 +58,10 @@ public class PlainTripleImporter {
                 stmt = buildRDFStarStatement(mainModel, refStmt, triple.predicate(), triple.object(), triple.objectType());
             } else {
                 stmt = buildStatement(mainModel, triple.subject(), triple.predicate(), triple.object(), triple.objectType());
+                // move this below the else once triples about triples about triples are supported TODO
+                metaModel.add(buildRDFStarStatement(metaModel, stmt, "hasImportSource", triple.source(), "literal"));
             }
             mainModel.add(stmt);
-            metaModel.add(buildRDFStarStatement(metaModel, stmt, "hasImportSource", triple.source(), "literal"));
         }
     }
 }
