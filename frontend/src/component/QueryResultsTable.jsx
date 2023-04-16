@@ -65,6 +65,7 @@ function QueryResultsTable(props) {
   return (
       <div>
         {resultData && <>
+          <strong>{resultData.rows.length} results</strong>:
           <TableContainer>
             <Table sx={{margin: "0 auto", width: 700}}>
               <TableHead>
