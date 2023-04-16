@@ -22,7 +22,7 @@ function QueryResultsTable(props) {
     fetch("http://localhost:8080/api/v1/knowthyselves/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: props.query })
+      body: JSON.stringify({ query: props.query, dataset: "main" }) // TODO add 3 checkboxes
     })
     .then(response => response.json())
     .then(data => {

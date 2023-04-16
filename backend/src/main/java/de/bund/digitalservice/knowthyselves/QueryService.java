@@ -21,10 +21,15 @@ public class QueryService {
     this.datasetService = datasetService;
   }
 
-  public String runQuery(String query) {
-    logger.info("Running query {}", query);
+  public String runQuery(String query, String dataset) {
+    logger.info("Running query {} on dataset {}", query, dataset);
 
-    Model model = datasetService.getModel("main");
+    Model model = switch (dataset) {
+      case "main" -> datasetService.getModel("main");
+      case "meta" -> datasetService.getModel("meta");
+      case "both" -> datasetService.getModel("main").union(datasetService.getModel("meta"));
+      default -> throw new IllegalArgumentException("Unknown dataset: " + dataset);
+    };
 
     try(QueryExecution queryExecution = QueryExecutionFactory.create(query, model)) {
       ResultSet resultSet = queryExecution.execSelect();

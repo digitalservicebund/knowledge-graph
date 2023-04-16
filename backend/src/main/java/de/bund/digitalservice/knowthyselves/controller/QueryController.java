@@ -25,6 +25,6 @@ public class QueryController {
 
   @PostMapping(value = "")
   public ResponseEntity<String> runQuery(@RequestBody Map<String, String> request) {
-    return ResponseEntity.ok(queryService.runQuery(request.get("query")));
+    return ResponseEntity.ok(queryService.runQuery(request.get("query"), request.get("dataset")));
   }
 }
