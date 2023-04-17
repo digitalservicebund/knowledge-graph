@@ -23,8 +23,13 @@ public class QueryController {
     this.queryService = queryService;
   }
 
-  @PostMapping(value = "")
-  public ResponseEntity<String> runQuery(@RequestBody Map<String, String> request) {
-    return ResponseEntity.ok(queryService.runQuery(request.get("query"), request.get("dataset")));
+  @PostMapping(value = "select")
+  public ResponseEntity<String> runSelectQuery(@RequestBody Map<String, String> request) {
+    return ResponseEntity.ok(queryService.runSelectQuery(request.get("query"), request.get("dataset")));
+  }
+
+  @PostMapping(value = "insert")
+  public ResponseEntity<String> runInsertQuery(@RequestBody Map<String, String> request) {
+    return ResponseEntity.ok(queryService.runInsertQuery(request.get("query"), request.get("dataset")));
   }
 }

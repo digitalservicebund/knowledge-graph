@@ -58,6 +58,10 @@ public class DatasetService {
     }
   }
 
+  public Dataset getDataset(String dsName) {
+    return datasets.get(dsName);
+  }
+
   public Model getModel(String dsName) {
     return models.get(dsName);
   }
