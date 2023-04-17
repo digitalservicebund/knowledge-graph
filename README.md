@@ -9,9 +9,7 @@ Find diagrams in `doc`.
 
 ## How to run the application
 
-There is demo-data available that will be imported to the graph on startup. So there is something to see right away when trying out the app :nerd_face:
-
-Lots of things are just mockups for the narrative of the demo at this point. They'll gradually turn into functioning code.
+For a quick demo with some data (and various mockups for the demo-narrative) readily available, go back to tag [v0.1.0-demo](https://github.com/digitalservicebund/know-thyselves/releases/tag/v0.1.0-demo). The current state on `main` will not import demo-data upon startup.
 
 ### Backend
 
