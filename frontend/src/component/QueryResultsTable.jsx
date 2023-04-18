@@ -51,7 +51,7 @@ function QueryResultsTable(props) {
     }
     // literal
     if (variable.includes("imageurl")) {
-      return <img src={col.value} title={col.value} width="120" alt="logo"/>
+      return <img src={col.value} title={col.value} width="60" alt="image"/>
     }
     if (variable.includes("url")) {
       return <>
