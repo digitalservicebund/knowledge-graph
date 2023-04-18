@@ -2,12 +2,17 @@ package de.bund.digitalservice.knowthyselves;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.query.TxnType;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.update.UpdateExecution;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +35,17 @@ public class QueryService {
     Dataset ds = switch (dataset) {
       case "main" -> datasetService.getDataset("main");
       case "meta" -> datasetService.getDataset("meta");
-      // case "both" -> TODO
+      case "both" -> {
+        Graph unionGraph = new MultiUnion(
+            new Graph[]{
+                datasetService.getDataset("main").getDefaultModel().getGraph(),
+                datasetService.getDataset("meta").getDefaultModel().getGraph()
+            });
+        Model unionModel = ModelFactory.createModelForGraph(unionGraph);
+        Dataset unionDataset = DatasetFactory.createTxnMem();
+        unionDataset.setDefaultModel(unionModel);
+        yield unionDataset;
+      }
       default -> throw new IllegalArgumentException("Unknown dataset: " + dataset);
     };
 
