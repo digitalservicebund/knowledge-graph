@@ -17,12 +17,11 @@ function Templates() {
   }, [])
 
   const fetchTemplates = () => {
-    let query = "PREFIX : <https://digitalservice.bund.de/kg#>\n"
-        + "SELECT * WHERE { \n"
-        + "  ?templateId :isA :QueryTemplate .\n"
-        + "  ?templateId :hasTitle ?title .\n"
-        + "  OPTIONAL { ?templateId :hasDescription ?description . }\n"
-        + "  ?templateId :hasQuery ?query .\n"
+    let query = "PREFIX : <https://digitalservice.bund.de/kg#> "
+        + "SELECT * WHERE { "
+        + "  ?templateId :isA :QueryTemplate . "
+        + "  ?templateId :hasTitle ?title . "
+        + "  OPTIONAL { ?templateId :hasDescription ?description . } "
         + "}"
     fetchSelect(query, "meta", responseJson => {
       console.log("Response:", responseJson)
@@ -30,7 +29,6 @@ function Templates() {
         id: row.templateId.value.split("#")[1],
         title: row.title.value,
         description: row.description ? row.description.value : "",
-        query: row.query.value
       })))
     })
   }
