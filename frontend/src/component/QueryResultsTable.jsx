@@ -6,6 +6,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { datasetNamesToOneString } from "../utils";
 
 function QueryResultsTable(props) {
 
@@ -18,16 +19,8 @@ function QueryResultsTable(props) {
     runQuery().then(() => {})
   }, [])
 
-  const datasetBooleansToStr = () => {
-    const { main, meta } = props.datasets
-    if (main && meta) return "both";
-    if (main) return "main";
-    if (meta) return "meta";
-    return "none";
-  };
-
   async function runQuery() {
-    let ds = datasetBooleansToStr()
+    let ds = datasetNamesToOneString(props.datasets)
     if (ds === "none") {
       alert("No dataset selected")
       return
