@@ -18,11 +18,24 @@ function QueryResultsTable(props) {
     runQuery().then(() => {})
   }, [])
 
+  const datasetBooleansToStr = () => {
+    const { main, meta } = props.datasets
+    if (main && meta) return "both";
+    if (main) return "main";
+    if (meta) return "meta";
+    return "none";
+  };
+
   async function runQuery() {
+    let ds = datasetBooleansToStr()
+    if (ds === "none") {
+      alert("No dataset selected")
+      return
+    }
     fetch("http://localhost:8080/api/v1/knowthyselves/query/select", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: props.query, dataset: "main" }) // TODO add 3 checkboxes
+      body: JSON.stringify({ query: props.query, dataset: ds })
     })
     .then(response => response.json())
     .then(data => {

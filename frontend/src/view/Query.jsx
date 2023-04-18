@@ -9,6 +9,12 @@ function Query() {
   const init = useRef(false);
   const yasgui = useRef();
   const [query, setQuery] = useState();
+  const [datasets, setDatasets] = useState({ main: true, meta: false });
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setDatasets({ ...datasets, [name]: checked });
+  };
 
   useEffect(() => {
     if (init.current) return
@@ -34,6 +40,27 @@ function Query() {
         <br/><br/>
         <div id="yasgui" style={{width: "700px"}} />
         <br/>
+        <div style={{paddingBottom: "20px", color: "gray"}}>
+          Dataset(s) to query:
+          <label>
+            <input
+                type="checkbox"
+                name="main"
+                checked={datasets.main}
+                onChange={handleCheckboxChange}
+            />
+            main
+          </label>
+          <label>
+            <input
+                type="checkbox"
+                name="meta"
+                checked={datasets.meta}
+                onChange={handleCheckboxChange}
+            />
+            meta
+          </label>
+        </div>
         <Button variant="contained" onClick={runQuery}>
           Run query
         </Button>
@@ -42,7 +69,7 @@ function Query() {
           Save as template
         </Button>
         <br/><br/>
-        {query && <QueryResultsTable key={query} query={query}/>}
+        {query && <QueryResultsTable key={query} query={query} datasets={datasets}/>}
       </div>
   );
 }
