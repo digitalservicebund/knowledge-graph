@@ -6,7 +6,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { datasetNamesToOneString } from "../utils";
+import { datasetNamesToOneString, fetchSelect } from "../utils";
 
 function QueryResultsTable(props) {
 
@@ -25,17 +25,11 @@ function QueryResultsTable(props) {
       alert("No dataset selected")
       return
     }
-    fetch("http://localhost:8080/api/v1/knowthyselves/query/select", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: props.query, dataset: ds })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
+    fetchSelect(props.query, ds, responseJson => {
+      console.log("Response:", responseJson)
       setResultData({
-        variables: data.head.vars,
-        rows: data.results.bindings
+        variables: responseJson.head.vars,
+        rows: responseJson.results.bindings
       })
     })
   }
