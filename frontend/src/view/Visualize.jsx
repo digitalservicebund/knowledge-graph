@@ -102,8 +102,8 @@ function Visualize() {
           <FormControlLabel value="3D" control={<Radio />} label="3D" />
         </RadioGroup>
         {graphData && visuMode === "2D" && <ForceGraph2D
-            width={1000}
-            height={600}
+            width={1200}
+            height={700}
             backgroundColor={"#eee"}
             graphData={graphData}
             nodeLabel="label"
@@ -112,8 +112,8 @@ function Visualize() {
             linkDirectionalArrowRelPos={1}
         />}
         {graphData && visuMode === "3D" && <ForceGraph3D
-            width={1000}
-            height={600}
+            width={1200}
+            height={700}
             graphData={graphData}
             nodeLabel="label"
             linkLabel="label"
