@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { queryTemplates } from "../data/query-templates";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import QueryResultsTable from "../component/QueryResultsTable";
+import { fetchSelect } from "../utils";
 
 function Template() {
   let { id } = useParams();
@@ -14,8 +14,28 @@ function Template() {
   useEffect(() => {
     if (init.current) return
     init.current = true;
-    setTemplate(queryTemplates.find(t => t.id === id));
+    fetchTemplate()
   }, [])
+
+  const fetchTemplate = () => {
+    let query = "PREFIX : <https://digitalservice.bund.de/kg#> "
+        + "SELECT * WHERE { "
+        + "  :" + id + " :isA :QueryTemplate . "
+        + "  :" + id + " :hasTitle ?title . "
+        + "  OPTIONAL { :" + id + " :hasDescription ?description . } "
+        + "  :" + id + " :hasQuery ?query . "
+        + "}"
+    fetchSelect(query, "meta", responseJson => {
+      console.log("Response:", responseJson)
+      let row = responseJson.results.bindings[0]
+      setTemplate({
+        title: row.title.value,
+        description: row.description ? row.description.value : "",
+        query: row.query.value,
+        choices: [] // TODO
+      })
+    })
+  }
 
   return (
       <div style={{textAlign: "center", width: "880px"}}>
@@ -35,7 +55,7 @@ function Template() {
                   </Button>
               }
               <br/>
-              {query && <QueryResultsTable query={query} templateId={template.id}/>}
+              {query && <QueryResultsTable query={query} datasets={{main: true, meta: false}} />}
             </>
         }
         { !template && "No template with id " + id + " found" }
