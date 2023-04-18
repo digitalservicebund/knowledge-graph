@@ -1,10 +1,39 @@
-import { queryTemplates } from "../data/query-templates";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { fetchSelect } from "../utils";
 
 function Templates() {
   const navigate = useNavigate();
+
+  const init = useRef(false);
+  const [templates, setTemplates] = useState([]);
+
+  useEffect(() => {
+    if (init.current) return
+    init.current = true
+    fetchTemplates()
+  }, [])
+
+  const fetchTemplates = () => {
+    let query = "PREFIX : <https://digitalservice.bund.de/kg#>\n"
+        + "SELECT * WHERE { \n"
+        + "  ?templateId :isA :QueryTemplate .\n"
+        + "  ?templateId :hasTitle ?title .\n"
+        + "  OPTIONAL { ?templateId :hasDescription ?description . }\n"
+        + "  ?templateId :hasQuery ?query .\n"
+        + "}"
+    fetchSelect(query, "meta", responseJson => {
+      console.log("Response:", responseJson)
+      setTemplates(responseJson.results.bindings.map(row => ({
+        id: row.templateId.value.split("#")[1],
+        title: row.title.value,
+        description: row.description ? row.description.value : "",
+        query: row.query.value
+      })))
+    })
+  }
 
   const paperStyle = {
     display: "flex",
@@ -41,10 +70,10 @@ function Templates() {
               },
             }}
         >
-          { queryTemplates.map(t =>
-              <Paper style={paperStyle} key={t.id} elevation={4} onClick={() => handlePaperClick(t.id)}>
-                <strong>{t.title}</strong>
-                <div style={descStyle}>{t.description}</div>
+          { templates.map(template =>
+              <Paper style={paperStyle} key={template.id} elevation={4} onClick={() => handlePaperClick(template.id)}>
+                <strong>{template.title}</strong>
+                <div style={descStyle}>{template.description}</div>
               </Paper>
           )}
         </Box>
