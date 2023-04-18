@@ -5,6 +5,7 @@ import Yasgui from "@triply/yasgui";
 import "@triply/yasgui/build/yasgui.min.css";
 import QueryResultsTable from "../component/QueryResultsTable";
 import slugify from "slugify";
+import { fetchInsert } from "../utils";
 
 function Query() {
   const init = useRef(false);
@@ -51,15 +52,7 @@ function Query() {
         "    :hasQuery \"\"\"\n" + query + "\n\"\"\" .\n" +
         "}"
     // let runOnDatasets TODO
-    fetch("http://localhost:8080/api/v1/knowthyselves/query/insert", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: insertQuery, dataset: "meta" })
-    })
-    .then(response => response.text())
-    .then(responseText => {
-      console.log("Response:", responseText)
-    })
+    fetchInsert(insertQuery, "meta", responseText => console.log("Response:", responseText))
   }
 
   return (

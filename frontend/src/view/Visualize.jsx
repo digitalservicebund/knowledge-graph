@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
+import { fetchSelect } from "../utils";
 
 function Visualize() {
   const init = useRef(false);
@@ -33,16 +34,10 @@ function Visualize() {
     const edges = {}
     const rdfStarTriples = []
 
-    fetch("http://localhost:8080/api/v1/knowthyselves/query/select", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: query, dataset: "main" })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      for (let i = 0; i < data.results.bindings.length; i++) {
-        let triple = data.results.bindings[i]
+    fetchSelect(query, "main", responseJson => {
+      console.log("Response: ", responseJson)
+      for (let i = 0; i < responseJson.results.bindings.length; i++) {
+        let triple = responseJson.results.bindings[i]
         if (triple.s.type === "triple") {
           rdfStarTriples.push(triple)
           continue
