@@ -10,6 +10,7 @@ function Template() {
   const init = useRef(false);
   const [template, setTemplate] = useState({});
   const [query, setQuery] = useState();
+  const [showQuery, setShowQuery] = useState(false);
 
   useEffect(() => {
     if (init.current) return
@@ -37,6 +38,10 @@ function Template() {
     })
   }
 
+  const toggleShowQuery = () => {
+    setShowQuery(!showQuery)
+  }
+
   return (
       <div style={{textAlign: "center", width: "880px"}}>
         { template &&
@@ -49,6 +54,12 @@ function Template() {
                   <br/>
                 </div>
               })}
+              <div style={{color: "gray", textDecoration: "underline"}} onClick={toggleShowQuery}>
+                <small>{showQuery ? "hide" : "show"} query</small>
+              </div>
+              { showQuery && <pre style={{textAlign: "left", marginLeft: "250px"}}>
+                {template.query}
+              </pre> }
               {!query &&
                   <Button style={{margin: "20px"}} variant="contained" onClick={() => setQuery(template.query)}>
                     Run query
