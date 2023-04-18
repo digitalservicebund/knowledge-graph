@@ -44,12 +44,12 @@ function Query() {
     let description = prompt("Enter an optional description")
     description = description.trim()
     let query = yasgui.current.getTab().getQuery()
-    let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#>\n" +
-        "INSERT DATA {\n" +
-        "    :" + id + " :isA :QueryTemplate ;\n" +
-        "    :hasTitle \"" + title + "\" ;\n" +
-        (description ? "    :hasDescription \"" + description + "\" ;\n" : "") +
-        "    :hasQuery \"\"\"\n" + query + "\n\"\"\" .\n" +
+    let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#> " +
+        "INSERT DATA { " +
+        "    :" + id + " :isA :QueryTemplate ; " +
+        "    :hasTitle \"" + title + "\" ; " +
+        (description ? "    :hasDescription \"" + description + "\" ; " : "") +
+        "    :hasQuery \"\"\"" + query + "\n\"\"\" . " +
         "}"
     // let runOnDatasets TODO
     fetchInsert(insertQuery, "meta", responseText => console.log("Response:", responseText))
