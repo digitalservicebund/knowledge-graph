@@ -58,14 +58,10 @@ function Query() {
   return (
       <div>
         <h2>Query</h2>
-        <Button variant="outlined">
-          Copy from template
-        </Button>
-        <br/><br/>
         <div id="yasgui" style={{width: "700px"}} />
         <br/>
         <div style={{paddingBottom: "20px", color: "gray"}}>
-          Dataset(s) to query:
+          Datasets:
           <label>
             <input
                 type="checkbox"
