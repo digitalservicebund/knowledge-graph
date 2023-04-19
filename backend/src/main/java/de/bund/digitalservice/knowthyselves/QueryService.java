@@ -36,14 +36,16 @@ public class QueryService {
       case "main" -> datasetService.getDataset("main");
       case "meta" -> datasetService.getDataset("meta");
       case "both" -> {
-        Graph unionGraph = new MultiUnion(
-            new Graph[]{
-                datasetService.getDataset("main").getDefaultModel().getGraph(),
-                datasetService.getDataset("meta").getDefaultModel().getGraph()
-            });
+        Dataset mainDs = datasetService.getDataset("main");
+        Dataset metaDs = datasetService.getDataset("meta");
+        mainDs.begin(TxnType.READ);
+        metaDs.begin(TxnType.READ);
+        Graph unionGraph = new MultiUnion(new Graph[]{mainDs.getDefaultModel().getGraph(), metaDs.getDefaultModel().getGraph()});
         Model unionModel = ModelFactory.createModelForGraph(unionGraph);
         Dataset unionDataset = DatasetFactory.createTxnMem();
         unionDataset.setDefaultModel(unionModel);
+        mainDs.end();
+        metaDs.end();
         yield unionDataset;
       }
       default -> throw new IllegalArgumentException("Unknown dataset: " + dataset);
