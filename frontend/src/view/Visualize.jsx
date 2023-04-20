@@ -48,8 +48,7 @@ function Visualize() {
 
     fetchSelect(query, "main", responseJson => {
       console.log("Response: ", responseJson)
-      for (let i = 0; i < responseJson.results.bindings.length; i++) {
-        let triple = responseJson.results.bindings[i]
+      for (const triple of responseJson.results.bindings) {
         if (triple.s.type === "triple") {
           rdfStarTriples.push(triple)
           continue
