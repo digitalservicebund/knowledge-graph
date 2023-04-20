@@ -24,12 +24,12 @@ function QueryResultsTable(props) {
       return <span title={rdfStarTripleFull}>{rdfStarTripleShort}</span>
     }
     // literal
-    if (variable.includes("picture")) {
+    if (variable.includes("imageurl")) {
       return <img src={col.value} title={col.value} width="60" alt="picture"/>
     }
     if (variable.includes("url")) {
       return <>
-        <a href={col.value} title={col.value} target="_blank" rel="noreferrer">link</a>
+        <a href={col.value} title={col.value} target="_blank" rel="noreferrer">{variable.split("url")[0]}</a>
         <OpenInNewIcon style={{fontSize: "large", verticalAlign: "middle", marginLeft: "2px"}}/>
       </>
     }
