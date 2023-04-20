@@ -158,7 +158,7 @@ function TopBar() {
               ))}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            {/*<Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                   <Button
                       onClick={handleOpenDatasetMenu}
@@ -219,7 +219,7 @@ function TopBar() {
                     </MenuItem>
                 ))}
               </Menu>
-            </Box>
+            </Box>*/}
           </Toolbar>
         </Container>
       </AppBar>
