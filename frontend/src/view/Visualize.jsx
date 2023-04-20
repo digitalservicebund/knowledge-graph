@@ -9,15 +9,27 @@ import { fetchSelect } from "../utils";
 function Visualize() {
   const init = useRef(false);
   const [graphData, setGraphData] = useState();
-
   const [visuMode, setVisuMode] = useState("2D");
+  const [dim, setDim] = useState({
+    width: window.innerWidth - 30,
+    height: window.innerHeight - 145
+  });
 
   useEffect(() => {
     if (!init.current) {
       init.current = true
       buildGraphData().then(() => {})
     }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
   }, [])
+
+  const handleResize = (e) => {
+    setDim({
+      width: e.target.innerWidth - 40,
+      height: e.target.innerHeight - 150
+    })
+  }
 
   function getLocalName(uri) {
     return uri.split("#").pop()
@@ -97,8 +109,8 @@ function Visualize() {
           <FormControlLabel value="3D" control={<Radio />} label="3D" />
         </RadioGroup>
         {graphData && visuMode === "2D" && <ForceGraph2D
-            width={1200}
-            height={700}
+            width={dim.width}
+            height={dim.height}
             backgroundColor={"#eee"}
             graphData={graphData}
             nodeLabel="label"
@@ -107,8 +119,8 @@ function Visualize() {
             linkDirectionalArrowRelPos={1}
         />}
         {graphData && visuMode === "3D" && <ForceGraph3D
-            width={1200}
-            height={700}
+            width={dim.width}
+            height={dim.height}
             graphData={graphData}
             nodeLabel="label"
             linkLabel="label"
