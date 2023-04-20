@@ -9,8 +9,8 @@ function Template() {
   let { id } = useParams();
   const init = useRef(false);
   const [template, setTemplate] = useState({});
-  const [query, setQuery] = useState();
   const [showQuery, setShowQuery] = useState(false);
+  const [queryResultData, setQueryResultData] = useState();
 
   useEffect(() => {
     if (init.current) return
@@ -42,6 +42,17 @@ function Template() {
     setShowQuery(!showQuery)
   }
 
+  async function runQuery() {
+    let ds = "main" // take from template TODO
+    fetchSelect(template.query, ds, responseJson => {
+      console.log("Response:", responseJson)
+      setQueryResultData({
+        variables: responseJson.head.vars,
+        rows: responseJson.results.bindings
+      })
+    })
+  }
+
   return (
       <div style={{textAlign: "center", width: "880px"}}>
         { template &&
@@ -60,13 +71,11 @@ function Template() {
               { showQuery && <pre style={{textAlign: "left", marginLeft: "250px"}}>
                 {template.query}
               </pre> }
-              {!query &&
-                  <Button style={{margin: "20px"}} variant="contained" onClick={() => setQuery(template.query)}>
-                    Run query
-                  </Button>
-              }
+              <Button style={{margin: "20px"}} variant="contained" onClick={() => runQuery()}>
+                Run query
+              </Button>
               <br/>
-              {query && <QueryResultsTable query={query} datasets={{main: true, meta: false}} />}
+              <QueryResultsTable queryResultData={queryResultData} />
             </>
         }
         { !template && "No template with id " + id + " found" }

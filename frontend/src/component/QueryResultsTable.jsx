@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -6,33 +5,8 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { datasetNamesToOneString, fetchSelect } from "../utils";
 
 function QueryResultsTable(props) {
-
-  const init = useRef(false);
-  const [resultData, setResultData] = useState();
-
-  useEffect(() => {
-    if (init.current) return
-    init.current = true;
-    runQuery().then(() => {})
-  }, [])
-
-  async function runQuery() {
-    let ds = datasetNamesToOneString(props.datasets)
-    if (ds === "none") {
-      alert("No dataset selected")
-      return
-    }
-    fetchSelect(props.query, ds, responseJson => {
-      console.log("Response:", responseJson)
-      setResultData({
-        variables: responseJson.head.vars,
-        rows: responseJson.results.bindings
-      })
-    })
-  }
 
   function buildCellContent(col, variable, rowIdx) {
     variable = variable.toLowerCase()
@@ -50,8 +24,8 @@ function QueryResultsTable(props) {
       return <span title={rdfStarTripleFull}>{rdfStarTripleShort}</span>
     }
     // literal
-    if (variable.includes("imageurl")) {
-      return <img src={col.value} title={col.value} width="60" alt="image"/>
+    if (variable.includes("picture")) {
+      return <img src={col.value} title={col.value} width="60" alt="picture"/>
     }
     if (variable.includes("url")) {
       return <>
@@ -64,22 +38,22 @@ function QueryResultsTable(props) {
 
   return (
       <div>
-        {resultData && <>
-          <strong>{resultData.rows.length} results</strong>:
+        {props.queryResultData && <>
+          <strong>{props.queryResultData.rows.length} results</strong>:
           <TableContainer>
             <Table sx={{margin: "0 auto", width: 700}}>
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  {resultData.variables.map(v =>
+                  {props.queryResultData.variables.map(v =>
                       <TableCell align="right" key={v}><strong>{v}</strong></TableCell>)}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {resultData.rows.map((col, rowIdx) => (
+                {props.queryResultData.rows.map((col, rowIdx) => (
                     <TableRow key={rowIdx} sx={{"&:last-child td, &:last-child th": {border: 0}}}>
                       <TableCell align="left"><span style={{color: "gray", fontSize: "small"}}>{rowIdx + 1}</span></TableCell>
-                      {resultData.variables.map((v, idx) =>
+                      {props.queryResultData.variables.map((v, idx) =>
                           <TableCell align="right" key={idx}>{buildCellContent(col[v], v, rowIdx)}</TableCell>
                       )}
                     </TableRow>

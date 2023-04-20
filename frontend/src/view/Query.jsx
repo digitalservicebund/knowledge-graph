@@ -5,13 +5,13 @@ import Yasgui from "@triply/yasgui";
 import "@triply/yasgui/build/yasgui.min.css";
 import QueryResultsTable from "../component/QueryResultsTable";
 import slugify from "slugify";
-import { fetchInsert } from "../utils";
+import { datasetNamesToOneString, fetchInsert, fetchSelect } from "../utils";
 
 function Query() {
   const init = useRef(false);
   const yasgui = useRef();
-  const [query, setQuery] = useState();
   const [datasets, setDatasets] = useState({ main: true, meta: false });
+  const [queryResultData, setQueryResultData] = useState();
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -30,7 +30,19 @@ function Query() {
   }, []);
 
   async function runQuery() {
-    setQuery(yasgui.current.getTab().getQuery())
+    let ds = datasetNamesToOneString(datasets)
+    if (ds === "none") {
+      alert("No dataset selected")
+      return
+    }
+    const query = yasgui.current.getTab().getQuery()
+    fetchSelect(query, ds, responseJson => {
+      console.log("Response:", responseJson)
+      setQueryResultData({
+        variables: responseJson.head.vars,
+        rows: responseJson.results.bindings
+      })
+    })
   }
 
   function saveAsTemplate() {
@@ -89,7 +101,7 @@ function Query() {
           Save as template
         </Button>
         <br/><br/>
-        {query && <QueryResultsTable key={query} query={query} datasets={datasets}/>}
+        <QueryResultsTable queryResultData={queryResultData} />
       </div>
   );
 }
