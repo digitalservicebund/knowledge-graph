@@ -24,13 +24,8 @@ function Query() {
   const [datasets, setDatasets] = useState({ main: true, meta: false })
   const [queryResultData, setQueryResultData] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [formValues, setFormValues] = useState({
-    title: "",
-    description: "",
-    main: true,
-    meta: false,
-    tags: []
-  })
+  const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [] }
+  const [formValues, setFormValues] = useState(FORM_VALUES_DEFAULT)
 
   useEffect(() => {
     if (init.current) return
@@ -71,6 +66,7 @@ function Query() {
   }
 
   const handleDialogOpen = () => {
+    setFormValues(FORM_VALUES_DEFAULT)
     fetchTags(() => setDialogOpen(true))
   }
 
