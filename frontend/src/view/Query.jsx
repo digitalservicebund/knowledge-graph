@@ -95,7 +95,7 @@ function Query() {
         "    :hasTitle \"" + title + "\" ; " +
         (description ? "    :hasDescription \"" + description + "\" ; " : "") +
         "    :runOnDataset \"" + ds + "\" ; " +
-        formValues.tags.map((tag) => "    :hasTag \"" + tag + "\" ; ").join(" ") +
+        formValues.tags.map((tag) => "    :hasTag \"" + slugify(tag.trim()) + "\" ; ").join(" ") +
         "    :hasQuery \"\"\"" + query + "\n\"\"\" . " +
         "}"
     fetchInsert(insertQuery, "meta", responseText => {

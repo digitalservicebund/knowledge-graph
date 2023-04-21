@@ -9,6 +9,7 @@ function Templates() {
 
   const init = useRef(false);
   const [templates, setTemplates] = useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     if (init.current) return
@@ -18,18 +19,28 @@ function Templates() {
 
   const fetchTemplates = () => {
     let query = "PREFIX : <https://digitalservice.bund.de/kg#> "
-        + "SELECT * WHERE { "
-        + "  ?templateId :isA :QueryTemplate . "
-        + "  ?templateId :hasTitle ?title . "
-        + "  OPTIONAL { ?templateId :hasDescription ?description . } "
-        + "}"
+        + "SELECT ?templateId ?title ?description (GROUP_CONCAT(?tag) as ?tags) WHERE { "
+        + "    ?templateId :isA :QueryTemplate . "
+        + "    ?templateId :hasTitle ?title . "
+        + "    OPTIONAL { ?templateId :hasDescription ?description . } "
+        + "    ?templateId :hasTag ?tag . "
+        + "} GROUP BY ?templateId ?title ?description"
     fetchSelect(query, "meta", responseJson => {
       console.log("Response:", responseJson)
-      setTemplates(responseJson.results.bindings.map(row => ({
-        id: row.templateId.value.split("#")[1],
-        title: row.title.value,
-        description: row.description ? row.description.value : "",
-      })))
+      let distinctTags = {}
+      let collectTemplates = []
+      for (let row of responseJson.results.bindings) {
+        let tagsHere = row.tags.value.split(" ")
+        collectTemplates.push({
+          id: row.templateId.value.split("#")[1],
+          title: row.title.value,
+          description: row.description ? row.description.value : "",
+          tags: tagsHere
+        })
+        for (let tag of tagsHere) distinctTags[tag] = true
+      }
+      setTemplates(collectTemplates)
+      setTags(Object.keys(distinctTags).sort())
     })
   }
 
@@ -56,6 +67,7 @@ function Templates() {
       <div>
         <br/>
         <h2>Templates</h2>
+        { /* List tags TODO */ }
         <Box
             style={{width: "650px"}}
             sx={{
