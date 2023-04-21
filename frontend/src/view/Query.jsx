@@ -20,7 +20,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 function Query() {
   const init = useRef(false)
   const yasgui = useRef()
-  const tags = useRef(["experimental"])
+  const tags = useRef([])
   const [datasets, setDatasets] = useState({ main: true, meta: false })
   const [queryResultData, setQueryResultData] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -42,6 +42,18 @@ function Query() {
     );
   }, []);
 
+  const fetchTags = (callback) => {
+    let query = "PREFIX : <https://digitalservice.bund.de/kg#> "
+        + "SELECT DISTINCT ?tag WHERE { "
+        + "  ?templateId :isA :QueryTemplate . "
+        + "  ?templateId :hasTag ?tag . "
+        + "}"
+    fetchSelect(query, "meta", responseJson => {
+      tags.current = responseJson.results.bindings.map(row => row.tag.value)
+      callback()
+    })
+  }
+
   const handleDatasetChange = (event) => {
     const { name, checked } = event.target
     setDatasets({ ...datasets, [name]: checked })
@@ -56,6 +68,10 @@ function Query() {
     }
     const { name, value, checked, type } = event.target
     setFormValues({ ...formValues, [name]: type === "checkbox" ? checked : value })
+  }
+
+  const handleDialogOpen = () => {
+    fetchTags(() => setDialogOpen(true))
   }
 
   const handleSave = () => {
@@ -144,7 +160,7 @@ function Query() {
           Run query
         </Button>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <Button variant="outlined" onClick={() => setDialogOpen(true)}>
+        <Button variant="outlined" onClick={handleDialogOpen}>
           Save as template
         </Button>
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
