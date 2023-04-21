@@ -80,9 +80,8 @@ function Query() {
       alert("Template must have a title")
       return
     }
-    let mainDsSelected = formValues.main
-    let metaDsSelected = formValues.meta
-    if (!mainDsSelected && !metaDsSelected) {
+    let ds = datasetNamesToOneString({ main: formValues.main, meta: formValues.meta })
+    if (ds === "none") {
       alert("At least one dataset must be selected")
       return
     }
@@ -95,8 +94,7 @@ function Query() {
         "    :" + id + " :isA :QueryTemplate ; " +
         "    :hasTitle \"" + title + "\" ; " +
         (description ? "    :hasDescription \"" + description + "\" ; " : "") +
-        (mainDsSelected ? "    :runsOnDataset \"main\" ; " : "") +
-        (metaDsSelected ? "    :runsOnDataset \"meta\" ; " : "") +
+        "    :runOnDataset \"" + ds + "\" ; " +
         formValues.tags.map((tag) => "    :hasTag \"" + tag + "\" ; ").join(" ") +
         "    :hasQuery \"\"\"" + query + "\n\"\"\" . " +
         "}"
