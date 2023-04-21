@@ -226,7 +226,7 @@ function Query() {
                     ))
                 }
                 renderInput={(params) => (
-                    <TextField {...params} label="Tags" placeholder="Type or select" />
+                    <TextField {...params} label="Tags (optional)" placeholder="Type or select" />
                 )}
             />
           </DialogContent>

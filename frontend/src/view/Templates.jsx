@@ -23,14 +23,14 @@ function Templates() {
         + "    ?templateId :isA :QueryTemplate . "
         + "    ?templateId :hasTitle ?title . "
         + "    OPTIONAL { ?templateId :hasDescription ?description . } "
-        + "    ?templateId :hasTag ?tag . "
+        + "    OPTIONAL { ?templateId :hasTag ?tag . } "
         + "} GROUP BY ?templateId ?title ?description"
     fetchSelect(query, "meta", responseJson => {
       console.log("Response:", responseJson)
       let distinctTags = {}
       let collectTemplates = []
       for (let row of responseJson.results.bindings) {
-        let tagsHere = row.tags.value.split(" ")
+        let tagsHere = row.tags ? row.tags.value.split(" ") : []
         collectTemplates.push({
           id: row.templateId.value.split("#")[1],
           title: row.title.value,
