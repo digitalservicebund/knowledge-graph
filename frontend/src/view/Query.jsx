@@ -33,7 +33,8 @@ function Query() {
     yasgui.current = new Yasgui(document.getElementById("yasgui"));
     yasgui.current.getTab().setQuery(
         "PREFIX : <https://digitalservice.bund.de/kg#>\n"
-        + "SELECT * WHERE { \n  ?subject ?predicate ?object .\n}"
+        + "SELECT * WHERE { \n  ?subject ?predicate ?object .\n} "
+        + "LIMIT 100"
     );
   }, []);
 
