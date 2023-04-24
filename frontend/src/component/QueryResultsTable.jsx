@@ -5,6 +5,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import fileDownload from "js-file-download";
 
 function QueryResultsTable(props) {
 
@@ -36,10 +37,30 @@ function QueryResultsTable(props) {
     return <span style={{color:"green"}}>{col.value === "0" ? "" : col.value}</span>
   }
 
+  function download(type) {
+    const vars = props.queryResultData.variables
+    const filename = "filename" // TODO
+    if (type === "csv") {
+      let header = vars.join(",") + "\n"
+      let rows = []
+      // TODO
+      fileDownload(header, filename + ".csv")
+      return
+    }
+    if (type === "json") {
+      fileDownload(JSON.stringify(props.queryResultData), filename + ".json");
+    }
+  }
+
   return (
       <div>
         {props.queryResultData && <>
-          <strong>{props.queryResultData.rows.length} results</strong>:
+          <strong>{props.queryResultData.rows.length} results</strong>
+          <small style={{paddingLeft: "10px", color: "gray"}}>
+            Download as&nbsp;
+            <span style={{textDecoration: "underline"}} onClick={() => download("json")}>JSON</span>
+          </small>
+          <br/><br/>
           <TableContainer>
             <Table sx={{margin: "0 auto", width: 700}}>
               <TableHead>
@@ -61,6 +82,7 @@ function QueryResultsTable(props) {
               </TableBody>
             </Table>
           </TableContainer>
+          <br/><br/><br/>
         </>
         }
     </div>
