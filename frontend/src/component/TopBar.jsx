@@ -19,6 +19,7 @@ const pages = [
     { label: "Templates", path: "/templates" },
     { label: "Query", path: "/query" },
     { label: "Data", path: "/data" },
+    { label: "Schema", path: "/schema" },
     { label: "Visualize", path: "/visualize" }
 ];
 const settings = ["Settings", "Logout"];

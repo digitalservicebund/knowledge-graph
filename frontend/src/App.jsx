@@ -5,6 +5,7 @@ import Templates from "./view/Templates";
 import Template from "./view/Template";
 import Query from "./view/Query";
 import Data from "./view/Data";
+import Schema from "./view/Schema";
 import Visualize from "./view/Visualize";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/template/:id" element={<Template />}  />
             <Route path="/query" element={<Query />}/>
             <Route path="/data" element={<Data />}/>
+            <Route path="/schema" element={<Schema />}/>
             <Route path="/visualize" element={<Visualize />}/>
           </Routes>
         </div>
