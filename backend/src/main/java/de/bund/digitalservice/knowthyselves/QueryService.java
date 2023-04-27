@@ -29,9 +29,9 @@ public class QueryService {
     this.datasetService = datasetService;
   }
 
-  public String runSelectQuery(String query, String dataset) {
-    boolean isConstruct = query.contains("CONSTRUCT"); // Better indicator? Parse query object somehow?
-    logger.info("Running {} query {} on dataset {}", isConstruct ? "CONSTRUCT" : "SELECT", query, dataset);
+  public String runReadQuery(String query, String dataset) {
+    String queryType = query.contains("CONSTRUCT") ? "CONSTRUCT" : "SELECT"; // Better indicator? Parse query object somehow?
+    logger.info("Running {} query {} on dataset {}", queryType, query, dataset);
 
     Dataset ds = switch (dataset) {
       case "main" -> datasetService.getDataset("main");
@@ -55,7 +55,7 @@ public class QueryService {
     ds.begin(TxnType.READ);
     try (QueryExecution queryExecution = QueryExecutionFactory.create(query, ds)) {
       OutputStream outStream = new ByteArrayOutputStream();
-      if (isConstruct) {
+      if (queryType.equals("CONSTRUCT")) {
         Model model = queryExecution.execConstruct();
         model.write(outStream, "TTL");
       } else {
@@ -68,19 +68,20 @@ public class QueryService {
     }
   }
 
-  public String runInsertQuery(String query, String dataset) {
-    logger.info("Running INSERT query {} on dataset {}", query, dataset);
+  public String runWriteQuery(String query, String dataset) {
+    String queryType = query.contains("DELETE") ? "DELETE" : "INSERT";
+    logger.info("Running {} query {} on dataset {}", queryType, query, dataset);
     Dataset ds = datasetService.getDataset(dataset);
     ds.begin(TxnType.WRITE);
     String result;
     try {
       UpdateExecution.dataset(ds).update(UpdateFactory.create(query)).execute();
       ds.commit();
-      result = "Successfully executed INSERT query to dataset " + dataset;
+      result = "Successfully executed " + queryType + " query to dataset " + dataset;
     } catch (Exception e) {
       ds.abort();
       logger.error(e);
-      result = "Failed to execute INSERT query to dataset " + dataset + ": " + e.getMessage();
+      result = "Failed to execute " + queryType + " query to dataset " + dataset + ": " + e.getMessage();
     } finally {
       ds.end();
     }

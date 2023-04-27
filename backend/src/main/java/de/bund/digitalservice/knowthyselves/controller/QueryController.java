@@ -24,12 +24,12 @@ public class QueryController {
   }
 
   @PostMapping(value = "select")
-  public ResponseEntity<String> runSelectQuery(@RequestBody Map<String, String> request) {
-    return ResponseEntity.ok(queryService.runSelectQuery(request.get("query"), request.get("dataset")));
+  public ResponseEntity<String> runReadQuery(@RequestBody Map<String, String> request) {
+    return ResponseEntity.ok(queryService.runReadQuery(request.get("query"), request.get("dataset")));
   }
 
   @PostMapping(value = "insert")
-  public ResponseEntity<String> runInsertQuery(@RequestBody Map<String, String> request) {
-    return ResponseEntity.ok(queryService.runInsertQuery(request.get("query"), request.get("dataset")));
+  public ResponseEntity<String> runWriteQuery(@RequestBody Map<String, String> request) {
+    return ResponseEntity.ok(queryService.runWriteQuery(request.get("query"), request.get("dataset")));
   }
 }
