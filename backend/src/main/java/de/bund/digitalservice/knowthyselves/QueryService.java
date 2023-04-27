@@ -70,11 +70,11 @@ public class QueryService {
     try {
       UpdateExecution.dataset(ds).update(UpdateFactory.create(query)).execute();
       ds.commit();
-      result = "Successfully executed INSERT query";
+      result = "Successfully executed INSERT query to dataset " + dataset;
     } catch (Exception e) {
       ds.abort();
       logger.error(e);
-      result = "Failed to execute INSERT query";
+      result = "Failed to execute INSERT query to dataset " + dataset + ": " + e.getMessage();
     } finally {
       ds.end();
     }
