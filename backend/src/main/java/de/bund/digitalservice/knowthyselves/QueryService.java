@@ -30,7 +30,8 @@ public class QueryService {
   }
 
   public String runSelectQuery(String query, String dataset) {
-    logger.info("Running SELECT query {} on dataset {}", query, dataset);
+    boolean isConstruct = query.contains("CONSTRUCT"); // Better indicator? Parse query object somehow?
+    logger.info("Running {} query {} on dataset {}", isConstruct ? "CONSTRUCT" : "SELECT", query, dataset);
 
     Dataset ds = switch (dataset) {
       case "main" -> datasetService.getDataset("main");
@@ -53,9 +54,14 @@ public class QueryService {
 
     ds.begin(TxnType.READ);
     try (QueryExecution queryExecution = QueryExecutionFactory.create(query, ds)) {
-      ResultSet resultSet = queryExecution.execSelect();
       OutputStream outStream = new ByteArrayOutputStream();
-      ResultSetFormatter.outputAsJSON(outStream, resultSet);
+      if (isConstruct) {
+        Model model = queryExecution.execConstruct();
+        model.write(outStream, "TTL");
+      } else {
+        ResultSet resultSet = queryExecution.execSelect();
+        ResultSetFormatter.outputAsJSON(outStream, resultSet);
+      }
       return outStream.toString();
     } finally {
       ds.end();
