@@ -71,7 +71,7 @@ function Query() {
   }
 
   const handleDialogOpen = () => {
-    setFormValues(FORM_VALUES_DEFAULT)
+    setFormValues({ ...formValues, "main": datasets.main, "meta": datasets.meta })
     fetchTags(() => setDialogOpen(true))
   }
 
@@ -102,6 +102,7 @@ function Query() {
     fetchInsert(insertQuery, "meta", responseText => {
       console.log("Response:", responseText)
       setDialogOpen(false)
+      setFormValues(FORM_VALUES_DEFAULT)
     })
   }
 
