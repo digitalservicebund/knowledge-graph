@@ -16,6 +16,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
+import InfoIcon from "@mui/icons-material/Info";
+import Tooltip from "@mui/material/Tooltip";
 
 function Query() {
   const init = useRef(false)
@@ -24,8 +26,18 @@ function Query() {
   const [datasets, setDatasets] = useState({ main: true, meta: false })
   const [queryResultData, setQueryResultData] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
-  const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [] }
+  const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [], parameters: {} }
   const [formValues, setFormValues] = useState(FORM_VALUES_DEFAULT)
+  const INSIDE_ANGLE_BRACKETS_REGEX = /(?<=<)[^<>]+(?=>)/g
+  const PARAMETERS_TOOLTIP = [
+      "\"Name\" will be shown to the user when asking to parameterize the query. If none is set, the name you used in the query will be used.",
+      "",
+      "If no query is set, the user can input free text as value for the parameter. If a query is set, its results determine the choices for the user.",
+      "",
+      "Note that the query MUST contain a ?value variable and MAY also contain a ?label variable. If ?label is present, that will be displayed to the user while the respective ?value will be set for the parameter.",
+      "",
+      "It is recommended to develop your query in a new tab before pasting it in here."
+  ].join("\n")
 
   useEffect(() => {
     if (init.current) return
@@ -71,11 +83,30 @@ function Query() {
       return
     }
     const { name, value, checked, type } = event.target
+    if (name.startsWith("param")) {
+      let paramId = name.split("-")[1]
+      let key = name.split("-")[2]
+      setFormValues({ ...formValues,
+        parameters: {
+          ...formValues.parameters,
+          [paramId]: {
+            ...formValues.parameters[paramId],
+            [key]: value
+          }
+        }
+      })
+      return
+    }
     setFormValues({ ...formValues, [name]: type === "checkbox" ? checked : value })
   }
 
   const handleDialogOpen = () => {
-    setFormValues({ ...formValues, "main": datasets.main, "meta": datasets.meta })
+    const paramIds = getQuery().match(INSIDE_ANGLE_BRACKETS_REGEX).filter(param => !param.startsWith("http"))
+    let params = {}
+    for (let paramId of paramIds) {
+      params[paramId] = { name: paramId, query: "" }
+    }
+    setFormValues({ ...formValues, "main": datasets.main, "meta": datasets.meta, parameters: params })
     fetchTags(() => setDialogOpen(true))
   }
 
@@ -236,6 +267,34 @@ function Query() {
                     <TextField {...params} label="Tags (optional)" placeholder="Type or select" />
                 )}
             />
+            <br/><br/>
+            {Object.keys(formValues.parameters).length > 0 && <>
+              <DialogContentText>
+                Parameters
+                <Tooltip title={<div style={{ fontSize: "small", whiteSpace: "pre-line" }}>{PARAMETERS_TOOLTIP}</div>} arrow>
+                  <InfoIcon style={{fontSize: "large", color: "lightgray", verticalAlign: "middle", marginLeft: "6px"}}/>
+                </Tooltip>
+              </DialogContentText>
+              <br/>
+              {Object.keys(formValues.parameters).map((paramId, idx) => (
+                  <div key={idx}>
+                    <TextField
+                        label={"Name for: " + paramId}
+                        name={"param-" + paramId + "-name"}
+                        value={formValues.parameters[paramId].name}
+                        onChange={handleDialogFormChange}
+                    />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <TextField
+                        label="Query"
+                        name={"param-" + paramId + "-query"}
+                        value={formValues.parameters[paramId].query}
+                        onChange={handleDialogFormChange}
+                    />
+                    <br/><br/>
+                  </div>
+              ))}
+            </>}
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
