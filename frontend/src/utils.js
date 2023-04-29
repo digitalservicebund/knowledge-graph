@@ -1,6 +1,12 @@
+import slugify from "slugify";
 
 const SELECT_QUERY_ENDPOINT = "http://localhost:8080/api/v1/knowthyselves/query/select"
 const INSERT_QUERY_ENDPOINT = "http://localhost:8080/api/v1/knowthyselves/query/insert"
+
+export const uri = (str) => {
+  str = str.replaceAll("+", "-").replaceAll("#", "-").replace(/[()]/g, "-")
+  return slugify(str.trim())
+}
 
 export const datasetNamesToOneString = (datasets) => {
   const { main, meta } = datasets

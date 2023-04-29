@@ -5,7 +5,7 @@ import Yasgui from "@triply/yasgui";
 import "@triply/yasgui/build/yasgui.min.css";
 import QueryResultsTable from "../component/QueryResultsTable";
 import slugify from "slugify";
-import { datasetNamesToOneString, fetchInsert, fetchSelect } from "../utils";
+import { datasetNamesToOneString, fetchInsert, fetchSelect, uri } from "../utils";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -58,7 +58,7 @@ function Query() {
 
   const handleDialogFormChange = (event, tags) => {
     if (tags) {
-      tags = tags.map((tag) => (tag.startsWith("Add new tag ") ? tag.slice(13, -1) : tag))
+      tags = tags.map((tag) => (tag.startsWith("Add new tag ") ? uri(tag.slice(13, -1)) : uri(tag)))
       setFormValues({ ...formValues, tags: tags })
       return
     }
@@ -92,7 +92,7 @@ function Query() {
         "    :hasTitle \"" + title + "\" ; " +
         (description ? "    :hasDescription \"" + description + "\" ; " : "") +
         "    :runOnDataset \"" + ds + "\" ; " +
-        formValues.tags.map((tag) => "    :hasTag \"" + slugify(tag.trim()) + "\" ; ").join(" ") +
+        formValues.tags.map((tag) => "    :hasTag :" + tag + " ; ").join(" ") +
         "    :hasQuery \"\"\"" + query + "\n\"\"\" . " +
         "}"
     fetchInsert(insertQuery, "meta", responseText => {
