@@ -167,9 +167,7 @@ function Query() {
           <DialogTitle>Save as template</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              By saving this query as a template you make it accessible to others.<br/>
-              If you are not sure others will find it useful but you want to
-              try things out (please do!), you can add the tag <i>experimental</i>.
+              By saving this query as a template you make it accessible to others
             </DialogContentText>
             <br/>
             <TextField
@@ -213,7 +211,7 @@ function Query() {
                 }
                 label="Meta"
             />
-            <br/><br/><br/>
+            <br/><br/>
             <Autocomplete
                 multiple
                 value={formValues.tags}
