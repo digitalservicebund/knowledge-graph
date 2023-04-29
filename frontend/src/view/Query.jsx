@@ -52,6 +52,10 @@ function Query() {
 
   const handleDatasetChange = (event) => {
     const { name, checked } = event.target
+    if (!checked && (name === "main" && !datasets.meta || name === "meta" && !datasets.main)) {
+      alert("At least one dataset must be selected")
+      return
+    }
     setDatasets({ ...datasets, [name]: checked })
     setFormValues({ ...formValues, [name]: checked })
   }
