@@ -32,7 +32,7 @@ function Query() {
     init.current = true;
     yasgui.current = new Yasgui(document.getElementById("yasgui"));
     yasgui.current.getTab().setQuery(
-        "PREFIX : <https://digitalservice.bund.de/kg#>\n"
+        "PREFIX : <https://digitalservice.bund.de/kg#>\n\n"
         + "SELECT * WHERE { \n  ?subject ?predicate ?object .\n} "
         + "LIMIT 100"
     );
@@ -45,9 +45,13 @@ function Query() {
         + "  ?templateId :hasTag ?tag . "
         + "}"
     fetchSelect(query, "meta", responseJson => {
-      tags.current = responseJson.results.bindings.map(row => row.tag.value)
+      tags.current = responseJson.results.bindings.map(row => row.tag.value.split("#")[1])
       callback()
     })
+  }
+
+  const getQuery = () => {
+    return yasgui.current.getTab().getQuery()
   }
 
   const handleDatasetChange = (event) => {
@@ -88,7 +92,6 @@ function Query() {
     }
     let id = slugify(title)
     let description = formValues.description.trim()
-    let query = yasgui.current.getTab().getQuery()
 
     let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#> " +
         "INSERT DATA { " +
@@ -97,7 +100,7 @@ function Query() {
         (description ? "    :hasDescription \"" + description + "\" ; " : "") +
         "    :runOnDataset \"" + ds + "\" ; " +
         formValues.tags.map((tag) => "    :hasTag :" + tag + " ; ").join(" ") +
-        "    :hasQuery \"\"\"" + query + "\n\"\"\" . " +
+        "    :hasQuery \"\"\"" + getQuery() + "\n\"\"\" . " +
         "}"
     fetchInsert(insertQuery, "meta", responseText => {
       console.log("Response:", responseText)
