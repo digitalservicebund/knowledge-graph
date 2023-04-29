@@ -39,6 +39,9 @@ function QueryResultsTable(props) {
     if (entity.type === "literal" && entity.datatype && entity.datatype === "http://www.w3.org/2001/XMLSchema#date") {
       return <span style={{color:"blue"}}>{entity.value}</span>
     }
+    if (entity.type === "literal" && entity.datatype && entity.datatype === "http://www.w3.org/2001/XMLSchema#integer") {
+      return <span style={{color:"orange"}}>{entity.value}</span>
+    }
     return <span style={{color:"green"}}>{entity.value}</span>
   }
 
