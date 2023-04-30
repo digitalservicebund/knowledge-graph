@@ -123,14 +123,24 @@ function Query() {
     let id = uri(title)
     let description = formValues.description.trim()
 
+    let params = ""
+    for (let paramId of Object.keys(formValues.parameters)) {
+      let param = formValues.parameters[paramId]
+      let triple = ":" + id + " :hasParameter :" + paramId
+      params += "    " + triple + " . "
+      if (param.name) params += "    <<" + triple + ">> :hasName \"" + param.name + "\" . "
+      if (param.query) params += "    <<" + triple + ">> :hasQuery \"" + param.query + "\" . " // use """ syntax? TODO
+    }
+    
     let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#> " +
         "INSERT DATA { " +
-        "    :" + id + " :isA :QueryTemplate ; " +
-        "    :hasTitle \"" + title + "\" ; " +
-        (description ? "    :hasDescription \"" + description + "\" ; " : "") +
-        "    :runOnDataset \"" + ds + "\" ; " +
-        formValues.tags.map((tag) => "    :hasTag :" + tag + " ; ").join(" ") +
-        "    :hasQuery \"\"\"" + getQuery() + "\n\"\"\" . " +
+        "    :" + id + " :isA :QueryTemplate . " +
+        "    :" + id + " :hasTitle \"" + title + "\" . " +
+        (description ? "    :" + id + " :hasDescription \"" + description + "\" . " : "") +
+        "    :" + id + " :runOnDataset \"" + ds + "\" . " +
+        formValues.tags.map((tag) => "    :" + id + " :hasTag :" + tag + " . ").join(" ") +
+        "    :" + id + " :hasQuery \"\"\"" + getQuery() + "\n\"\"\" . " +
+        (params ? params : "") +
         "}"
     fetchInsert(insertQuery, "meta", responseText => {
       console.log("Response:", responseText)
