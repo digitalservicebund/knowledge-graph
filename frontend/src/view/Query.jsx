@@ -103,7 +103,7 @@ function Query() {
     const paramIds = getQuery().match(INSIDE_ANGLE_BRACKETS_REGEX).filter(param => !param.startsWith("http"))
     let params = {}
     for (let paramId of paramIds) {
-      params[paramId] = { name: paramId, query: "" }
+      params[paramId] = { name: "", query: "" }
     }
     setFormValues({ ...formValues, "main": datasets.main, "meta": datasets.meta, parameters: params })
     fetchTags(() => setDialogOpen(true))
@@ -131,7 +131,7 @@ function Query() {
       if (param.name) params += "    <<" + triple + ">> :hasName \"" + param.name + "\" . "
       if (param.query) params += "    <<" + triple + ">> :hasQuery \"" + param.query + "\" . " // use """ syntax? TODO
     }
-    
+
     let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#> " +
         "INSERT DATA { " +
         "    :" + id + " :isA :QueryTemplate . " +
