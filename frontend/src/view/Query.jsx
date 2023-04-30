@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Yasgui from "@triply/yasgui";
 import "@triply/yasgui/build/yasgui.min.css";
 import QueryResultsTable from "../component/QueryResultsTable";
-import slugify from "slugify";
 import { datasetNamesToOneString, fetchInsert, fetchSelect, uri } from "../utils";
 import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
@@ -121,7 +120,7 @@ function Query() {
       alert("At least one dataset must be selected")
       return
     }
-    let id = slugify(title)
+    let id = uri(title)
     let description = formValues.description.trim()
 
     let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#> " +
@@ -197,6 +196,12 @@ function Query() {
         <Button variant="outlined" onClick={handleDialogOpen}>
           Save as template
         </Button>
+        {queryResultData && queryResultData.rows.length > 0 && <>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <Button variant="outlined" onClick={() => {}}>
+            Create plot
+          </Button>
+        </>}
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
           <DialogTitle>Save as template</DialogTitle>
           <DialogContent>
