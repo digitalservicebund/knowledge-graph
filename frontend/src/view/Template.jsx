@@ -25,15 +25,28 @@ function Template() {
         + "  :" + id + " :hasTitle ?title . "
         + "  OPTIONAL { :" + id + " :hasDescription ?description . } "
         + "  :" + id + " :hasQuery ?query . "
+        + "  OPTIONAL { "
+        + "    :" + id + " :hasParameter ?param . "
+        + "    OPTIONAL { <<:" + id + " :hasParameter ?param>> :hasName ?paramName . } "
+        + "    OPTIONAL { <<:" + id + " :hasParameter ?param>> :hasQuery ?paramQuery . } "
+        + "  } "
         + "}"
     fetchSelect(query, "meta", responseJson => {
       console.log("Response:", responseJson)
-      let row = responseJson.results.bindings[0]
+      let rows = responseJson.results.bindings
+      let params = {}
+      rows.forEach(row => {
+        if (!row.param) return
+        let paramId = row.param.value.split("#")[1]
+        params[paramId] = {}
+        if (row.paramName) params[paramId].name = row.paramName.value
+        if (row.paramQuery) params[paramId].query = row.paramQuery.value
+      })
       setTemplate({
-        title: row.title.value,
-        description: row.description ? row.description.value : "",
-        query: row.query.value,
-        choices: [] // TODO
+        title: rows[0].title.value,
+        description: rows[0].description ? rows[0].description.value : "",
+        query: rows[0].query.value,
+        parameters: params
       })
     })
   }
