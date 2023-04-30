@@ -34,6 +34,10 @@ function Template() {
     fetchSelect(query, "meta", responseJson => {
       console.log("Response:", responseJson)
       let rows = responseJson.results.bindings
+      if (rows.length === 0) {
+        alert("No template with id " + id + " found")
+        return
+      }
       let params = {}
       rows.forEach(row => {
         if (!row.param) return
