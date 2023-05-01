@@ -72,7 +72,6 @@ function Query() {
       return
     }
     setDatasets({ ...datasets, [name]: checked })
-    setFormValues({ ...formValues, [name]: checked })
   }
 
   const handleDialogFormChange = (event, tags) => {
@@ -81,7 +80,7 @@ function Query() {
       setFormValues({ ...formValues, tags: tags })
       return
     }
-    const { name, value, checked, type } = event.target
+    const { name, value } = event.target
     if (name.startsWith("param")) {
       let paramId = name.split("-")[1]
       let key = name.split("-")[2]
@@ -96,7 +95,7 @@ function Query() {
       })
       return
     }
-    setFormValues({ ...formValues, [name]: type === "checkbox" ? checked : value })
+    setFormValues({ ...formValues, [name]: value })
   }
 
   const handleDialogOpen = () => {
@@ -237,30 +236,6 @@ function Query() {
                 onChange={handleDialogFormChange}
             />
             <br/><br/><br/>
-            <DialogContentText>Datasets to run this on:</DialogContentText>
-            <FormControlLabel
-                control={
-                  <Checkbox
-                      disabled
-                      name="main"
-                      checked={formValues.main}
-                      onChange={handleDialogFormChange}
-                  />
-                }
-                label="Main"
-            />
-            <FormControlLabel
-                control={
-                  <Checkbox
-                      disabled
-                      name="meta"
-                      checked={formValues.meta}
-                      onChange={handleDialogFormChange}
-                  />
-                }
-                label="Meta"
-            />
-            <br/><br/>
             <Autocomplete
                 multiple
                 value={formValues.tags}
