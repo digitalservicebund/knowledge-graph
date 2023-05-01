@@ -35,7 +35,9 @@ function Query() {
       "",
       "Note that the query MUST contain a ?value variable and MAY also contain a ?label variable. If ?label is present, that will be displayed to the user while the respective ?value will be set for the parameter.",
       "",
-      "It is recommended to develop your query in a new tab before pasting it in here."
+      "If your parameter is to fill a literal it needs to look like this: \"<param>\". If it is to fill an URI it needs to look like this :<param>.",
+      "",
+      "It is recommended to develop your query in a new tab before pasting it in here.",
   ].join("\n")
 
   useEffect(() => {
