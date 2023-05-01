@@ -10,19 +10,26 @@ import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TaskService {
   private final Logger logger = LogManager.getLogger(TaskService.class);
 
+  private final String allowListed;
   private final DatasetService datasetService;
 
-  public TaskService(DatasetService datasetService) {
+  public TaskService(@Value("${task.allow-listed}") String allowListed, DatasetService datasetService) {
+    this.allowListed = allowListed;
     this.datasetService = datasetService;
   }
 
   public String moveTriplesWithPredicateToAnotherDataset(String from, String to, String predicate) {
+    String predicateLocalName = predicate.substring(predicate.lastIndexOf("#") + 1).trim();
+    if (allowListed != null && !allowListed.equalsIgnoreCase(from + "-" + to + "-" + predicateLocalName)) {
+      return "This task is not allow-listed";
+    }
     logger.info("Moving triples with predicate {} from dataset {} to dataset {}", predicate, from, to);
     Dataset fromDs = datasetService.getDataset(from);
     Dataset toDs = datasetService.getDataset(to);

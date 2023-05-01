@@ -70,6 +70,9 @@ public class QueryService {
 
   public String runWriteQuery(String query, String dataset) {
     String queryType = query.contains("DELETE") ? "DELETE" : "INSERT";
+    if (queryType.equals("DELETE")) {
+      return "DELETE queries are currently not allowed";
+    }
     logger.info("Running {} query {} on dataset {}", queryType, query, dataset);
     Dataset ds = datasetService.getDataset(dataset);
     ds.begin(TxnType.WRITE);
