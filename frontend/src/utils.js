@@ -16,6 +16,15 @@ export const datasetNamesToOneString = (datasets) => {
   return "none";
 }
 
+export const fetchSelectAwait = async (query, ds) => {
+  return await fetch(SELECT_QUERY_ENDPOINT, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({query: query, dataset: ds})
+  })
+  .then(response => response.json())
+}
+
 export const fetchSelect = (query, ds, callback) => {
   fetch(SELECT_QUERY_ENDPOINT, {
     method: "POST",

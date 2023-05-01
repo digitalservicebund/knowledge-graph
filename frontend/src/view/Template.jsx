@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import QueryResultsTable from "../component/QueryResultsTable";
-import { fetchSelect } from "../utils";
+import { fetchSelect, fetchSelectAwait } from "../utils";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function Template() {
   let { id } = useParams();
@@ -38,21 +39,31 @@ function Template() {
         alert("No template with id " + id + " found")
         return
       }
-      let params = {}
-      rows.forEach(row => {
-        if (!row.param) return
-        let paramId = row.param.value.split("#")[1]
-        params[paramId] = {}
-        if (row.paramName) params[paramId].name = row.paramName.value
-        if (row.paramQuery) params[paramId].query = row.paramQuery.value
-      })
-      setTemplate({
-        title: rows[0].title.value,
-        description: rows[0].description ? rows[0].description.value : "",
-        query: rows[0].query.value,
-        parameters: params
+      processRowsForParams(rows).then(params => {
+        setTemplate({
+          title: rows[0].title.value,
+          description: rows[0].description ? rows[0].description.value : "",
+          query: rows[0].query.value,
+          parameters: params
+        })
       })
     })
+  }
+
+  async function processRowsForParams(rows) {
+    let params = {}
+    for (let row of rows) {
+      if (!row.param) continue
+      let paramId = row.param.value.split("#")[1]
+      params[paramId] = {}
+      if (row.paramName) params[paramId].name = row.paramName.value
+      if (row.paramQuery) {
+        let query = row.paramQuery.value
+        params[paramId].query = query
+        params[paramId].queryResults = await fetchSelectAwait(query, "main") // support DS choice here too TODO
+      }
+    }
+    return params
   }
 
   const toggleShowDetails = () => {
@@ -70,18 +81,51 @@ function Template() {
     })
   }
 
+  function handleParamAutocompleteChange(event, option) {
+    console.log(option)
+    let value = option.value
+    let paramId = option.paramId
+    // TODO
+  }
+
+  function buildParameterField(paramId) {
+    let param = template.parameters[paramId]
+    let paramName = param.name ? param.name : paramId
+
+    if (param.query) {
+      let hasOnlyValue = param.queryResults.head.vars.length === 1 // if false it has value and label
+      const uriOrLiteral = (val) => val.type === "uri" ? val.value.split("#")[1] : val.value
+      let options = param.queryResults.results.bindings.map(row => {
+        let value = uriOrLiteral(row.value)
+        let label = hasOnlyValue ? value : uriOrLiteral(row.label)
+        return { label: label, value: value, paramId: paramId }
+      })
+      return <Autocomplete
+          key={paramId}
+          options={options}
+          renderInput={(params) => <TextField {...params} label={"Choose value for " + paramName} />}
+          onChange={handleParamAutocompleteChange}
+      />
+    }
+
+    return (
+      <TextField
+          key={paramId}
+          label={"Enter value for " + paramName}
+          variant="outlined"
+          style={{ width: "300px", margin: "10px" }}
+      />
+    )
+  }
+
   return (
       <div style={{textAlign: "center", width: "880px"}}>
         { template &&
             <>
               <h2>{template.title}</h2>
               <p>{template.description}</p>
-              { template.choices && template.choices.map(c => {
-                return <div key={c.label}>
-                  <TextField label={c.label} variant="standard"/>
-                  <br/>
-                </div>
-              })}
+              { template.parameters && Object.keys(template.parameters).length > 0
+                  && Object.keys(template.parameters).map(paramId => buildParameterField(paramId)) }
               <div style={{color: "gray", textDecoration: "underline"}} onClick={toggleShowDetails}>
                 <small>{showDetails ? "hide" : "show"} details</small>
               </div>
