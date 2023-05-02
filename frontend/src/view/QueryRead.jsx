@@ -17,7 +17,6 @@ import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 
 function QueryRead() {
-  const init = useRef(false)
   const yasgui = useRef()
   const tags = useRef([])
   const [datasets, setDatasets] = useState({ main: true, meta: false })
@@ -39,8 +38,7 @@ function QueryRead() {
   ].join("\n")
 
   useEffect(() => {
-    if (init.current) return
-    init.current = true;
+    if (yasgui.current) return
     yasgui.current = new Yasgui(document.getElementById("yasgui"));
     yasgui.current.getTab().setQuery(
         "PREFIX : <https://digitalservice.bund.de/kg#>\n\n"
@@ -162,8 +160,7 @@ function QueryRead() {
       alert("No dataset selected")
       return
     }
-    const query = yasgui.current.getTab().getQuery()
-    fetchSelect(query, ds, responseJson => {
+    fetchSelect(getQuery(), ds, responseJson => {
       console.log("Response:", responseJson)
       setQueryResultData({
         variables: responseJson.head.vars,
