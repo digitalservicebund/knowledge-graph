@@ -151,9 +151,26 @@ function Template() {
               <div style={{color: "gray", textDecoration: "underline"}} onClick={toggleShowDetails}>
                 <small>{showDetails ? "hide" : "show"} details</small>
               </div>
-              { showDetails && <pre style={{textAlign: "left", marginLeft: "250px"}}>
-                {buildParameterizedQuery()}
-              </pre> }
+              { showDetails &&
+                  <div style={{backgroundColor: "lightgoldenrodyellow", borderRadius: "10px", padding: "10px", margin: "10px"}}>
+                    Runs on dataset: {template.dataset}
+                    <br/><br/>
+                    Query:
+                    <pre style={{textAlign: "left", marginLeft: "250px"}}>
+                      {buildParameterizedQuery()}
+                    </pre>
+                    { Object.keys(template.parameters)
+                        .filter(paramId => template.parameters[paramId].query)
+                        .map(paramId =>
+                            <span key={paramId}>
+                              Query for parameter {paramId}:
+                              <pre style={{textAlign: "left", marginLeft: "250px"}}>
+                                {template.parameters[paramId].query}
+                              </pre>
+                            </span>
+                        )
+                    }
+                  </div> }
               <Button style={{margin: "20px"}} variant="contained" onClick={() => runQuery()}>
                 Run query
               </Button>
