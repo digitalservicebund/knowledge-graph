@@ -10,6 +10,7 @@ function Templates() {
   const init = useRef(false);
   const [templates, setTemplates] = useState([]);
   const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   useEffect(() => {
     if (init.current) return
@@ -30,7 +31,7 @@ function Templates() {
       let distinctTags = {}
       let collectTemplates = []
       for (let row of responseJson.results.bindings) {
-        let tagsHere = row.tags ? row.tags.value.split(" ") : []
+        let tagsHere = row.tags ? row.tags.value.split(" ").map(tag => tag.split("#")[1]) : []
         collectTemplates.push({
           id: row.templateId.value.split("#")[1],
           title: row.title.value,
@@ -63,11 +64,36 @@ function Templates() {
     navigate("/template/" + id)
   }
 
+  const handleTagClick = tag => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter(t => t !== tag))
+    } else {
+      setSelectedTags([...selectedTags, tag])
+    }
+  }
+
+  const filterTemplate = template => {
+    for (let tag of selectedTags) {
+      if (!template.tags.includes(tag)) return false
+    }
+    return true
+  }
+
   return (
       <div>
         <br/>
         <h2>Templates</h2>
-        { /* List tags TODO */ }
+        { <>
+          <br/>
+          {tags.map(tag =>
+              <span key={tag} style={{marginRight: "10px", padding: "8px", borderRadius: "10px",
+                backgroundColor: (selectedTags.includes(tag) ? "lightskyblue" : "lightblue")}}
+              onClick={() => handleTagClick(tag)}>
+                {tag}
+              </span>
+          )}
+          <br/><br/><br/>
+        </> }
         <Box
             style={{width: "650px"}}
             sx={{
@@ -80,7 +106,7 @@ function Templates() {
               },
             }}
         >
-          { templates.map(template =>
+          { templates.filter(t => filterTemplate(t)).map(template =>
               <Paper style={paperStyle} key={template.id} elevation={4} onClick={() => handlePaperClick(template.id)}>
                 <strong>{template.title}</strong>
                 <div style={descStyle}>{template.description}</div>
