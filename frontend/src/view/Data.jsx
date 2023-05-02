@@ -21,7 +21,7 @@ function Data() {
   const [addRemove, setAddRemove] = useState("add");
 
   const formats = ["RDF/Turtle", "JSON-LD", "TGF", "SPARQL endpoint", "Markdown", "GraphML", "CSV", "Excel", "Google Spreadsheet", "Confluence page"]
-  const [io, setIO] = useState("import");
+  const [io, setIO] = useState("export");
 
   const exampleCode = ["Java", "JavaScript", "Python"]
 
@@ -32,6 +32,11 @@ function Data() {
     flexDirection: "column",
     backgroundColor: "rgb(255, 255, 0, 0.06)",
     cursor: "pointer"
+  }
+
+  const disabledPaperStyle = {
+    ...paperStyle,
+    backgroundColor: "rgb(150, 150, 150, 0.08)",
   }
 
   function uri(localName) {
@@ -48,7 +53,7 @@ function Data() {
 
   function handlePaperClick(format) {
     if (
-        (io === "import" && format === "Markdown") ||
+        // (io === "import" && format === "Markdown") ||
         (io === "export" && format === "RDF/Turtle")
     ) {
       fetch("http://localhost:8080/api/v1/knowthyselves/io/" + io, {
@@ -72,25 +77,25 @@ function Data() {
   return (
       <div>
         <br/><br/>
-        <h2>Edit statements manually</h2>
+        <h2 style={{color: "gray"}}>Edit statements manually</h2>
         <RadioGroup style={{paddingBottom: "15px"}} row defaultValue="add" onChange={(e) => setAddRemove(e.target.value)}>
-          <FormControlLabel value="add" control={<Radio />} label="Add" />
-          <FormControlLabel value="update" control={<Radio />} label="Update" />
-          <FormControlLabel value="delete" control={<Radio />} label="Delete" />
+          <FormControlLabel value="add" control={<Radio />} label="Add" disabled/>
+          <FormControlLabel value="update" control={<Radio />} label="Update" disabled/>
+          <FormControlLabel value="delete" control={<Radio />} label="Delete" disabled/>
         </RadioGroup>
 
-        <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} onKeyUp={handleKeyUp} />
+        <TextField label="Subject" variant="outlined" value={sub} onChange={handleSubChange} onKeyUp={handleKeyUp} disabled/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <TextField label="Predicate" variant="outlined" value={pred} onChange={handlePredChange} onKeyUp={handleKeyUp} />
+        <TextField label="Predicate" variant="outlined" value={pred} onChange={handlePredChange} onKeyUp={handleKeyUp} disabled/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <TextField label="Object" variant="outlined" value={obj} onChange={handleObjChange} onKeyUp={handleKeyUp} />
-        <Button style={{margin: "10px 0 0 25px"}} variant="contained" onClick={addTriple}>
+        <TextField label="Object" variant="outlined" value={obj} onChange={handleObjChange} onKeyUp={handleKeyUp} disabled/>
+        <Button style={{margin: "10px 0 0 25px"}} variant="contained" onClick={addTriple} disabled>
           Submit
         </Button>
         <br/><br/>
         <h2>Import / Export</h2>
-        <RadioGroup row defaultValue="import" onChange={(e) => setIO(e.target.value)}>
-          <FormControlLabel value="import" control={<Radio />} label="Import from" />
+        <RadioGroup row defaultValue="export" onChange={(e) => setIO(e.target.value)}>
+          <FormControlLabel value="import" control={<Radio />} label="Import from" disabled/>
           <FormControlLabel value="export" control={<Radio />} label="Export to" />
         </RadioGroup>
         <br/>
@@ -107,14 +112,14 @@ function Data() {
             }}
         >
           {formats.map(f =>
-              <Paper style={paperStyle} key={f} elevation={2} onClick={() => handlePaperClick(f)}>
-                <div style={{textAlign: "center"}}>{f}</div>
+              <Paper style={f === "RDF/Turtle" ? paperStyle : disabledPaperStyle} key={f} elevation={2} onClick={() => handlePaperClick(f)}>
+                <div style={{textAlign: "center", color: f === "RDF/Turtle" ? "black" : "gray"}}>{f}</div>
               </Paper>
           )}
         </Box>
         <br/>
-        <h2>Example code</h2>
-        <p>For accessing the SPARQL endpoints programmatically</p>
+        <h2 style={{color: "gray"}}>Example code</h2>
+        <p style={{color: "gray"}}>For accessing the SPARQL endpoints programmatically</p>
         <Box
             style={{width: "800px"}}
             sx={{
@@ -128,8 +133,8 @@ function Data() {
             }}
         >
           {exampleCode.map(e =>
-              <Paper style={paperStyle} key={e} elevation={2}>
-                <div style={{textAlign: "center"}}>{e}</div>
+              <Paper style={disabledPaperStyle} key={e} elevation={2}>
+                <div style={{textAlign: "center", color: "gray"}}>{e}</div>
               </Paper>
           )}
         </Box>
