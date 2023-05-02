@@ -36,6 +36,12 @@ function QueryRead() {
       "",
       "It is recommended to develop your query in a new tab before pasting it in here.",
   ].join("\n")
+  const SCHEMA_TOOLTIP = [
+      "This is needed to use the correct vocabulary in the SPARQL query.",
+      "",
+      "For instance, there are two possible predicates from the DigitalService node to Person nodes:",
+      ":hasEmployee and :hasExternalCollaborator"
+  ].join("\n")
 
   useEffect(() => {
     if (yasgui.current) return
@@ -172,6 +178,13 @@ function QueryRead() {
   return (
       <div>
         <h2>Query</h2>
+        <div style={{color: "gray", fontSize: "small"}}>
+          The schema being used can be found on <a style={{color: "gray"}} href="https://miro.com/app/board/uXjVMOiZaKo=" target="_blank">this</a> Miro board
+          <Tooltip title={<div style={{ fontSize: "small", whiteSpace: "pre-line" }}>{SCHEMA_TOOLTIP}</div>} arrow>
+            <InfoIcon style={{fontSize: "large", color: "lightgray", verticalAlign: "middle", marginLeft: "6px", marginBottom: "2px"}}/>
+          </Tooltip>
+        </div>
+        <br/>
         <div id="yasgui" style={{width: "700px"}} />
         <br/>
         <div style={{paddingBottom: "20px", color: "gray"}}>
