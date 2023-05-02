@@ -113,6 +113,9 @@ function Template() {
     let paramName = param.name ? param.name : paramId
 
     if (param.query) {
+      if (!param.queryResults.head.vars.includes("value")) {
+        alert("Parameter options query for " + paramId + " does not have a variable ?value")
+      }
       let hasOnlyValue = param.queryResults.head.vars.length === 1 // if false it has value and label
       const uriOrLiteral = (val) => val.type === "uri" ? val.value.split("#")[1] : val.value
       let options = param.queryResults.results.bindings.map(row => {
