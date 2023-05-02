@@ -10,6 +10,7 @@ function Template() {
   let { id } = useParams();
   const init = useRef(false);
   const [template, setTemplate] = useState({});
+  const [parameterizedQuery, setParameterizedQuery] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [queryResultData, setQueryResultData] = useState();
 
@@ -39,14 +40,16 @@ function Template() {
         alert("No template with id " + id + " found")
         return
       }
+      let templateQuery = rows[0].query.value
       processRowsForParams(rows).then(params => {
         setTemplate({
           title: rows[0].title.value,
           description: rows[0].description ? rows[0].description.value : "",
-          query: rows[0].query.value,
+          query: templateQuery,
           parameters: params
         })
       })
+      setParameterizedQuery(templateQuery)
     })
   }
 
@@ -72,7 +75,7 @@ function Template() {
 
   async function runQuery() {
     let ds = "main" // take from template TODO
-    fetchSelect(template.query, ds, responseJson => {
+    fetchSelect(parameterizedQuery, ds, responseJson => {
       console.log("Response:", responseJson)
       setQueryResultData({
         variables: responseJson.head.vars,
@@ -82,10 +85,9 @@ function Template() {
   }
 
   function handleParamAutocompleteChange(event, option) {
-    console.log(option)
     let value = option.value
     let paramId = option.paramId
-    // TODO
+    setParameterizedQuery(parameterizedQuery.replaceAll("<" + paramId + ">", value))
   }
 
   function buildParameterField(paramId) {
@@ -129,8 +131,8 @@ function Template() {
               <div style={{color: "gray", textDecoration: "underline"}} onClick={toggleShowDetails}>
                 <small>{showDetails ? "hide" : "show"} details</small>
               </div>
-              { showDetails && <pre style={{textAlign: "left", marginLeft: "250px"}}>
-                {template.query}
+              { showDetails && parameterizedQuery && <pre style={{textAlign: "left", marginLeft: "250px"}}>
+                {parameterizedQuery}
               </pre> }
               <Button style={{margin: "20px"}} variant="contained" onClick={() => runQuery()}>
                 Run query
