@@ -209,7 +209,7 @@ function Query() {
         </Button>
         {queryResultData && queryResultData.rows.length > 0 && <>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <Button variant="outlined" onClick={() => {}}>
+          <Button variant="outlined" onClick={() => { alert("Not implemented yet")} }>
             Create plot
           </Button>
         </>}
