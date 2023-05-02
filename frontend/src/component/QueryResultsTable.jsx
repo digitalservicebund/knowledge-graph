@@ -68,6 +68,7 @@ function QueryResultsTable(props) {
           <small style={{paddingLeft: "10px", color: "gray"}}>
             Download as&nbsp;
             <span style={{textDecoration: "underline"}} onClick={() => download("json")}>JSON</span>
+            , CSV, or open as Google Spreadsheet
           </small>
           <br/><br/>
           <TableContainer>

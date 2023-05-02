@@ -26,11 +26,11 @@ function QueryRead() {
   const [formValues, setFormValues] = useState(FORM_VALUES_DEFAULT)
   const INSIDE_ANGLE_BRACKETS_REGEX = /(?<=<)[^<>]+(?=>)/g
   const PARAMETERS_TOOLTIP = [
-      "\"Name\" will be shown to the user when asking to parameterize the query. If none is set, the name you used in the query will be used.",
+      "\"Name\" will be shown to the user when asking to parameterize the query. If none is set, the variable you used in the query (e.g. <thisOne>) will be used.",
       "",
-      "If no query is set, the user can input free text as value for the parameter. If a query is set, its results determine the choices for the user.",
+      "If no query is set, the user can input free text as value for the parameter. If a query is set, its results determine the choices for the user. These queries can currently only run on the main dataset.",
       "",
-      "Note that the query MUST contain a ?value variable and MAY also contain a ?label variable. If ?label is present, that will be displayed to the user while the respective ?value will be set for the parameter.",
+      "Note that the query MUST contain a ?value variable and MAY also contain a ?label variable. If ?label is present, that will be displayed to the user while the respective ?value will be filled in.",
       "",
       "If your parameter is to fill a literal it needs to look like this: \"<param>\". If it is to fill an URI it needs to look like this :<param>.",
       "",
@@ -215,19 +215,19 @@ function QueryRead() {
         <Button variant="outlined" onClick={handleDialogOpen}>
           Save as template
         </Button>
-        {queryResultData && queryResultData.rows.length > 0 && <>
+        { queryResultData && queryResultData.rows.length > 0 && <>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <Button variant="outlined" onClick={() => { alert("Not implemented yet")} }>
+          <Button variant="outlined" onClick={() => {}} disabled>
             Create plot
           </Button>
-        </>}
+        </> }
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
           <DialogTitle>Save as template</DialogTitle>
           <DialogContent>
             <DialogContentText style={{ fontSize: "small" }}>
               By saving this query as a template you make it accessible to others.<br/>
-              To parameterize your query, write <i>:&lt;paramName&gt;</i> at the respective locations in the query.
-              For instance instead of <i>:joinedProject</i>.
+              To parameterize your query, write something like <i>:&lt;projectId&gt;</i> at the respective locations in the query.
+              For instance instead of <i>?project</i>.
               Users of your template will then be able to choose/set those parameters before running the query.
             </DialogContentText>
             <br/>
