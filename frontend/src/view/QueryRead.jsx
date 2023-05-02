@@ -6,8 +6,6 @@ import "@triply/yasgui/build/yasgui.min.css";
 import QueryResultsTable from "../component/QueryResultsTable";
 import { datasetNamesToOneString, fetchInsert, fetchSelect, uri } from "../utils";
 import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -18,7 +16,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 
-function Query() {
+function QueryRead() {
   const init = useRef(false)
   const yasgui = useRef()
   const tags = useRef([])
@@ -299,4 +297,4 @@ function Query() {
   );
 }
 
-export default Query;
+export default QueryRead;
