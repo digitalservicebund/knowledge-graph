@@ -6,6 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import fileDownload from "js-file-download";
+import { getTimestamp } from "../utils";
 
 function QueryResultsTable(props) {
 
@@ -47,7 +48,7 @@ function QueryResultsTable(props) {
 
   function download(type) {
     const vars = props.queryResultData.variables
-    const filename = "filename" // TODO
+    const filename = "query-result-data-" + getTimestamp()
     if (type === "csv") {
       let header = vars.join(",") + "\n"
       let rows = []
