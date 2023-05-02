@@ -10,7 +10,6 @@ function Template() {
   let { id } = useParams();
   const init = useRef(false);
   const [template, setTemplate] = useState({});
-  const [parameterizedQuery, setParameterizedQuery] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [queryResultData, setQueryResultData] = useState();
 
@@ -49,7 +48,6 @@ function Template() {
           parameters: params
         })
       })
-      setParameterizedQuery(templateQuery)
     })
   }
 
@@ -64,6 +62,7 @@ function Template() {
         let query = row.paramQuery.value
         params[paramId].query = query
         params[paramId].queryResults = await fetchSelectAwait(query, "main") // support DS choice here too TODO
+        params[paramId].userChoice = ""
       }
     }
     return params
@@ -75,7 +74,11 @@ function Template() {
 
   async function runQuery() {
     let ds = "main" // take from template TODO
-    fetchSelect(parameterizedQuery, ds, responseJson => {
+    if (Object.keys(template.parameters).filter(paramId => !template.parameters[paramId].userChoice).length > 0) {
+      alert("Not all parameters are filled")
+      return
+    }
+    fetchSelect(buildParameterizedQuery(), ds, responseJson => {
       console.log("Response:", responseJson)
       setQueryResultData({
         variables: responseJson.head.vars,
@@ -84,10 +87,24 @@ function Template() {
     })
   }
 
-  function handleParamAutocompleteChange(event, option) {
-    let value = option.value
-    let paramId = option.paramId
-    setParameterizedQuery(parameterizedQuery.replaceAll("<" + paramId + ">", value))
+  function buildParameterizedQuery() {
+    let query = template.query
+    Object.keys(template.parameters).forEach(paramId => {
+      let userChoice = template.parameters[paramId].userChoice
+      if (userChoice) query = query.replaceAll("<" + paramId + ">", userChoice)
+    })
+    return query
+  }
+
+  function handleParamAutocompleteChange(event, option, paramId) {
+    const setUserChoice = (value) => {
+      setTemplate(prevState => {
+        let newState = { ...prevState }
+        newState.parameters[paramId].userChoice = value
+        return newState
+      })
+    }
+    setUserChoice(option ? option.value : "")
   }
 
   function buildParameterField(paramId) {
@@ -100,13 +117,13 @@ function Template() {
       let options = param.queryResults.results.bindings.map(row => {
         let value = uriOrLiteral(row.value)
         let label = hasOnlyValue ? value : uriOrLiteral(row.label)
-        return { label: label, value: value, paramId: paramId }
+        return { label: label, value: value }
       })
       return <Autocomplete
           key={paramId}
           options={options}
           renderInput={(params) => <TextField {...params} label={"Choose value for " + paramName} />}
-          onChange={handleParamAutocompleteChange}
+          onChange={(event, option) => handleParamAutocompleteChange(event, option, paramId)}
       />
     }
 
@@ -131,8 +148,8 @@ function Template() {
               <div style={{color: "gray", textDecoration: "underline"}} onClick={toggleShowDetails}>
                 <small>{showDetails ? "hide" : "show"} details</small>
               </div>
-              { showDetails && parameterizedQuery && <pre style={{textAlign: "left", marginLeft: "250px"}}>
-                {parameterizedQuery}
+              { showDetails && <pre style={{textAlign: "left", marginLeft: "250px"}}>
+                {buildParameterizedQuery()}
               </pre> }
               <Button style={{margin: "20px"}} variant="contained" onClick={() => runQuery()}>
                 Run query
