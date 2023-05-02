@@ -6,6 +6,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import fileDownload from "js-file-download";
+import { getTimestamp } from "../utils";
 
 const DEFAULT_NAMESPACE = "https://digitalservice.bund.de/kg#"
 const DEFAULT_NAMESPACE_PREFIX = "ds"
@@ -56,13 +58,22 @@ function Data() {
         // (io === "import" && format === "Markdown") ||
         (io === "export" && format === "RDF/Turtle")
     ) {
+      let dataset = prompt("Which dataset? (main or meta)", "main")
+      if (!dataset || !["main", "meta"].includes(dataset)) {
+        alert("No (valid) dataset given")
+        return
+      }
       fetch("http://localhost:8080/api/v1/knowthyselves/io/" + io, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ format: format.toLowerCase() })
+        body: JSON.stringify({ format: format.toLowerCase(), dataset: dataset })
       })
       .then(response => response.text())
-      .then(data => console.log(data));
+      .then(data => {
+        let filename = dataset + "-turtle-export-" + getTimestamp() + ".ttls"
+        console.log("Turtle data downloaded, now saving as file:", filename)
+        fileDownload(data,  filename)
+      })
       return
     }
     alert("Not implemented yet.");

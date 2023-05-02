@@ -67,19 +67,14 @@ public class ImportExportController {
   }
 
   @PostMapping(value = "/export")
-  public String exportFormat(@RequestBody Map<String, String> request) {
+  public ResponseEntity<String> exportFormat(@RequestBody Map<String, String> request) {
     String format = request.get("format").toLowerCase();
+    String dataset = request.get("dataset").toLowerCase();
     logger.info("export using format {}", format);
 
     if (format.equals("rdf/turtle")) {
-      try {
-        rdfExporter.doExport(datasetService);
-        return format + "-export successful";
-      } catch (FileNotFoundException e) {
-        logger.error("{}-export failed", format, e);
-        return format + "-export failed: " + e.getMessage();
-      }
+      return ResponseEntity.ok(rdfExporter.doExport(datasetService, dataset));
     }
-    return "Format " + format + " is unknown.";
+    return ResponseEntity.internalServerError().body("Format " + format + " is unknown.");
   }
 }
