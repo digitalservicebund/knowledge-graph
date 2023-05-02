@@ -224,8 +224,11 @@ function QueryRead() {
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
           <DialogTitle>Save as template</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              By saving this query as a template you make it accessible to others
+            <DialogContentText style={{ fontSize: "small" }}>
+              By saving this query as a template you make it accessible to others.<br/>
+              To parameterize your query, write <i>:&lt;paramName&gt;</i> at the respective locations in the query.
+              For instance instead of <i>:joinedProject</i>.
+              Users of your template will then be able to choose/set those parameters before running the query.
             </DialogContentText>
             <br/>
             <TextField
