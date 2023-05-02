@@ -4,6 +4,7 @@ import Main from "./view/Main";
 import Templates from "./view/Templates";
 import Template from "./view/Template";
 import QueryRead from "./view/QueryRead";
+import QueryWrite from "./view/QueryWrite";
 import Data from "./view/Data";
 import Schema from "./view/Schema";
 import Visualize from "./view/Visualize";
@@ -18,6 +19,7 @@ function App() {
             <Route path="/templates" element={<Templates />}/>
             <Route path="/template/:id" element={<Template />}  />
             <Route path="/query" element={<QueryRead />}/>
+            <Route path="/write-query" element={<QueryWrite />}/>
             <Route path="/data" element={<Data />}/>
             <Route path="/schema" element={<Schema />}/>
             <Route path="/visualize" element={<Visualize />}/>
