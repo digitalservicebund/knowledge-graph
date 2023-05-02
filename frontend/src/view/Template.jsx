@@ -25,6 +25,7 @@ function Template() {
         + "  :" + id + " :isA :QueryTemplate . "
         + "  :" + id + " :hasTitle ?title . "
         + "  OPTIONAL { :" + id + " :hasDescription ?description . } "
+        + "  :" + id + " :runOnDataset ?dataset . "
         + "  :" + id + " :hasQuery ?query . "
         + "  OPTIONAL { "
         + "    :" + id + " :hasParameter ?param . "
@@ -44,6 +45,7 @@ function Template() {
         setTemplate({
           title: rows[0].title.value,
           description: rows[0].description ? rows[0].description.value : "",
+          dataset: rows[0].dataset.value,
           query: templateQuery,
           parameters: params
         })
@@ -73,12 +75,11 @@ function Template() {
   }
 
   async function runQuery() {
-    let ds = "main" // take from template TODO
     if (Object.keys(template.parameters).filter(paramId => !template.parameters[paramId].userChoice).length > 0) {
       alert("Not all parameters are filled")
       return
     }
-    fetchSelect(buildParameterizedQuery(), ds, responseJson => {
+    fetchSelect(buildParameterizedQuery(), template.dataset, responseJson => {
       console.log("Response:", responseJson)
       setQueryResultData({
         variables: responseJson.head.vars,
