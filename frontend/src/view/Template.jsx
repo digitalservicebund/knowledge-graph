@@ -97,7 +97,7 @@ function Template() {
     return query
   }
 
-  function handleParamAutocompleteChange(event, option, paramId) {
+  function handleParamUserChoiceChange(event, option, paramId) {
     const setUserChoice = (value) => {
       setTemplate(prevState => {
         let newState = { ...prevState }
@@ -124,7 +124,7 @@ function Template() {
           key={paramId}
           options={options}
           renderInput={(params) => <TextField {...params} label={"Choose value for " + paramName} />}
-          onChange={(event, option) => handleParamAutocompleteChange(event, option, paramId)}
+          onChange={(event, option) => handleParamUserChoiceChange(event, option, paramId)}
       />
     }
 
@@ -134,6 +134,8 @@ function Template() {
           label={"Enter value for " + paramName}
           variant="outlined"
           style={{ width: "300px", margin: "10px" }}
+          value={param.userChoice ? param.userChoice : ""}
+          onChange={(event) => handleParamUserChoiceChange(event, { value: event.target.value }, paramId)}
       />
     )
   }
