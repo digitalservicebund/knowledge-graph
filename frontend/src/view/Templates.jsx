@@ -79,6 +79,18 @@ function Templates() {
     return true
   }
 
+  const getTemplateCount = () => {
+    let count = 0
+    let str = "Showing "
+    for (let template of templates) if (filterTemplate(template)) count ++
+    switch (count) {
+      case 0: str += "none of the"; break;
+      case templates.length: str += "all"; break;
+      default: str += count; break;
+    }
+    return str + " of the " + templates.length + " templates"
+  }
+
   return (
       <div>
         <br/>
@@ -92,7 +104,9 @@ function Templates() {
                 {tag}
               </span>
           )}
-          <br/><br/><br/>
+          <br/><br/>
+          <small style={{ color: "gray" }}>{getTemplateCount()}</small>
+          <br/><br/>
         </> }
         <Box
             style={{width: "650px"}}
