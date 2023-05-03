@@ -91,6 +91,12 @@ function Templates() {
     return str + " of the " + templates.length + " templates"
   }
 
+  const getConcatenatedTags = template => {
+    let str = ""
+    for (let tag of template.tags) str += "#" + tag + " "
+    return str
+  }
+
   return (
       <div>
         <br/>
@@ -124,6 +130,7 @@ function Templates() {
               <Paper style={paperStyle} key={template.id} elevation={4} onClick={() => handlePaperClick(template.id)}>
                 <strong>{template.title}</strong>
                 <div style={descStyle}>{template.description}</div>
+                <span style={{ fontSize: "small", color: "gray"}}>{getConcatenatedTags(template)}</span>
               </Paper>
           )}
         </Box>
