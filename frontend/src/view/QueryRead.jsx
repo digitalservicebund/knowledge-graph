@@ -289,7 +289,9 @@ function QueryRead() {
                     />
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <TextField
-                        label="Query"
+                        multiline
+                        rows={2}
+                        label={"Query for: " + paramId}
                         name={"param-" + paramId + "-query"}
                         value={formValues.parameters[paramId].query}
                         onChange={handleDialogFormChange}
