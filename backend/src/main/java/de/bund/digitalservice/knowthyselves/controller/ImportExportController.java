@@ -54,26 +54,26 @@ public class ImportExportController {
   }
 
   @PostMapping(value = "/import")
-  public String importFormat(@RequestBody Map<String, String> request) {
+  public ResponseEntity<String> importFormat(@RequestBody Map<String, String> request) {
     String format = request.get("format").toLowerCase();
     logger.info("import using format {}", format);
 
     if (format.equals("markdown")) {
       try {
         markdownImporter.doImport(datasetService, null);
-        return format + "-import successful";
+        return ResponseEntity.ok(format + "-import successful");
       } catch (IOException e) {
         logger.error("{}-import failed", format, e);
-        return format + "-import failed: " + e.getMessage();
+        return ResponseEntity.internalServerError().body(format + "-import failed: " + e.getMessage());
       }
     }
 
     if (format.equals("rdf/turtle")) {
       rdfImporter.doImport(datasetService, request.get("turtleFileContent"), request.get("dataset"));
-      return format + "-import successful";
+      return ResponseEntity.ok(format + "-import successful");
     }
 
-    return "Format " + format + " is unknown";
+    return ResponseEntity.internalServerError().body("Format " + format + " is unknown");
   }
 
   @PostMapping(value = "/export")
