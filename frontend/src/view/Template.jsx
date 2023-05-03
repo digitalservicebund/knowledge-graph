@@ -21,10 +21,11 @@ function Template() {
 
   const fetchTemplate = () => {
     let query = "PREFIX : <https://digitalservice.bund.de/kg#> "
-        + "SELECT * WHERE { "
+        + "SELECT ?title ?description ?dataset ?query ?param ?paramName ?paramQuery (GROUP_CONCAT(?tag) as ?tags) WHERE { "
         + "  :" + id + " :isA :QueryTemplate . "
         + "  :" + id + " :hasTitle ?title . "
         + "  OPTIONAL { :" + id + " :hasDescription ?description . } "
+        + "  OPTIONAL { :" + id + " :hasTag ?tag . } "
         + "  :" + id + " :runOnDataset ?dataset . "
         + "  :" + id + " :hasQuery ?query . "
         + "  OPTIONAL { "
@@ -32,7 +33,7 @@ function Template() {
         + "    OPTIONAL { <<:" + id + " :hasParameter ?param>> :hasName ?paramName . } "
         + "    OPTIONAL { <<:" + id + " :hasParameter ?param>> :hasQuery ?paramQuery . } "
         + "  } "
-        + "}"
+        + "} GROUP BY ?title ?description ?dataset ?query ?param ?paramName ?paramQuery"
     fetchSelect(query, "meta", responseJson => {
       console.log("Response:", responseJson)
       let rows = responseJson.results.bindings
@@ -47,6 +48,7 @@ function Template() {
           description: rows[0].description ? rows[0].description.value : "",
           dataset: rows[0].dataset.value,
           query: templateQuery,
+          tags: rows[0].tags ? rows[0].tags.value.split(" ").map(tag => tag.split("#")[1]) : [],
           parameters: params
         })
       })
@@ -160,9 +162,13 @@ function Template() {
               </div>
               { showDetails &&
                   <div style={{backgroundColor: "lightgoldenrodyellow", borderRadius: "10px", padding: "10px", margin: "10px"}}>
-                    Runs on dataset: {template.dataset}
+                    { template.tags.length > 0 && <>
+                      <strong>Tags:</strong> {template.tags.map(tag => <span key={tag}>#{tag} </span>)}
+                    </> }
                     <br/><br/>
-                    Query:
+                    <strong>Runs on dataset:</strong> {template.dataset}
+                    <br/><br/>
+                    <strong>Query:</strong>
                     <pre style={{textAlign: "left", marginLeft: "250px"}}>
                       {buildParameterizedQuery()}
                     </pre>
@@ -170,7 +176,7 @@ function Template() {
                         .filter(paramId => template.parameters[paramId].query)
                         .map(paramId =>
                             <span key={paramId}>
-                              Query for parameter {paramId}:
+                              <strong>Query for parameter {paramId}:</strong>
                               <pre style={{textAlign: "left", marginLeft: "250px"}}>
                                 {template.parameters[paramId].query}
                               </pre>
