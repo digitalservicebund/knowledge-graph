@@ -1,11 +1,11 @@
 package de.bund.digitalservice.knowthyselves.controller;
 
 import de.bund.digitalservice.knowthyselves.DatasetService;
+import de.bund.digitalservice.knowthyselves.io.CsvExporter;
 import de.bund.digitalservice.knowthyselves.io.MarkdownImporter;
 import de.bund.digitalservice.knowthyselves.io.PlainTripleImporter;
 import de.bund.digitalservice.knowthyselves.io.RdfExporter;
 import de.bund.digitalservice.knowthyselves.io.RdfImporter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +31,16 @@ public class ImportExportController {
   private final MarkdownImporter markdownImporter;
   private final RdfImporter rdfImporter;
   private final RdfExporter rdfExporter;
+  private final CsvExporter csvExporter;
   private final PlainTripleImporter plainTripleImporter;
 
   public ImportExportController(DatasetService datasetService, MarkdownImporter markdownImporter,
-      RdfImporter rdfImporter, RdfExporter rdfExporter, PlainTripleImporter plainTripleImporter) {
+      RdfImporter rdfImporter, RdfExporter rdfExporter, CsvExporter csvExporter, PlainTripleImporter plainTripleImporter) {
     this.datasetService = datasetService;
     this.markdownImporter = markdownImporter;
     this.rdfImporter = rdfImporter;
     this.rdfExporter = rdfExporter;
+    this.csvExporter = csvExporter;
     this.plainTripleImporter = plainTripleImporter;
   }
 
@@ -85,6 +87,11 @@ public class ImportExportController {
     if (format.equals("rdf/turtle")) {
       return ResponseEntity.ok(rdfExporter.doExport(datasetService, dataset));
     }
+
+    if (format.equals("csv")) {
+      return ResponseEntity.ok(csvExporter.doExport(datasetService, dataset));
+    }
+
     return ResponseEntity.internalServerError().body("Format " + format + " is unknown.");
   }
 }

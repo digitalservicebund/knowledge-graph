@@ -22,7 +22,7 @@ function Data() {
 
   const [addRemove, setAddRemove] = useState("add");
 
-  const formats = ["RDF/Turtle", "JSON-LD", "TGF", "SPARQL endpoint", "Markdown", "GraphML", "CSV", "Excel", "Google Spreadsheet", "Confluence page"]
+  const formats = ["RDF/Turtle", "CSV", "JSON-LD", "TGF", "SPARQL endpoint", "Markdown", "GraphML", "Excel", "Google Spreadsheet", "Confluence page"]
   const [io, setIO] = useState("export");
 
   const exampleCode = ["Java", "JavaScript", "Python"]
@@ -56,7 +56,7 @@ function Data() {
   function handlePaperClick(format) {
     if (
         // (io === "import" && format === "Markdown") ||
-        (io === "export" && format === "RDF/Turtle")
+        (io === "export" && (format === "RDF/Turtle" || format === "CSV"))
     ) {
       let dataset = prompt("Which dataset? (main or meta)", "main")
       if (!dataset || !["main", "meta"].includes(dataset)) {
@@ -70,8 +70,10 @@ function Data() {
       })
       .then(response => response.text())
       .then(data => {
-        let filename = dataset + "-turtle-export-" + getTimestamp() + ".ttls"
-        console.log("Turtle data downloaded, now saving as file:", filename)
+        let filename;
+        if (format === "RDF/Turtle") filename = dataset + "-turtle-export-" + getTimestamp() + ".ttls"
+        if (format === "CSV") filename = dataset + "-csv-export-" + getTimestamp() + ".csv"
+        console.log("Data downloaded, now saving as file:", filename)
         fileDownload(data,  filename)
       })
       return
@@ -83,6 +85,11 @@ function Data() {
     if (ev.key === "Enter") {
       addTriple();
     }
+  }
+
+  function isEnabledFormat(format) {
+    if (format === "RDF/Turtle") return true
+    return format === "CSV";
   }
 
   return (
@@ -123,8 +130,8 @@ function Data() {
             }}
         >
           {formats.map(f =>
-              <Paper style={f === "RDF/Turtle" ? paperStyle : disabledPaperStyle} key={f} elevation={2} onClick={() => handlePaperClick(f)}>
-                <div style={{textAlign: "center", color: f === "RDF/Turtle" ? "black" : "gray"}}>{f}</div>
+              <Paper style={isEnabledFormat(f) ? paperStyle : disabledPaperStyle} key={f} elevation={2} onClick={() => handlePaperClick(f)}>
+                <div style={{textAlign: "center", color: isEnabledFormat(f) ? "black" : "gray"}}>{f}</div>
               </Paper>
           )}
         </Box>
