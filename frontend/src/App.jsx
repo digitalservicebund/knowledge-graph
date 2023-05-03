@@ -19,7 +19,7 @@ function App() {
             <Route path="/templates" element={<Templates />}/>
             <Route path="/template/:id" element={<Template />}  />
             <Route path="/query" element={<QueryRead />}/>
-            <Route path="/write-query" element={<QueryWrite />}/>
+            <Route path="/query-write" element={<QueryWrite />}/>
             <Route path="/data" element={<Data />}/>
             <Route path="/schema" element={<Schema />}/>
             <Route path="/visualize" element={<Visualize />}/>
