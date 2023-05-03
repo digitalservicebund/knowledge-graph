@@ -4,6 +4,7 @@ import de.bund.digitalservice.knowthyselves.DatasetService;
 import de.bund.digitalservice.knowthyselves.io.MarkdownImporter;
 import de.bund.digitalservice.knowthyselves.io.PlainTripleImporter;
 import de.bund.digitalservice.knowthyselves.io.RdfExporter;
+import de.bund.digitalservice.knowthyselves.io.RdfImporter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -28,12 +29,15 @@ public class ImportExportController {
   private final DatasetService datasetService;
 
   private final MarkdownImporter markdownImporter;
+  private final RdfImporter rdfImporter;
   private final RdfExporter rdfExporter;
   private final PlainTripleImporter plainTripleImporter;
 
-  public ImportExportController(DatasetService datasetService, MarkdownImporter markdownImporter, RdfExporter rdfExporter, PlainTripleImporter plainTripleImporter) {
+  public ImportExportController(DatasetService datasetService, MarkdownImporter markdownImporter,
+      RdfImporter rdfImporter, RdfExporter rdfExporter, PlainTripleImporter plainTripleImporter) {
     this.datasetService = datasetService;
     this.markdownImporter = markdownImporter;
+    this.rdfImporter = rdfImporter;
     this.rdfExporter = rdfExporter;
     this.plainTripleImporter = plainTripleImporter;
   }
@@ -63,6 +67,12 @@ public class ImportExportController {
         return format + "-import failed: " + e.getMessage();
       }
     }
+
+    if (format.equals("rdf/turtle")) {
+      rdfImporter.doImport(datasetService, request.get("turtleFileContent"), request.get("dataset"));
+      return format + "-import successful";
+    }
+
     return "Format " + format + " is unknown";
   }
 
