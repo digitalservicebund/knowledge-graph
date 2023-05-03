@@ -113,6 +113,10 @@ function Template() {
     let paramName = param.name ? param.name : paramId
 
     if (param.query) {
+      if (!param.queryResults.head) {
+        alert("The parameter query seems malformed, I don't get results for " + paramId)
+        return
+      }
       if (!param.queryResults.head.vars.includes("value")) {
         alert("Parameter options query for " + paramId + " does not have a variable ?value")
       }
