@@ -128,16 +128,18 @@ function Templates() {
         <h2>Templates</h2>
         { <>
           <br/>
-          {tags.map(tag =>
-              <Tooltip key={tag} title={tag.length > MAX_LENGTH_TAG ? tag : ""} arrow>
-                <span style={{marginRight: "10px", padding: "8px", borderRadius: "10px",
-                  backgroundColor: (selectedTags.includes(tag) ? "lightskyblue" : "lightblue")}}
-                onClick={() => handleTagClick(tag)}>
-                  {shortenStrings(tag, MAX_LENGTH_TAG)}
-                </span>
-              </Tooltip>
-          )}
-          <br/><br/>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", maxWidth: "800px", margin: "0 auto" }}>
+            {tags.map(tag =>
+                <Tooltip key={tag} title={tag.length > MAX_LENGTH_TAG ? tag : ""} arrow>
+                  <span style={{marginRight: "8px", marginBottom: "8px", padding: "8px", borderRadius: "10px",
+                    backgroundColor: (selectedTags.includes(tag) ? "lightskyblue" : "lightblue")}}
+                  onClick={() => handleTagClick(tag)}>
+                    {shortenStrings(tag, MAX_LENGTH_TAG)}
+                  </span>
+                </Tooltip>
+            )}
+          </div>
+          <br/>
           <small style={{ color: "gray" }}>{getTemplateCount()}</small>
           <br/><br/>
         </> }
