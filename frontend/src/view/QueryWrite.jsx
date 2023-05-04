@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import Button from "@mui/material/Button";
 import Yasgui from "@triply/yasgui";
 import "@triply/yasgui/build/yasgui.min.css";
-import { fetchInsert } from "../utils";
+import { BASE_URL, fetchInsert } from "../utils";
 
 function QueryWrite() {
   const yasgui = useRef()
@@ -33,7 +33,7 @@ function QueryWrite() {
     const file = e.target.files[0]
     const reader = new FileReader()
     reader.onload = (event) => {
-      fetch("http://localhost:8080/api/v1/knowthyselves/io/import", {
+      fetch(BASE_URL + "/api/v1/knowthyselves/io/import", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
