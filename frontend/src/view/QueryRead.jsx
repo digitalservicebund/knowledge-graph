@@ -42,6 +42,11 @@ function QueryRead() {
       "For instance, there are two possible predicates from the DigitalService node to Person nodes:",
       ":hasEmployee and :hasExternalCollaborator"
   ].join("\n")
+  const DATASETS_TOOLTIP = [
+    "main stores all triples that got imported, the actual data.",
+    "",
+    "meta stores triples about the triples in main; they describe their import sources. Furthermore, templates are stored here.",
+  ].join("\n")
 
   useEffect(() => {
     if (yasgui.current) return
@@ -207,6 +212,9 @@ function QueryRead() {
             />
             meta
           </label>
+          <Tooltip title={<div style={{ fontSize: "small", whiteSpace: "pre-line" }}>{DATASETS_TOOLTIP}</div>} arrow>
+            <InfoIcon style={{fontSize: "large", color: "lightgray", verticalAlign: "middle", marginLeft: "6px", marginBottom: "3px"}}/>
+          </Tooltip>
         </div>
         <Button variant="contained" onClick={runQuery}>
           Run query
