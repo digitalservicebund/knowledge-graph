@@ -137,7 +137,7 @@ function QueryRead() {
       let triple = ":" + id + " :hasParameter :" + paramId
       params += "    " + triple + " . "
       if (param.name) params += "    <<" + triple + ">> :hasName \"" + param.name + "\" . "
-      if (param.query) params += "    <<" + triple + ">> :hasQuery \"" + param.query + "\" . " // use """ syntax? TODO
+      if (param.query) params += "    <<" + triple + ">> :hasQuery \"\"\"" + param.query + "\"\"\" . "
     }
 
     let insertQuery = "PREFIX : <https://digitalservice.bund.de/kg#> " +
