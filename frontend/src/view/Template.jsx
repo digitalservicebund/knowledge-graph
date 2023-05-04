@@ -129,12 +129,13 @@ function Template() {
         let label = hasOnlyValue ? value : uriOrLiteral(row.label)
         return { label: label, value: value }
       })
-      return <Autocomplete
-          key={paramId}
-          options={options}
-          renderInput={(params) => <TextField {...params} label={"Choose value for " + paramName} />}
-          onChange={(event, option) => handleParamUserChoiceChange(event, option, paramId)}
-      />
+      return <span key={paramId} style={{ margin: "10px" }}>
+        <Autocomplete
+            options={options}
+            renderInput={(params) => <TextField {...params} label={"Choose value for " + paramName} />}
+            onChange={(event, option) => handleParamUserChoiceChange(event, option, paramId)}
+        />
+      </span>
     }
 
     return (
