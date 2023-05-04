@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { fetchSelect } from "../utils";
+import Tooltip from "@mui/material/Tooltip";
 
 function Templates() {
   const navigate = useNavigate();
@@ -11,6 +12,11 @@ function Templates() {
   const [templates, setTemplates] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+
+  const MAX_LENGTH_TAG = 20
+  const MAX_LENGTH_TITLE = 24
+  const MAX_LENGTH_DESCRIPTION = 62
+  const MAX_LENGTH_TAGS = 30
 
   useEffect(() => {
     if (init.current) return
@@ -97,6 +103,25 @@ function Templates() {
     return str
   }
 
+  const isShortened = template => {
+    return template.title.length > MAX_LENGTH_TITLE
+        || template.description.length > MAX_LENGTH_DESCRIPTION
+        || getConcatenatedTags(template).length > MAX_LENGTH_TAGS
+  }
+
+  const shortenStrings = (str, max) => {
+    if (str.length > max) str = str.substring(0, max).trim() + "..."
+    return str
+  }
+
+  const buildPaper = (template) => {
+    return <Paper key={template.id} style={paperStyle} elevation={4} onClick={() => handlePaperClick(template.id)}>
+      <strong>{shortenStrings(template.title, MAX_LENGTH_TITLE)}</strong>
+      <div style={descStyle}>{shortenStrings(template.description, MAX_LENGTH_DESCRIPTION)}</div>
+      <span style={{ fontSize: "small", color: "gray"}}>{shortenStrings(getConcatenatedTags(template), MAX_LENGTH_TAGS)}</span>
+    </Paper>
+  }
+
   return (
       <div>
         <br/>
@@ -104,35 +129,49 @@ function Templates() {
         { <>
           <br/>
           {tags.map(tag =>
-              <span key={tag} style={{marginRight: "10px", padding: "8px", borderRadius: "10px",
-                backgroundColor: (selectedTags.includes(tag) ? "lightskyblue" : "lightblue")}}
-              onClick={() => handleTagClick(tag)}>
-                {tag}
-              </span>
+              <Tooltip key={tag} title={tag.length > MAX_LENGTH_TAG ? tag : ""} arrow>
+                <span style={{marginRight: "10px", padding: "8px", borderRadius: "10px",
+                  backgroundColor: (selectedTags.includes(tag) ? "lightskyblue" : "lightblue")}}
+                onClick={() => handleTagClick(tag)}>
+                  {shortenStrings(tag, MAX_LENGTH_TAG)}
+                </span>
+              </Tooltip>
           )}
           <br/><br/>
           <small style={{ color: "gray" }}>{getTemplateCount()}</small>
           <br/><br/>
         </> }
         <Box
-            style={{width: "650px"}}
+            style={{width: "800px"}}
             sx={{
               display: "flex",
               flexWrap: "wrap",
               "& > :not(style)": {
                 m: 1,
-                width: 200,
+                width: 240,
                 height: 120,
               },
             }}
         >
-          { templates.filter(t => filterTemplate(t)).map(template =>
-              <Paper style={paperStyle} key={template.id} elevation={4} onClick={() => handlePaperClick(template.id)}>
-                <strong>{template.title}</strong>
-                <div style={descStyle}>{template.description}</div>
-                <span style={{ fontSize: "small", color: "gray"}}>{getConcatenatedTags(template)}</span>
-              </Paper>
-          )}
+          {templates
+            .filter((t) => filterTemplate(t))
+            .map((template) => {
+              return isShortened(template) ? (
+                  <Tooltip
+                      key={template.id + "_tooltip"}
+                      title={
+                        <div style={{ fontSize: "small", whiteSpace: "pre-line" }}>
+                          {template.title + "\n\n" + template.description + "\n\n" + getConcatenatedTags(template)}
+                        </div>
+                      }
+                      arrow
+                  >
+                    {buildPaper(template)}
+                  </Tooltip>
+              ) : (
+                  buildPaper(template)
+              );
+          })}
         </Box>
       </div>
   );

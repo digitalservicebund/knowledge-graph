@@ -232,7 +232,7 @@ function QueryRead() {
             </DialogContentText>
             <br/>
             <TextField
-                label="Title"
+                label="Title (short)"
                 name="title"
                 fullWidth
                 variant="standard"
