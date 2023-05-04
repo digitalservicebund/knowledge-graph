@@ -24,7 +24,7 @@ function QueryRead() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [], parameters: {} }
   const [formValues, setFormValues] = useState(FORM_VALUES_DEFAULT)
-  const INSIDE_ANGLE_BRACKETS_REGEX = /(?<=<)[^<>]+(?=>)/g
+  const INSIDE_ANGLE_BRACKETS_REGEX = /(?<=(?<!<)<)[^<>]+(?=>(?!>))/g
   const PARAMETERS_TOOLTIP = [
       "\"Name\" will be shown to the user when asking to parameterize the query. If none is set, the variable you used in the query (e.g. <thisOne>) will be used.",
       "",
