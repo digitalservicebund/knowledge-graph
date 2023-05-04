@@ -1,6 +1,8 @@
 # src/config.json
 public/profile-pictures/
 
+package-lock.json
+
 # dependencies
 /node_modules
 /.pnp
