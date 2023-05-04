@@ -3,3 +3,5 @@ build/
 
 .tdb/
 export/
+
+src/main/resources/static

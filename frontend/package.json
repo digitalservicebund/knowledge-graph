@@ -24,6 +24,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "postbuild": "cp -r build/. ../backend/src/main/resources/static/",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
