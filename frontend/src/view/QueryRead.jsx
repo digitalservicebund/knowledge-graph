@@ -20,6 +20,7 @@ function QueryRead() {
   const yasgui = useRef()
   const tags = useRef([])
   const [datasets, setDatasets] = useState({ main: true, meta: false })
+  const [status, setStatus] = useState()
   const [queryResultData, setQueryResultData] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
   const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [], parameters: {} }
@@ -171,12 +172,18 @@ function QueryRead() {
       alert("No dataset selected")
       return
     }
+    setStatus("Loading...")
     fetchSelect(getQuery(), ds, responseJson => {
       console.log("Response:", responseJson)
+      if (responseJson.error) {
+        setStatus(responseJson.error + ": " + responseJson.message)
+        return
+      }
       setQueryResultData({
         variables: responseJson.head.vars,
         rows: responseJson.results.bindings
       })
+      setStatus(undefined)
     })
   }
 
@@ -315,7 +322,11 @@ function QueryRead() {
           </DialogActions>
         </Dialog>
         <br/><br/>
-        <QueryResultsTable queryResultData={queryResultData} />
+        {status ?
+          <div style={{color: "red", width: "720px"}}>{status}</div>
+            :
+          <QueryResultsTable queryResultData={queryResultData} />
+        }
       </div>
   );
 }
