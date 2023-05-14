@@ -23,7 +23,7 @@ function QueryRead() {
   const [status, setStatus] = useState()
   const [queryResultData, setQueryResultData] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
-  const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [], parameters: {} }
+  const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [], parameters: {}, isActiveKnowledge: false }
   const [formValues, setFormValues] = useState(FORM_VALUES_DEFAULT)
   const INSIDE_ANGLE_BRACKETS_REGEX = /(?<=(?<!<)<)[^<>]+(?=>(?!>))/g
   const PARAMETERS_TOOLTIP = [
@@ -90,7 +90,7 @@ function QueryRead() {
       setFormValues({ ...formValues, tags: tags })
       return
     }
-    const { name, value } = event.target
+    const { name, value, type, checked } = event.target
     if (name.startsWith("param")) {
       let paramId = name.split("-")[1]
       let key = name.split("-")[2]
@@ -103,6 +103,14 @@ function QueryRead() {
           }
         }
       })
+      return
+    }
+    if (type === "checkbox") {
+      if (name === "isActiveKnowledge" && checked) {
+        setFormValues({ ...formValues, [name]: checked, tags: [...formValues.tags, "active-knowledge"] })
+      } else {
+        setFormValues({ ...formValues, [name]: checked })
+      }
       return
     }
     setFormValues({ ...formValues, [name]: value })
@@ -146,6 +154,7 @@ function QueryRead() {
         "    :" + id + " :isA :QueryTemplate . " +
         "    :" + id + " :hasTitle \"" + title + "\" . " +
         (description ? "    :" + id + " :hasDescription \"" + description + "\" . " : "") +
+        (formValues.isActiveKnowledge ? "    :" + id + " :isActiveKnowledge \"true\" . " : "") +
         "    :" + id + " :runOnDataset \"" + ds + "\" . " +
         formValues.tags.map((tag) => "    :" + id + " :hasTag :" + tag + " . ").join(" ") +
         "    :" + id + " :hasQuery \"\"\"" + getQuery() + "\n\"\"\" . " +
@@ -315,6 +324,15 @@ function QueryRead() {
                   </div>
               ))}
             </>}
+            <label>
+              <input
+                  type="checkbox"
+                  name="isActiveKnowledge"
+                  checked={formValues.isActiveKnowledge}
+                  onChange={handleDialogFormChange}
+              />
+              Mark as active knowledge {/*<!-- "flag for periodic checks" better? -->*/}
+            </label>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
