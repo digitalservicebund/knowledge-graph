@@ -122,16 +122,10 @@ function Templates() {
     </Paper>
   }
 
-  const runActiveKnowledgeQueries = () => {
-    // TODO
-  }
-
   return (
       <div>
         <br/>
         <h2>Templates</h2>
-        <small style={{ color: "gray", textDecoration: "underline" }} onClick={runActiveKnowledgeQueries}>Run active knowledge queries</small>
-        <br/>
         { <>
           <br/>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", maxWidth: "800px", margin: "0 auto" }}>

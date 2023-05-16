@@ -19,6 +19,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import { fetchSelect } from "../utils";
 
 const pages = [
     { label: "Templates", path: "/templates" },
@@ -35,6 +36,7 @@ function TopBar() {
   const [anchorElDataset, setAnchorElDataset] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [activeKnowledgeModalOpen, setActiveKnowledgeModalOpen] = useState(false);
+  const [activeKnowledgeResultRows, setActiveKnowledgeResultRows] = useState([]);
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
@@ -64,6 +66,61 @@ function TopBar() {
   const handleDatasetClick = (ds) => {
     handleCloseDatasetMenu()
     setCurrentDataset(ds)
+  }
+
+  const checkActiveKnowledge = () => {
+    let query = `
+PREFIX : <https://digitalservice.bund.de/kg#>
+SELECT 
+  (?currentProjectName AS ?currentProject)
+  ?learning
+  (?pastProjectName AS ?pastProject)
+  (?pastProjectState AS ?matchingState)
+  (?pastTheme AS ?matchingActivity)
+  (?pastClient AS ?matchingClient)
+WHERE {
+  # past
+  ?learningId :occurredInProject ?pastProjectId .
+  ?pastProjectId :hasName ?pastProjectName .
+  ?learningId :description ?learning .
+  ?learningId :hasTopic ?pastProjectState .
+  ?learningId :hasTheme ?pastTheme .
+  ?pastProjectId :hasClient ?pastClient .
+  # current
+  ?currentProjectId :isInState ?currentProjectState .
+  ?currentProjectId :hasName ?currentProjectName .
+  ?currentProjectId :hasClient ?currentClient .
+  ?currentProjectId :currentActivity ?currentActivity .
+  # matching
+  FILTER(?pastProjectState = ?currentProjectState) .
+  FILTER(?pastClient = ?currentClient) .
+  FILTER(?pastTheme = ?currentActivity) .
+}`
+    fetchSelect(query, "main", (responseJson) => {
+      setActiveKnowledgeResultRows(responseJson.results.bindings)
+      setActiveKnowledgeModalOpen(true)
+
+      console.log("responseJson.results.bindings", responseJson.results.bindings)
+    })
+  }
+
+  const buildLearningStatement = () => {
+    let row = activeKnowledgeResultRows[0]
+    let currentProject = row.currentProject.value
+    let learning = row.learning.value
+    let pastProject = row.pastProject.value
+    let matchingState = row.matchingState.value.split("#")[1]
+    let matchingActivity = row.matchingActivity.value.split("#")[1]
+    let matchingClient = row.matchingClient.value.split("#")[1]
+    return <span>
+      The current project <strong>{currentProject}</strong> with <strong>{matchingClient}</strong> as client
+      is doing <strong>{matchingActivity}</strong> in the state <strong>{matchingState}</strong>. This matches
+      a learning that was saved in the past project <strong>{pastProject}</strong>:
+      <br/><br/>
+      <span style={{color: "gray", fontSize: "large"}}>"</span>
+      <span style={{color: "blue"}}>{learning}</span>
+      <span style={{color: "gray", fontSize: "large"}}>"</span>
+    </span>
   }
 
   return (
@@ -169,7 +226,7 @@ function TopBar() {
                 <Tooltip title="">
                     <Button
                         /*onClick={handleOpenDatasetMenu}*/
-                        onClick={() => setActiveKnowledgeModalOpen(true)}
+                        onClick={checkActiveKnowledge}
                         sx={{ my: 2, color: "white", display: "block", marginRight: "10px" }}
                     >
                       {/*Dataset: {currentDataset.label}*/}
@@ -233,12 +290,24 @@ function TopBar() {
           </Container>
         </AppBar>
         <Dialog open={activeKnowledgeModalOpen} onClose={() => setActiveKnowledgeModalOpen(false)}>
-          <DialogTitle>New potentially relevant learning found!</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              TODO
-            </DialogContentText>
-          </DialogContent>
+          { activeKnowledgeResultRows.length > 0 ?
+              <>
+                <DialogTitle>Potentially relevant learning found!</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    {buildLearningStatement()}
+                  </DialogContentText>
+                </DialogContent>
+              </>
+              : <>
+                <DialogTitle>No new active learning results</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    If you know that there should exist relevant learnings for a given context but they don't show up - let's investigate and improve the pattern!
+                  </DialogContentText>
+                </DialogContent>
+              </>
+          }
           <DialogActions>
             <Button onClick={() => setActiveKnowledgeModalOpen(false)}>Close</Button>
             <Button onClick={() => {}}>Go to template</Button>
