@@ -78,6 +78,8 @@ SELECT
   (?pastProjectState AS ?matchingState)
   (?pastTheme AS ?matchingActivity)
   (?pastClient AS ?matchingClient)
+  ?year
+  ?author
 WHERE {
   # past
   ?learningId :occurredInProject ?pastProjectId .
@@ -86,6 +88,9 @@ WHERE {
   ?learningId :hasTopic ?pastProjectState .
   ?learningId :hasTheme ?pastTheme .
   ?pastProjectId :hasClient ?pastClient .
+  ?learningId :occurredInYear ?year .
+  ?learningId :addedBy ?authorId .
+  ?authorId :hasFullName ?author .
   # current
   ?currentProjectId :isInState ?currentProjectState .
   ?currentProjectId :hasName ?currentProjectName .
@@ -99,8 +104,6 @@ WHERE {
     fetchSelect(query, "main", (responseJson) => {
       setActiveKnowledgeResultRows(responseJson.results.bindings)
       setActiveKnowledgeModalOpen(true)
-
-      console.log("responseJson.results.bindings", responseJson.results.bindings)
     })
   }
 
@@ -115,7 +118,7 @@ WHERE {
     return <span>
       The current project <strong>{currentProject}</strong> with <strong>{matchingClient}</strong> as client
       is doing <strong>{matchingActivity}</strong> in the state <strong>{matchingState}</strong>. This matches
-      a learning that was saved in the past project <strong>{pastProject}</strong>:
+      a learning that was saved in the past project <strong>{pastProject}</strong> by <strong>{row.author.value}</strong> in <strong>{row.year.value}</strong>:
       <br/><br/>
       <span style={{color: "gray", fontSize: "large"}}>"</span>
       <span style={{color: "blue"}}>{learning}</span>
