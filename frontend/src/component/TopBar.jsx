@@ -313,7 +313,10 @@ WHERE {
           }
           <DialogActions>
             <Button onClick={() => setActiveKnowledgeModalOpen(false)}>Close</Button>
-            <Button onClick={() => {}}>Go to template</Button>
+            <Button onClick={() => {
+              navigate("/template/Learning-matches")
+              setActiveKnowledgeModalOpen(false)
+            }}>Go to template</Button>
           </DialogActions>
         </Dialog>
       </div>
