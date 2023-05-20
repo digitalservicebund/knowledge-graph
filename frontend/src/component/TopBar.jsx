@@ -76,7 +76,8 @@ SELECT
   (?pastProjectName AS ?pastProject)
   (?pastProjectState AS ?matchingState)
   (?pastTheme AS ?matchingActivity)
-  (?pastClient AS ?matchingClient)
+  ?pastClient
+  ?currentClient
   ?year
   ?author
 WHERE {
@@ -97,7 +98,6 @@ WHERE {
   ?currentProjectId :currentActivity ?currentActivity .
   # matching
   FILTER(?pastProjectState = ?currentProjectState) .
-  FILTER(?pastClient = ?currentClient) .
   FILTER(?pastTheme = ?currentActivity) .
 }`
     fetchSelect(query, "main", (responseJson) => {
@@ -107,16 +107,19 @@ WHERE {
   }
 
   const buildLearningStatement = () => {
-    let row = activeKnowledgeResultRows[0]
+    let row = activeKnowledgeResultRows[0] // only the first learning will be displayed for now
     let currentProject = row.currentProject.value
     let learning = row.learning.value
     let pastProject = row.pastProject.value
     let matchingState = row.matchingState.value.split("#")[1]
     let matchingActivity = row.matchingActivity.value.split("#")[1]
-    let matchingClient = row.matchingClient.value.split("#")[1]
+    let pastClient = row.pastClient.value.split("#")[1]
+    let currentClient = row.currentClient.value.split("#")[1]
+    let matchingClients = pastClient === currentClient
     return <span>
-      The current project <strong>{currentProject}</strong> with <strong>{matchingClient}</strong> as client
-      is doing <strong>{matchingActivity}</strong> in the state <strong>{matchingState}</strong>. This matches
+      The current project <strong>{currentProject}</strong>
+      { matchingClients ? <> with <strong>{pastClient}</strong> as client </> : " " }
+      is doing <strong>{matchingActivity}</strong> in the state <strong>{matchingState}</strong>. This context matches
       a learning that was saved in the past project <strong>{pastProject}</strong> by <strong>{row.author.value}</strong> in <strong>{row.year.value}</strong>:
       <br/><br/>
       <span style={{color: "gray", fontSize: "large"}}>"</span>
