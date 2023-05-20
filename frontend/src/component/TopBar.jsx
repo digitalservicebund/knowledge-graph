@@ -10,7 +10,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import GroupsIcon from "@mui/icons-material/Groups";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
@@ -131,29 +130,13 @@ WHERE {
         <AppBar position="static">
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-              <GroupsIcon
-                  sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+              <img
+                  src="https://user-images.githubusercontent.com/5141792/239685148-d32b9c3d-ef73-466a-afda-c5ed9019b660.png"
+                  width="45"
+                  style={{ cursor: "pointer", marginRight: "10px" }}
+                  alt="Katy DigitalService Logo"
                   onClick={handleLogoClick}
-                  style={{ cursor: "pointer" }}
               />
-              <Typography
-                  variant="h6"
-                  noWrap
-                  component="a"
-                  onClick={handleLogoClick}
-                  sx={{
-                    cursor: "pointer",
-                    mr: 2,
-                    display: { xs: "none", md: "flex" },
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    color: "inherit",
-                    textDecoration: "none",
-                  }}
-              >
-                KnowThyselves
-              </Typography>
-
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                 <IconButton
                     size="large"
@@ -190,29 +173,6 @@ WHERE {
                   ))}
                 </Menu>
               </Box>
-              <GroupsIcon
-                  sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-                  onClick={handleLogoClick}
-                  style={{ cursor: "pointer" }}
-              />
-              <Typography
-                  variant="h5"
-                  noWrap
-                  component="a"
-                  onClick={handleLogoClick}
-                  sx={{
-                    cursor: "pointer",
-                    mr: 2,
-                    display: { xs: "flex", md: "none" },
-                    flexGrow: 1,
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    color: "inherit",
-                    textDecoration: "none",
-                  }}
-              >
-                KnowThyselves
-              </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 {pages.map((page) => (
                     <Button
