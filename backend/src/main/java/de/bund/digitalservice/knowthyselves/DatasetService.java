@@ -41,7 +41,7 @@ public class DatasetService {
       logger.info("Dataset {} loaded from: {}", dsName, tbdDir);
 
       Model model = ds.getDefaultModel();
-      model.setNsPrefix(defaultNsPrefix, defaultNs);
+      model.setNsPrefix("", defaultNs);
       models.put(dsName, model);
       if (addDemoData) {
         try {
