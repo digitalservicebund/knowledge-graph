@@ -5,6 +5,8 @@ import TextField from "@mui/material/TextField";
 import QueryResultsTable from "../component/QueryResultsTable";
 import { fetchSelect, fetchSelectAwait } from "../utils";
 import Autocomplete from "@mui/material/Autocomplete";
+import chartjs from "chart.js/auto"; // required for react-chartjs-2
+import { Line } from "react-chartjs-2";
 
 function Template() {
   let { id } = useParams();
@@ -12,6 +14,7 @@ function Template() {
   const [template, setTemplate] = useState({});
   const [showDetails, setShowDetails] = useState(false);
   const [queryResultData, setQueryResultData] = useState();
+  const [chartData, setChartData] = useState()
 
   useEffect(() => {
     if (init.current) return
@@ -83,10 +86,23 @@ function Template() {
     }
     fetchSelect(buildParameterizedQuery(), template.dataset, responseJson => {
       console.log("Response:", responseJson)
-      setQueryResultData({
-        variables: responseJson.head.vars,
-        rows: responseJson.results.bindings
-      })
+      let variables = responseJson.head.vars
+      let rows = responseJson.results.bindings
+      setQueryResultData({ variables: variables, rows: rows })
+      if (template.tags.includes("line-chart") && id === "Hiring-timeline") {
+        let labels = []
+        let datasets = {}
+        variables.forEach(variable => {
+          let date = variable.substring(0, 7)
+          if (!labels.includes(date)) labels.push(date)
+          let discipline = variable.substring(7, variable.length)
+          if (!datasets[discipline]) datasets[discipline] = { label: discipline, data: [], tension: 0.2 }
+          let value = Number(rows[0][variable].value)
+          datasets[discipline].data.push(value)
+        })
+        // delete datasets["Total"]
+        setChartData({ labels: labels, datasets: Object.values(datasets) })
+      }
     })
   }
 
@@ -192,6 +208,7 @@ function Template() {
               <QueryResultsTable queryResultData={queryResultData} />
             </>
         }
+        {chartData && <><br/><Line data={chartData} /><br/><br/><br/></>}
         { !template && "No template with id " + id + " found" }
       </div>
   );
