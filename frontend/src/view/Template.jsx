@@ -7,6 +7,7 @@ import { fetchSelect, fetchSelectAwait } from "../utils";
 import Autocomplete from "@mui/material/Autocomplete";
 import chartjs from "chart.js/auto"; // required for react-chartjs-2
 import { Line } from "react-chartjs-2";
+import fileDownload from "js-file-download";
 
 function Template() {
   let { id } = useParams();
@@ -166,6 +167,20 @@ function Template() {
     )
   }
 
+  const downloadChartData = () => {
+    let csv = []
+    let disciplineLabels = chartData.datasets.map(ds => ds.label)
+    csv.push(["Month", ...disciplineLabels].join(","))
+    chartData.labels.forEach((month, idx) => {
+      let row = [month]
+      chartData.datasets.forEach(ds => {
+        row.push(ds.data[idx])
+      })
+      csv.push(row.join(","))
+    })
+    fileDownload(csv.join("\n"), "ChartData.csv")
+  }
+
   return (
       <div style={{textAlign: "center", width: "880px"}}>
         { template &&
@@ -208,7 +223,16 @@ function Template() {
               <QueryResultsTable queryResultData={queryResultData} />
             </>
         }
-        {chartData && <><br/><Line data={chartData} /><br/><br/><br/></>}
+        {chartData && <>
+          <br/>
+          <Line data={chartData}/>
+          { id === "Hiring-timeline" && <><br/>
+          <small
+              style={{ color: "gray", textDecoration: "underline", cursor: "pointer" }}
+              onClick={downloadChartData}
+          >Download chart data as CSV</small></> }
+          <br/><br/><br/>
+        </>}
         { !template && "No template with id " + id + " found" }
       </div>
   );
