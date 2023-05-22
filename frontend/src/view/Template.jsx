@@ -97,7 +97,7 @@ function Template() {
           let date = variable.substring(0, 7)
           if (!labels.includes(date)) labels.push(date)
           let discipline = variable.substring(7, variable.length)
-          if (!datasets[discipline]) datasets[discipline] = { label: discipline, data: [], tension: 0.2 }
+          if (!datasets[discipline]) datasets[discipline] = { label: discipline, data: [], tension: 0.2 } //, fill: "origin" }
           let value = Number(rows[0][variable].value)
           datasets[discipline].data.push(value)
         })
@@ -167,6 +167,20 @@ function Template() {
     )
   }
 
+  const chartOptions = {
+    animation: {
+      onComplete: function(animation) {
+        /*let chartInstance = animation.chart
+        chartInstance.data.datasets.forEach(dataset => {
+          if(dataset.backgroundColor) {
+            dataset.backgroundColor = dataset.backgroundColor.replace(/[^,]+(?=\))/, "1")
+          }
+        })
+        chartInstance.update()*/
+      }
+    }
+  }
+
   const downloadChartData = () => {
     let csv = []
     let disciplineLabels = chartData.datasets.map(ds => ds.label)
@@ -225,7 +239,7 @@ function Template() {
         }
         {chartData && <>
           <br/>
-          <Line data={chartData}/>
+          <Line data={chartData} options={chartOptions} />
           { id === "Hiring-timeline" && <><br/>
           <small
               style={{ color: "gray", textDecoration: "underline", cursor: "pointer" }}
