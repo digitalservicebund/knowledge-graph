@@ -25,15 +25,15 @@ function QueryRead() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const FORM_VALUES_DEFAULT = { title: "", description: "", main: true, meta: false, tags: [], parameters: {}, isActiveKnowledge: false }
   const [formValues, setFormValues] = useState(FORM_VALUES_DEFAULT)
-  const INSIDE_ANGLE_BRACKETS_REGEX = /(?<=(?<!<)<)[^<>]+(?=>(?!>))/g
+  const INSIDE_SQUARE_BRACKETS_REGEX = /\[([^[\]]+)]/g
   const PARAMETERS_TOOLTIP = [
-      "\"Name\" will be shown to the user when asking to parameterize the query. If none is set, the variable you used in the query (e.g. <thisOne>) will be used.",
+      "\"Name\" will be shown to the user when asking to parameterize the query. If none is set, the variable you used in the query (e.g. [thisOne]) will be used.",
       "",
       "If no query is set, the user can input free text as value for the parameter. If a query is set, its results determine the choices for the user. These queries can currently only run on the main dataset.",
       "",
       "Note that the query MUST contain a ?value variable and MAY also contain a ?label variable. If ?label is present, that will be displayed to the user while the respective ?value will be filled in.",
       "",
-      "If your parameter is to fill a literal it needs to look like this: \"<param>\". If it is to fill an URI it needs to look like this :<param>.",
+      "If your parameter is to fill a literal it needs to look like this: \"[param]\". If it is to fill an URI it needs to look like this :[param].",
       "",
       "It is recommended to develop your query in a new tab before pasting it in here.",
   ].join("\n")
@@ -117,7 +117,7 @@ function QueryRead() {
   }
 
   const handleDialogOpen = () => {
-    const paramIds = getQuery().match(INSIDE_ANGLE_BRACKETS_REGEX).filter(param => !param.startsWith("http"))
+    const paramIds = Array.from(getQuery().matchAll(INSIDE_SQUARE_BRACKETS_REGEX)).map(match => match[1])
     let params = {}
     for (let paramId of paramIds) {
       params[paramId] = { name: "", query: "" }
@@ -250,7 +250,7 @@ function QueryRead() {
           <DialogContent>
             <DialogContentText style={{ fontSize: "small" }}>
               By saving this query as a template you make it accessible to others.<br/>
-              To parameterize your query, write something like <i>:&lt;projectId&gt;</i> at the respective locations in the query.
+              To parameterize your query, write something like <i>[projectId]</i> at the respective locations in the query.
               For instance instead of <i>?project</i>.
               Users of your template will then be able to choose/set those parameters before running the query.
             </DialogContentText>

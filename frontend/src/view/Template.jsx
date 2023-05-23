@@ -111,7 +111,7 @@ function Template() {
     let query = template.query
     Object.keys(template.parameters).forEach(paramId => {
       let userChoice = template.parameters[paramId].userChoice
-      if (userChoice) query = query.replaceAll("<" + paramId + ">", userChoice)
+      if (userChoice) query = query.replaceAll("[" + paramId + "]", userChoice)
     })
     return query
   }
