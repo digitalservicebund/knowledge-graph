@@ -5,9 +5,7 @@ import TextField from "@mui/material/TextField";
 import QueryResultsTable from "../component/QueryResultsTable";
 import { fetchSelect, fetchSelectAwait } from "../utils";
 import Autocomplete from "@mui/material/Autocomplete";
-import chartjs from "chart.js/auto"; // required for react-chartjs-2
-import { Line } from "react-chartjs-2";
-import fileDownload from "js-file-download";
+import LineChart from "../component/LineChart";
 
 function Template() {
   let { id } = useParams();
@@ -15,7 +13,6 @@ function Template() {
   const [template, setTemplate] = useState({});
   const [showDetails, setShowDetails] = useState(false);
   const [queryResultData, setQueryResultData] = useState();
-  const [chartData, setChartData] = useState()
 
   useEffect(() => {
     if (init.current) return
@@ -87,23 +84,7 @@ function Template() {
     }
     fetchSelect(buildParameterizedQuery(), template.dataset, responseJson => {
       console.log("Response:", responseJson)
-      let variables = responseJson.head.vars
-      let rows = responseJson.results.bindings
-      setQueryResultData({ variables: variables, rows: rows })
-      if (template.tags.includes("line-chart") && id === "Hiring-timeline") {
-        let labels = []
-        let datasets = {}
-        variables.forEach(variable => {
-          let date = variable.substring(0, 7)
-          if (!labels.includes(date)) labels.push(date)
-          let discipline = variable.substring(7, variable.length)
-          if (!datasets[discipline]) datasets[discipline] = { label: discipline, data: [], tension: 0.2 } //, fill: "origin" }
-          let value = Number(rows[0][variable].value)
-          datasets[discipline].data.push(value)
-        })
-        // delete datasets["Total"]
-        setChartData({ labels: labels, datasets: Object.values(datasets) })
-      }
+      setQueryResultData({ variables: responseJson.head.vars, rows: responseJson.results.bindings })
     })
   }
 
@@ -167,34 +148,6 @@ function Template() {
     )
   }
 
-  const chartOptions = {
-    animation: {
-      onComplete: function(animation) {
-        /*let chartInstance = animation.chart
-        chartInstance.data.datasets.forEach(dataset => {
-          if(dataset.backgroundColor) {
-            dataset.backgroundColor = dataset.backgroundColor.replace(/[^,]+(?=\))/, "1")
-          }
-        })
-        chartInstance.update()*/
-      }
-    }
-  }
-
-  const downloadChartData = () => {
-    let csv = []
-    let disciplineLabels = chartData.datasets.map(ds => ds.label)
-    csv.push(["Month", ...disciplineLabels].join(","))
-    chartData.labels.forEach((month, idx) => {
-      let row = [month]
-      chartData.datasets.forEach(ds => {
-        row.push(ds.data[idx])
-      })
-      csv.push(row.join(","))
-    })
-    fileDownload(csv.join("\n"), "ChartData.csv")
-  }
-
   return (
       <div style={{textAlign: "center", width: "880px"}}>
         { template &&
@@ -237,16 +190,8 @@ function Template() {
               <QueryResultsTable queryResultData={queryResultData} />
             </>
         }
-        {chartData && <>
-          <br/>
-          <Line data={chartData} options={chartOptions} />
-          { id === "Hiring-timeline" && <><br/>
-          <small
-              style={{ color: "gray", textDecoration: "underline", cursor: "pointer" }}
-              onClick={downloadChartData}
-          >Download chart data as CSV</small></> }
-          <br/><br/><br/>
-        </>}
+        { queryResultData && id.toLowerCase() === "hiring-timeline" &&
+            <LineChart queryResultData={queryResultData} /> }
         { !template && "No template with id " + id + " found" }
       </div>
   );
