@@ -56,7 +56,14 @@ function LineChart(props) {
         })
         chartInstance.update()
       }
-    }
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: "Employee growth by discipline",
+        font: { size: 20 },
+      },
+    },
   }
 
   const downloadChartData = () => {
