@@ -6,6 +6,7 @@ import QueryResultsTable from "../component/QueryResultsTable";
 import { fetchSelect, fetchSelectAwait } from "../utils";
 import Autocomplete from "@mui/material/Autocomplete";
 import LineChart from "../component/LineChart";
+import GanttChart from "../component/GanttChart";
 
 function Template() {
   let { id } = useParams();
@@ -192,6 +193,8 @@ function Template() {
         }
         { queryResultData && id.toLowerCase() === "hiring-timeline" &&
             <LineChart queryResultData={queryResultData} /> }
+        { queryResultData && id.toLowerCase() === "projects-timeline" &&
+            <GanttChart queryResultData={queryResultData} /> }
         { !template && "No template with id " + id + " found" }
       </div>
   );
