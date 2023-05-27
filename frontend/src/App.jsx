@@ -8,6 +8,7 @@ import QueryWrite from "./view/QueryWrite";
 import Data from "./view/Data";
 import Schema from "./view/Schema";
 import Visualize from "./view/Visualize";
+import Experimental from "./view/Experimental";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/data" element={<Data />}/>
             <Route path="/schema" element={<Schema />}/>
             <Route path="/visualize" element={<Visualize />}/>
+            <Route path="/experimental" element={<Experimental />}/>
           </Routes>
         </div>
       </BrowserRouter>

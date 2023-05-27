@@ -24,7 +24,8 @@ const pages = [
     { label: "Templates", path: "/templates" },
     { label: "Query", path: "/query" },
     { label: "Data", path: "/data" },
-    { label: "Visualize", path: "/visualize" }
+    { label: "Visualize", path: "/visualize" },
+    { label: "Experimental", path: "/experimental" }
 ];
 const settings = ["Settings", "Logout"];
 
