@@ -97,7 +97,7 @@ WHERE {
   ?currentProjectId :hasClient ?currentClient .
   ?currentProjectId :currentActivity ?currentActivity .
   # matching
-  FILTER(?pastProjectState = ?currentProjectState) .
+  # FILTER(?pastProjectState = ?currentProjectState) .
   FILTER(?pastTheme = ?currentActivity) .
 }`
     fetchSelect(query, "main", (responseJson) => {
