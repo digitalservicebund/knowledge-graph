@@ -6,6 +6,7 @@ import fileDownload from "js-file-download";
 function LineChart(props) {
   const init = useRef(false)
   const [chartData, setChartData] = useState()
+  const chartRef = useRef()
 
   useEffect(() => {
     if (init.current) return
@@ -67,6 +68,9 @@ function LineChart(props) {
   }
 
   const downloadChartData = () => {
+    chartRef.current.canvas.toBlob(blob => {
+      fileDownload(blob, "Chart.png")
+    }, "image/png")
     let csv = []
     let disciplineLabels = chartData.datasets.map(ds => ds.label)
     csv.push(["Month", ...disciplineLabels].join(","))
@@ -82,7 +86,7 @@ function LineChart(props) {
 
   return ( chartData &&
       <>
-        <Line data={chartData} options={chartOptions} />
+        <Line data={chartData} options={chartOptions} ref={chartRef} />
         <br/>
           <small
               style={{ color: "gray", textDecoration: "underline", cursor: "pointer" }}
