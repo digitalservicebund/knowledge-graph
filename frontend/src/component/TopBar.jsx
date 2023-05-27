@@ -117,10 +117,11 @@ WHERE {
     let currentClient = row.currentClient.value.split("#")[1]
     let matchingClients = pastClient === currentClient
     return <span>
-      The current project <strong>{currentProject}</strong>
-      { matchingClients ? <> with <strong>{pastClient}</strong> as client </> : " " }
-      is doing <strong>{matchingActivity}</strong> in the state <strong>{matchingState}</strong>. This context matches
-      a learning that was saved in the past project <strong>{pastProject}</strong> by <strong>{row.author.value}</strong> in <strong>{row.year.value}</strong>:
+      The project <strong>{currentProject}</strong>
+      { matchingClients ? <> with <strong>{pastClient}</strong> as client is in
+        the state <strong>{matchingState}</strong> and </> : " " }
+      is doing <strong>{matchingActivity}</strong>. This context matches a learning
+      that was saved in the past project <strong>{pastProject}</strong> by <strong>{row.author.value}</strong> in <strong>{row.year.value}</strong>:
       <br/><br/>
       <span style={{color: "gray", fontSize: "large"}}>"</span>
       <span style={{color: "blue"}}>{learning}</span>
