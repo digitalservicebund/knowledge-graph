@@ -15,8 +15,8 @@ function PieChart(props) {
   const computeDatasets = () => {
     let data = { labels: [], datasets: [{ data: [] }]}
     props.queryResultData.rows.forEach(row => {
-      let count = row.count.value
-      data.labels.push(row.status.value.split("#")[1] + " (" + count + ")")
+      let count = row["count"].value
+      data.labels.push(row["status"].value.split("#")[1] + " (" + count + ")")
       data.datasets[0].data.push(count)
     })
     setChartData(data)

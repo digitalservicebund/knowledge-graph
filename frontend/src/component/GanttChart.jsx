@@ -21,9 +21,9 @@ function GanttChart(props) {
     }
     props.queryResultData.rows.forEach(row => {
       projects.push({
-        name: row.name.value,
-        start: dateToMonth(row.earliest.value),
-        end: dateToMonth(row.latest.value)
+        name: row["name"].value,
+        start: dateToMonth(row["earliest"].value),
+        end: dateToMonth(row["latest"].value)
       })
     })
     startMonths.current = projects.map(project => project.start)
