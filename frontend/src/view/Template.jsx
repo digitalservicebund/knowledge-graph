@@ -8,6 +8,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import LineChart from "../component/LineChart";
 import GanttChart from "../component/GanttChart";
 import PieChart from "../component/PieChart";
+import BarChart from "../component/BarChart";
 
 function Template() {
   let { id } = useParams();
@@ -198,6 +199,8 @@ function Template() {
             <GanttChart queryResultData={queryResultData} /> }
         { queryResultData && id.toLowerCase() === "t4g-project-statuses" &&
             <PieChart queryResultData={queryResultData} /> }
+        { queryResultData && id.toLowerCase() === "project-partners" &&
+            <BarChart queryResultData={queryResultData} /> }
         { !template && "No template with id " + id + " found" }
       </div>
   );
