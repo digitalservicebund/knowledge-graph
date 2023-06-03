@@ -47,11 +47,11 @@ function Experimental() {
     async function searchByPerson() {
         appendOutput(activity("Checking the Knowledge Graph ..."))
 
-    let query = `PREFIX : <https://digitalservice.bund.de/kg#>
-      SELECT * WHERE { 
-        ?person :isA :Person .
-        ?person :hasFullName "${input}" .
-      }`
+        let query = `PREFIX : <https://digitalservice.bund.de/kg#>
+          SELECT * WHERE { 
+            ?person :isA :Person .
+            ?person :hasFullName "${input}" .
+          }`
 
         setTimeout(() => {
             fetchSelect(query, "main", responseJson => {
@@ -62,54 +62,53 @@ function Experimental() {
             })
         }, 1000)
 
-    const wikidataQuery = `
-      SELECT ?person ?personLabel ?position ?positionLabel ?office ?officeLabel WHERE {
-        ?person rdfs:label "${input}"@de.
-        ?person p:P39 ?positionStatement.
-        ?positionStatement ps:P39 ?position.
-        ?position wdt:P2389 ?office.
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "de". }
-      }`
+        const wikidataQuery = `
+            SELECT ?person ?personLabel ?position ?positionLabel ?office ?officeLabel WHERE {
+                ?person rdfs:label "${input}"@de.
+                ?person p:P39 ?positionStatement.
+                ?positionStatement ps:P39 ?position.
+                ?position wdt:P2389 ?office.
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "de". }}`
 
-    const bindingsStream = await sparql.fetchBindings("https://query.wikidata.org/sparql", wikidataQuery)
-    bindingsStream.on("variables", vars =>
-        console.log("variables:", vars)
-    )
-    bindingsStream.on("data", data => {
-      console.log("data:", data)
-    })
-    bindingsStream.on("end", () => {
-      console.log("end")
-    })
-  }
+        const bindingsStream = await sparql.fetchBindings("https://query.wikidata.org/sparql", wikidataQuery)
+        bindingsStream.on("variables", vars =>
+            console.log("variables:", vars)
+        )
+        bindingsStream.on("data", data => {
+            console.log("data:", data)
+        })
+        bindingsStream.on("end", () => {
+            console.log("end")
+        })
+    }
 
-  const searchByField = () => {
-    // TODO
-  }
+    const searchByField = () => {
+        // TODO
+    }
 
-  return (
-      <div>
-        <br/>
-        <h2>Stakeholders</h2>
-        <RadioGroup row defaultValue="person" onChange={(e) => setMode(e.target.value)}>
-          <FormControlLabel value="person" control={<Radio />} label="What do we know about this Person?"/>
-          <FormControlLabel value="field" control={<Radio />} label="Who do we know in this field?"/>
-        </RadioGroup>
-        <br/><br/>
-        <TextField
-            label={mode === "person" ? "Name" : "Field"}
-            value={input}
-            style={{ width: "350px" }}
-            onChange={(e) => setInput(e.target.value)}
-        />
-        <Button variant="contained" onClick={() => mode === "person" ? searchByPerson() : searchByField()} style={{margin: "9px 0 0 25px"}}>
-          Search
-        </Button>
-          <div id="output" style={{ marginTop: "60px" }}>
-              { outputs.map((output, idx) => <span key={idx}>{output}</span>) }
-          </div>
-      </div>
-  );
+    return (
+        <div>
+            <br/>
+            <h2>Stakeholders</h2>
+            <RadioGroup row defaultValue="person" onChange={(e) => setMode(e.target.value)}>
+              <FormControlLabel value="person" control={<Radio />} label="What do we know about this Person?"/>
+              <FormControlLabel value="field" control={<Radio />} label="Who do we know in this field?"/>
+            </RadioGroup>
+            <br/><br/>
+            <TextField
+                label={mode === "person" ? "Name" : "Field"}
+                value={input}
+                style={{ width: "350px" }}
+                onChange={(e) => setInput(e.target.value)}
+            />
+            <Button variant="contained" onClick={() => mode === "person" ? searchByPerson() : searchByField()} style={{margin: "9px 0 0 25px"}}>
+              Search
+            </Button>
+              <div id="output" style={{ marginTop: "60px" }}>
+                  { outputs.map((output, idx) => <span key={idx}>{output}</span>) }
+              </div>
+        </div>
+    );
 }
 
 export default Experimental;
