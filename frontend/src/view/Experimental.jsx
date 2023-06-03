@@ -6,24 +6,61 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { fetchSelect } from "../utils";
 import { SparqlEndpointFetcher } from "fetch-sparql-endpoint";
+import BounceLoader from "react-spinners/BounceLoader";
+import styled, { keyframes } from "styled-components";
 const sparql = new SparqlEndpointFetcher()
 
 function Experimental() {
-  const [mode, setMode] = useState("person")
-  const [input, setInput] = useState("") // Annalena Baerbock
+    const [mode, setMode] = useState("person")
+    const [input, setInput] = useState("Annalena Baerbock") // Annalena Baerbock
+    const [outputs, setOutputs] = useState([])
 
-  async function searchByPerson() {
+    const appendOutput = newOutputEl => {
+        setOutputs(currentOutputs => [...currentOutputs, newOutputEl])
+    }
+
+    const fadeOut = keyframes`
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    `;
+
+    const FadingBounceLoader = styled(BounceLoader)`
+        animation: ${fadeOut} 2s forwards;
+    `;
+
+    const activity = str => {
+        return (
+            <div style={{ display: "flex", alignItems: "center", color: "gray", margin: "10px" }}>
+                <FadingBounceLoader size={20} color="blue"/>
+                &nbsp;&nbsp;
+                {str}
+            </div>
+        )
+    }
+
+    const statement = str => {
+        return <div style={{ color: "darkblue", marginLeft: "40px" }}>
+            {str}
+        </div>
+    }
+
+    async function searchByPerson() {
+        appendOutput(activity("Checking the Knowledge Graph ..."))
+
     let query = `PREFIX : <https://digitalservice.bund.de/kg#>
       SELECT * WHERE { 
         ?person :isA :Person .
         ?person :hasFullName "${input}" .
       }`
-    fetchSelect(query, "main", responseJson => {
-      console.log("Response:", responseJson)
-      if (responseJson.results.bindings.length === 0) {
-        // TODO
-      }
-    })
+
+        setTimeout(() => {
+            fetchSelect(query, "main", responseJson => {
+                console.log("Response:", responseJson)
+                if (responseJson.results.bindings.length === 0) {
+                    appendOutput(statement("No person with name " + input + " found"))
+                }
+            })
+        }, 1000)
 
     const wikidataQuery = `
       SELECT ?person ?personLabel ?position ?positionLabel ?office ?officeLabel WHERE {
@@ -68,6 +105,9 @@ function Experimental() {
         <Button variant="contained" onClick={() => mode === "person" ? searchByPerson() : searchByField()} style={{margin: "9px 0 0 25px"}}>
           Search
         </Button>
+          <div id="output" style={{ marginTop: "60px" }}>
+              { outputs.map((output, idx) => <span key={idx}>{output}</span>) }
+          </div>
       </div>
   );
 }
