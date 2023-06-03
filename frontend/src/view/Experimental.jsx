@@ -39,13 +39,13 @@ function Experimental() {
     }
 
     const statement = str => {
-        return <div style={{ color: "darkblue", marginLeft: "40px" }}>
+        return <div style={{ color: "blue", marginLeft: "40px" }}>
             {str}
         </div>
     }
 
-    async function searchByPerson() {
-        appendOutput(activity("Checking the Knowledge Graph ..."))
+    const searchByPerson = () => {
+        appendOutput(activity("Checking the Knowledge Graph"))
 
         let query = `PREFIX : <https://digitalservice.bund.de/kg#>
           SELECT * WHERE { 
@@ -57,29 +57,45 @@ function Experimental() {
             fetchSelect(query, "main", responseJson => {
                 console.log("Response:", responseJson)
                 if (responseJson.results.bindings.length === 0) {
-                    appendOutput(statement("No person with name " + input + " found"))
+                    appendOutput(statement(<>No person with name <strong>{input}</strong> found</>))
+                    setTimeout(() => {
+                        appendOutput(activity("Checking Wikidata for background infos"))
+                        checkWikidata((office, party) => {
+                            setTimeout(() => {
+                                appendOutput(statement(<>Found workplace <strong>{office}</strong> and party <strong>{party}</strong></>))
+                                setTimeout(() => {
+                                    appendOutput(activity("Checking the Knowledge Graph"))
+                                    setTimeout(() => {
+                                        // TODO
+                                    }, 1000)
+                                }, 1000)
+                            }, 1000)
+                        }).then(() => {})
+                    }, 1000)
                 }
             })
         }, 1000)
+    }
 
+    async function checkWikidata(callback) {
         const wikidataQuery = `
-            SELECT ?person ?personLabel ?position ?positionLabel ?office ?officeLabel WHERE {
-                ?person rdfs:label "${input}"@de.
+            SELECT ?person ?personLabel ?position ?positionLabel ?office ?officeLabel ?party ?partyLabel WHERE {
+                ?person rdfs:label "Annalena Baerbock"@de.
                 ?person p:P39 ?positionStatement.
                 ?positionStatement ps:P39 ?position.
                 ?position wdt:P2389 ?office.
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "de". }}`
+                ?person wdt:P102 ?party.
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "de". }
+            }`
 
         const bindingsStream = await sparql.fetchBindings("https://query.wikidata.org/sparql", wikidataQuery)
-        bindingsStream.on("variables", vars =>
-            console.log("variables:", vars)
-        )
+        bindingsStream.on("variables", vars => {})
         bindingsStream.on("data", data => {
-            console.log("data:", data)
+            let office = data["officeLabel"].value
+            let party = data["partyLabel"].value
+            callback(office, party)
         })
-        bindingsStream.on("end", () => {
-            console.log("end")
-        })
+        bindingsStream.on("end", () => {})
     }
 
     const searchByField = () => {
