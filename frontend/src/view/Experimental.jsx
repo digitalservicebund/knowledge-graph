@@ -51,7 +51,68 @@ function Experimental() {
     const searchByField = () => {
         setOutputs([])
         appendOutput(activity("Collecting synonyms from Wikidata"))
-        // ...
+        checkSynonymsOnWikidata("wd:Q11660", aiSynonyms => {
+            console.log("AI synonyms:", aiSynonyms)
+            checkSynonymsOnWikidata("wd:Q219416", sustainabilitySynonyms => {
+                console.log("Sustainability synonyms:", sustainabilitySynonyms)
+                setTimeout(() => {
+                    appendOutput(statement(<>Found synonyms in EN and DE: {aiSynonyms.length} for <strong>AI</strong> and {sustainabilitySynonyms.length} for <strong>Sustainability</strong></>))
+                    appendOutput(activity("Checking the Knowledge Graph"))
+                    let query = `
+PREFIX : <https://digitalservice.bund.de/kg#>
+SELECT ?field (COUNT(?person) AS ?count) 
+WHERE {
+  ?person :worksInField ?field .
+  FILTER (?field IN (:AI, :Sustainability))
+} GROUP BY ?field`
+                    fetchSelect(query, "main", responseJson => {
+                        console.log("Response:", responseJson)
+                        setTimeout(() => {
+                            let rows = responseJson.results.bindings
+                            let aiCount = Number(rows.find(row => row["field"].value.split("#")[1] === "AI")["count"].value)
+                            let susCount = Number(rows.find(row => row["field"].value.split("#")[1] === "Sustainability")["count"].value)
+                            appendOutput(statement(<>Found {aiCount} contacts working in AI, <span style={{ textDecoration: "underline" }}>see who</span></>))
+                            setTimeout(() => {
+                                appendOutput(statement(<>Found {susCount} contacts working in Sustainability, <span style={{textDecoration: "underline"}}>see who</span></>))
+                                query = `
+PREFIX : <https://digitalservice.bund.de/kg#>
+SELECT * WHERE {
+  ?person :workplace ?workplace .
+  ?workplace :hasFieldOfWork :Sustainability .
+  ?person :hasFullName ?fullName .
+  ?person :howDoWeKnowThem ?contactContext .
+  ?person :dsAffinityScore ?affinityScore .
+}`
+                                fetchSelect(query, "main", responseJson => {
+                                    console.log("Response:", responseJson)
+                                    let row = responseJson.results.bindings[0]
+                                    let name = row["fullName"].value
+                                    let workplace = row["workplace"].value.split("#")[1]
+                                    let contactContext = row["contactContext"].value
+                                    let affinityScore = Number(row["affinityScore"].value)
+                                    setTimeout(() => {
+                                        appendOutput(statement(<>Found 1 contact in AI whose organisation is in Sustainability:</>))
+                                        appendOutput(statement(<li style={{marginLeft: "18px"}}><span style={{textDecoration: "underline"}}>{name}</span>, {contactContext}, DS affinity score: {affinityScore}</li>))
+                                    }, getDelayTime())
+                                })
+                            }, getDelayTime())
+                        }, getDelayTime())
+                    })
+                }, getDelayTime())
+            })
+        })
+    }
+
+    async function checkSynonymsOnWikidata(itemId, callback) {
+        const aiSynonyms = `
+            SELECT ?synonym WHERE {
+              ${itemId} skos:altLabel ?synonym .
+              FILTER((LANG(?synonym) = "en") || (LANG(?synonym) = "de"))
+            }`
+        const bindingsStream = await sparql.fetchBindings("https://query.wikidata.org/sparql", aiSynonyms)
+        let synonyms = []
+        bindingsStream.on("data", row => synonyms.push(row["synonym"].value))
+        bindingsStream.on("end", () => callback(synonyms))
     }
 
     const searchByPerson = () => {
@@ -71,7 +132,7 @@ function Experimental() {
                     appendOutput(statement(<>No person with name <strong>{input}</strong> found</>))
                     setTimeout(() => {
                         appendOutput(activity("Checking Wikidata for background infos"))
-                        checkWikidata((office, party) => {
+                        checkOfficeAndPartyOnWikidata((office, party) => {
                             setTimeout(() => {
                                 appendOutput(statement(<>Found workplace <strong>{office}</strong> and party <strong>{party}</strong></>))
                                 setTimeout(() => {
@@ -165,8 +226,8 @@ SELECT ?name ?contactContext ?affinityScore WHERE {
         }, getDelayTime())
     }
 
-    async function checkWikidata(callback) {
-        const wikidataQuery = `
+    async function checkOfficeAndPartyOnWikidata(callback) {
+        const query = `
             SELECT ?person ?personLabel ?position ?positionLabel ?office ?officeLabel ?party ?partyLabel WHERE {
                 ?person rdfs:label "Annalena Baerbock"@de.
                 ?person p:P39 ?positionStatement.
@@ -176,7 +237,7 @@ SELECT ?name ?contactContext ?affinityScore WHERE {
                 SERVICE wikibase:label { bd:serviceParam wikibase:language "de". }
             }`
 
-        const bindingsStream = await sparql.fetchBindings("https://query.wikidata.org/sparql", wikidataQuery)
+        const bindingsStream = await sparql.fetchBindings("https://query.wikidata.org/sparql", query)
         bindingsStream.on("variables", vars => {})
         bindingsStream.on("data", data => {
             console.log("Wikidata response:", data)
