@@ -15,6 +15,8 @@ function Experimental() {
     const [input, setInput] = useState("Annalena Baerbock") // Annalena Baerbock
     const [outputs, setOutputs] = useState([])
 
+    const DELAY_TIME = 1000
+
     const appendOutput = newOutputEl => {
         setOutputs(currentOutputs => [...currentOutputs, newOutputEl])
     }
@@ -67,14 +69,14 @@ function Experimental() {
                                     appendOutput(activity("Checking the Knowledge Graph"))
                                     setTimeout(() => {
                                         // TODO
-                                    }, 1000)
-                                }, 1000)
-                            }, 1000)
+                                    }, DELAY_TIME)
+                                }, DELAY_TIME)
+                            }, DELAY_TIME)
                         }).then(() => {})
-                    }, 1000)
+                    }, DELAY_TIME)
                 }
             })
-        }, 1000)
+        }, DELAY_TIME)
     }
 
     async function checkWikidata(callback) {
