@@ -11,8 +11,8 @@ import styled, { keyframes } from "styled-components";
 const sparql = new SparqlEndpointFetcher()
 
 function Experimental() {
-    const [mode, setMode] = useState("person")
-    const [input, setInput] = useState("Annalena Baerbock") // Annalena Baerbock
+    const [mode, setMode] = useState("field")
+    const [input, setInput] = useState("") // Annalena Baerbock / AI, Sustainability
     const [outputs, setOutputs] = useState([])
 
     const getDelayTime = () => {
@@ -48,7 +48,14 @@ function Experimental() {
         </div>
     }
 
+    const searchByField = () => {
+        setOutputs([])
+        appendOutput(activity("Collecting synonyms from Wikidata"))
+        // ...
+    }
+
     const searchByPerson = () => {
+        setOutputs([])
         appendOutput(activity("Checking the Knowledge Graph"))
 
         let query = `PREFIX : <https://digitalservice.bund.de/kg#>
@@ -180,19 +187,15 @@ SELECT ?name ?contactContext ?affinityScore WHERE {
         bindingsStream.on("end", () => {})
     }
 
-    const searchByField = () => {
-        // TODO
-    }
-
     return (
         <div>
             <br/>
             <h2>Stakeholders</h2>
-            <RadioGroup row defaultValue="person" onChange={(e) => setMode(e.target.value)}>
-              <FormControlLabel value="person" control={<Radio />} label="What do we know about this Person?"/>
+            <RadioGroup row defaultValue="field" onChange={(e) => setMode(e.target.value)}>
               <FormControlLabel value="field" control={<Radio />} label="Who do we know in this field?"/>
+              <FormControlLabel value="person" control={<Radio />} label="What do we know about this Person?"/>
             </RadioGroup>
-            <br/><br/>
+            <br/>
             <TextField
                 label={mode === "person" ? "Name" : "Field"}
                 value={input}
