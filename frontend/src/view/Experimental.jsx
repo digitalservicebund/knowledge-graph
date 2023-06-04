@@ -15,7 +15,9 @@ function Experimental() {
     const [input, setInput] = useState("Annalena Baerbock") // Annalena Baerbock
     const [outputs, setOutputs] = useState([])
 
-    const DELAY_TIME = 1000
+    const getDelayTime = () => {
+        return 1000 + Math.random() * 1000
+    }
 
     const appendOutput = newOutputEl => {
         setOutputs(currentOutputs => [...currentOutputs, newOutputEl])
@@ -140,20 +142,20 @@ SELECT ?name ?contactContext ?affinityScore WHERE {
                                                                     let affinityScore = row["affinityScore"].value
                                                                     appendOutput(statement(<li style={{ marginLeft: "18px" }}><span style={{ textDecoration: "underline" }}>{name}</span>, {contactContext}, DS affinity score: {affinityScore}</li>))
                                                                 }
-                                                            }, DELAY_TIME)
+                                                            }, getDelayTime())
                                                         })
-                                                    }, DELAY_TIME)
+                                                    }, getDelayTime())
                                                 })
-                                            }, DELAY_TIME)
+                                            }, getDelayTime())
                                         })
-                                    }, DELAY_TIME)
-                                }, DELAY_TIME)
-                            }, DELAY_TIME)
+                                    }, getDelayTime())
+                                }, getDelayTime())
+                            }, getDelayTime())
                         }).then(() => {})
-                    }, DELAY_TIME)
+                    }, getDelayTime())
                 }
             })
-        }, DELAY_TIME)
+        }, getDelayTime())
     }
 
     async function checkWikidata(callback) {
