@@ -56,7 +56,7 @@ function Experimental() {
             checkSynonymsOnWikidata("wd:Q219416", sustainabilitySynonyms => {
                 console.log("Sustainability synonyms:", sustainabilitySynonyms)
                 setTimeout(() => {
-                    appendOutput(statement(<>Found synonyms in EN and DE: {aiSynonyms.length} for <strong>AI</strong> and {sustainabilitySynonyms.length} for <strong>Sustainability</strong></>))
+                    appendOutput(statement(<>Found synonyms (EN & DE): {aiSynonyms.length} for <strong>AI</strong> and {sustainabilitySynonyms.length} for <strong>Sustainability</strong></>))
                     appendOutput(activity("Checking the Knowledge Graph"))
                     let query = `
 PREFIX : <https://digitalservice.bund.de/kg#>
@@ -81,7 +81,6 @@ SELECT * WHERE {
   ?workplace :hasFieldOfWork :Sustainability .
   ?person :hasFullName ?fullName .
   ?person :howDoWeKnowThem ?contactContext .
-  ?person :dsAffinityScore ?affinityScore .
 }`
                                 fetchSelect(query, "main", responseJson => {
                                     console.log("Response:", responseJson)
@@ -89,10 +88,9 @@ SELECT * WHERE {
                                     let name = row["fullName"].value
                                     let workplace = row["workplace"].value.split("#")[1]
                                     let contactContext = row["contactContext"].value
-                                    let affinityScore = Number(row["affinityScore"].value)
                                     setTimeout(() => {
                                         appendOutput(statement(<>Found 1 contact in AI whose organisation is in Sustainability:</>))
-                                        appendOutput(statement(<li style={{marginLeft: "18px"}}><span style={{textDecoration: "underline"}}>{name}</span>, {contactContext}, DS affinity score: {affinityScore}</li>))
+                                        appendOutput(statement(<li style={{marginLeft: "18px"}}><span style={{textDecoration: "underline"}}>{name}</span>, {contactContext}, {workplace}</li>))
                                     }, getDelayTime())
                                 })
                             }, getDelayTime())
@@ -129,9 +127,9 @@ SELECT * WHERE {
             fetchSelect(query, "main", responseJson => {
                 console.log("Response:", responseJson)
                 if (responseJson.results.bindings.length === 0) {
-                    appendOutput(statement(<>No person with name <strong>{input}</strong> found</>))
+                    appendOutput(statement(<>No person with name <strong>{input}</strong> found in contacts</>))
                     setTimeout(() => {
-                        appendOutput(activity("Checking Wikidata for background infos"))
+                        appendOutput(activity("Checking Wikidata for infos about this person"))
                         checkOfficeAndPartyOnWikidata((office, party) => {
                             setTimeout(() => {
                                 appendOutput(statement(<>Found workplace <strong>{office}</strong> and party <strong>{party}</strong></>))
@@ -178,7 +176,6 @@ WHERE {
                                                 query = `
 PREFIX : <https://digitalservice.bund.de/kg#>
 SELECT ?name WHERE {
-  :DigitalService :hasEmployee ?person .
   ?person :hasPreviousWorkplace ?workplace .
   ?workplace :hasName "${office}" .
   ?person :hasFullName ?name .
@@ -193,11 +190,10 @@ SELECT ?name WHERE {
                                                         }
                                                         query = `
 PREFIX : <https://digitalservice.bund.de/kg#>
-SELECT ?name ?contactContext ?affinityScore WHERE { 
+SELECT ?name ?contactContext WHERE { 
   ?person :isInParty "${party}" .
   ?person :hasFullName ?name .
   ?person :howDoWeKnowThem ?contactContext .
-  ?person :dsAffinityScore ?affinityScore .
 } `
                                                         fetchSelect(query, "main", responseJson => {
                                                             console.log("Response:", responseJson)
@@ -207,8 +203,7 @@ SELECT ?name ?contactContext ?affinityScore WHERE {
                                                                 for (let row of rows) {
                                                                     let name = row["name"].value
                                                                     let contactContext = row["contactContext"].value
-                                                                    let affinityScore = row["affinityScore"].value
-                                                                    appendOutput(statement(<li style={{ marginLeft: "18px" }}><span style={{ textDecoration: "underline" }}>{name}</span>, {contactContext}, DS affinity score: {affinityScore}</li>))
+                                                                    appendOutput(statement(<li style={{ marginLeft: "18px" }}><span style={{ textDecoration: "underline" }}>{name}</span>, {contactContext}</li>))
                                                                 }
                                                             }, getDelayTime())
                                                         })
