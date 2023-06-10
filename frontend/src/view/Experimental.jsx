@@ -16,7 +16,7 @@ function Experimental() {
     const [outputs, setOutputs] = useState([])
 
     const getDelayTime = () => {
-        return 1000 + Math.random() * 1000
+        return 2000 + Math.random() * 2000
     }
 
     const appendOutput = newOutputEl => {
@@ -57,7 +57,7 @@ function Experimental() {
                 console.log("Sustainability synonyms:", sustainabilitySynonyms)
                 setTimeout(() => {
                     appendOutput(statement(<>Found synonyms (EN & DE): {aiSynonyms.length} for <strong>AI</strong> and {sustainabilitySynonyms.length} for <strong>Sustainability</strong></>))
-                    appendOutput(activity("Checking the Knowledge Graph"))
+                    appendOutput(activity("Checking the Knowledge Graph for all synonyms"))
                     let query = `
 PREFIX : <https://digitalservice.bund.de/kg#>
 SELECT ?field (COUNT(?person) AS ?count) 
@@ -91,6 +91,9 @@ SELECT * WHERE {
                                     setTimeout(() => {
                                         appendOutput(statement(<>Found 1 contact in AI whose organisation is in Sustainability:</>))
                                         appendOutput(statement(<li style={{marginLeft: "18px"}}><span style={{textDecoration: "underline"}}>{name}</span>, {contactContext}, {workplace}</li>))
+                                        setTimeout(() => {
+                                            appendOutput(statement(<>Want to post in <span style={{textDecoration: "underline"}}>#5_ressources</span> to ask for a matching contact?</>))
+                                        }, getDelayTime())
                                     }, getDelayTime())
                                 })
                             }, getDelayTime())
