@@ -42,6 +42,7 @@ public class DatasetService {
 
       Model model = ds.getDefaultModel();
       model.setNsPrefix("", defaultNs);
+      model.setNsPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
       models.put(dsName, model);
       if (addDemoData) {
         try {
