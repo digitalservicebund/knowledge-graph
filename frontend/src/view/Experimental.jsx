@@ -16,7 +16,7 @@ function Experimental() {
     const [outputs, setOutputs] = useState([])
 
     const getDelayTime = () => {
-        return 2000 + Math.random() * 2000
+        return 2000 + Math.random() * 1000
     }
 
     const appendOutput = newOutputEl => {
