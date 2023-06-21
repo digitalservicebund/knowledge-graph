@@ -1,6 +1,6 @@
 import slugify from "slugify";
 
-export const BASE_URL = "" // "http://localhost:8080" for use with "npm start"
+export const BASE_URL = "http://localhost:8080" // for use with "npm start"
 
 const SELECT_QUERY_ENDPOINT = BASE_URL + "/api/v1/knowthyselves/query/select"
 const INSERT_QUERY_ENDPOINT = BASE_URL + "/api/v1/knowthyselves/query/insert"
