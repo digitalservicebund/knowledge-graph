@@ -157,6 +157,12 @@ function Templates() {
         >
           {templates
             .filter((t) => filterTemplate(t))
+            // .sort((a, b) => a.title.localeCompare(b.title))
+            .sort((a, b) => {
+              const titleA = parseInt(a.title.split(" ")[0])
+              const titleB = parseInt(b.title.split(" ")[0])
+              return titleA - titleB
+            })
             .map((template) => {
               return isShortened(template) ? (
                   <Tooltip
